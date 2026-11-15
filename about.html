@@ -10,7 +10,7 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=27">
+<link rel="stylesheet" href="assets/style.css?v=28">
 </head>
 <body>
 
@@ -116,19 +116,17 @@
 <div class="footer-brand">
 <a class="logo" href="index.html"><span class="logo-mark"></span><span class="logo-word">land2grid</span></a>
 <p>Land, grid connectivity and industrial offtake, coordinated by one accountable team — for IPPs and EPCs building solar and wind projects in India.</p>
-</div>
-<div class="footer-col">
-<h4>What We Do</h4>
-<a href="services/land-management.html">Land management</a>
-<a href="services/grid-connectivity.html">Grid connectivity</a>
-<a href="services/customer-acquisition.html">Customer acquisition</a>
+<p class="footer-address">land2grid<br>Bangalore, India</p>
+<a href="mailto:rajib@land2grid.com">rajib@land2grid.com</a>
 </div>
 <div class="footer-col">
 <h4>Company</h4>
 <a href="about.html">About</a>
+<a href="services/land-management.html">What We Do</a>
 <a href="case-studies.html">Our Experience</a>
 <a href="insights.html">News &amp; Insights</a>
 <a href="careers.html">Careers</a>
+<a href="dashboard.html">Find Projects</a>
 <a href="contact.html">Contact</a>
 </div>
 <div class="footer-col">
@@ -138,18 +136,23 @@
 <a href="#"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18.9 2H22l-7.5 8.57L23 22h-6.9l-5.4-6.6L4.4 22H1.3l8.03-9.17L1 2h7.1l4.9 6.03L18.9 2Zm-1.2 18h1.9L7.4 4H5.4l12.3 16Z"/></svg>X</a>
 </div>
 </div>
-<div class="footer-col">
+<div class="footer-col footer-col-form">
 <h4>Get in touch</h4>
-<p class="footer-address">land2grid<br>Bangalore, India</p>
-<a href="mailto:rajib@land2grid.com">rajib@land2grid.com</a>
+<form class="footer-form" name="project-enquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="thank-you.html">
+<input type="hidden" name="form-name" value="project-enquiry">
+<p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
+<input type="email" name="email" placeholder="Your email" aria-label="Your email" required>
+<textarea name="message" placeholder="Tell us about your project" aria-label="Tell us about your project" required></textarea>
+<button class="btn" type="submit">Send</button>
+</form>
 </div>
 </div>
 <div class="wrap footer-bottom">
 <a class="logo" href="index.html"><span class="logo-mark"></span><span class="logo-word">land2grid</span></a>
-<nav class="footer-legal"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Cookie policy</a></nav>
+<nav class="footer-legal"><a href="#">Privacy</a><a href="#">Terms</a><a href="#" id="cookie-settings-link">Cookie policy</a></nav>
 </div>
 </footer>
 
-<script src="assets/main.js?v=7"></script>
+<script src="assets/main.js?v=8"></script>
 </body>
 </html>

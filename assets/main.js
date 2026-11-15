@@ -91,14 +91,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.body.appendChild(fab);
 
+  // skip auto-popping the greeting on a first visit where the cookie banner
+  // is also about to show — two unprompted popups at once is cluttered, and
+  // the greeting can sit over the footer's cookie-settings link
+  var consentAlready = null;
+  try { consentAlready = localStorage.getItem('l2g-cookie-consent'); } catch (e) {}
   var dismissed = sessionStorage.getItem('l2g-chat-dismissed') === '1';
-  if (!dismissed) {
+  if (!dismissed && consentAlready) {
     document.body.appendChild(greeting);
-    greeting.querySelector('.chat-greeting-close').addEventListener('click', function () {
-      greeting.remove();
-      sessionStorage.setItem('l2g-chat-dismissed', '1');
-    });
   }
+  greeting.querySelector('.chat-greeting-close').addEventListener('click', function () {
+    greeting.remove();
+    sessionStorage.setItem('l2g-chat-dismissed', '1');
+  });
 
   fab.addEventListener('click', function () {
     if (document.body.contains(greeting)) {
@@ -107,4 +112,56 @@ document.addEventListener('DOMContentLoaded', function () {
       document.body.appendChild(greeting);
     }
   });
+
+  // cookie consent — a plain accept/reject banner shown until the visitor
+  // picks one, stored in localStorage so the choice persists across pages
+  // and visits. This site doesn't currently set any analytics/marketing
+  // cookies; the banner and the stored choice are here so that if/when one
+  // is added, the code can check l2g-cookie-consent before loading it.
+  var cookieBanner = document.createElement('div');
+  cookieBanner.className = 'cookie-banner';
+  cookieBanner.setAttribute('role', 'region');
+  cookieBanner.setAttribute('aria-label', 'Cookie consent');
+  cookieBanner.innerHTML =
+    '<p>We use cookies for basic site functionality and, if you agree, to understand how the site is used.</p>' +
+    '<div class="cookie-actions">' +
+    '<button type="button" class="cookie-reject">Reject</button>' +
+    '<button type="button" class="cookie-accept">Accept</button>' +
+    '</div>';
+
+  function showCookieBanner() {
+    if (!document.body.contains(cookieBanner)) {
+      document.body.appendChild(cookieBanner);
+      document.body.classList.add('has-cookie-banner');
+    }
+  }
+  function hideCookieBanner() {
+    if (document.body.contains(cookieBanner)) {
+      cookieBanner.remove();
+      document.body.classList.remove('has-cookie-banner');
+    }
+  }
+
+  var consent = null;
+  try { consent = localStorage.getItem('l2g-cookie-consent'); } catch (e) {}
+  if (!consent) {
+    showCookieBanner();
+  }
+
+  cookieBanner.querySelector('.cookie-accept').addEventListener('click', function () {
+    try { localStorage.setItem('l2g-cookie-consent', 'accepted'); } catch (e) {}
+    hideCookieBanner();
+  });
+  cookieBanner.querySelector('.cookie-reject').addEventListener('click', function () {
+    try { localStorage.setItem('l2g-cookie-consent', 'rejected'); } catch (e) {}
+    hideCookieBanner();
+  });
+
+  var cookieSettingsLink = document.getElementById('cookie-settings-link');
+  if (cookieSettingsLink) {
+    cookieSettingsLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      showCookieBanner();
+    });
+  }
 });
