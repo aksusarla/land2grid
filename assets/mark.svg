@@ -1,5 +1,0 @@
-<svg viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="land2grid">
-<text x="2" y="58" font-family="Archivo, sans-serif" font-weight="800" font-size="52" letter-spacing="-1" fill="currentColor">land2grid</text>
-<path d="M4 72 Q 190 90 382 72" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-<path d="M373 64 L384 72 L373 81" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>

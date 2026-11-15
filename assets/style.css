@@ -44,9 +44,9 @@ a{color:inherit}
 header.site{position:sticky;top:0;z-index:40;background:var(--dark);border-bottom:1px solid var(--line-on-dark)}
 header.site .wrap{display:flex;align-items:center;gap:1.5rem;max-width:none;margin:0;padding:.85rem 1.75rem}
 .logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--on-dark)}
-.logo-mark{width:1.75rem;height:1.75rem;border-radius:.55rem;background:var(--accent);flex:none;display:block}
+.logo-mark{height:2.1rem;width:auto;flex:none;display:block}
 .logo-word{font-family:"Manrope",sans-serif;font-weight:700;font-size:1.15rem;letter-spacing:-.01em;color:currentColor}
-footer.site .footer-brand .logo-mark{width:1.9rem;height:1.9rem}
+footer.site .footer-brand .logo-mark{height:2.3rem}
 nav.primary{display:flex;align-items:center;gap:1.6rem}
 nav.primary a{color:var(--on-dark-soft);text-decoration:none;font-size:.95rem;white-space:nowrap}
 nav.primary a:hover,nav.primary a.active{color:var(--on-dark)}
