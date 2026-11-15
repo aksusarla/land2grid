@@ -224,17 +224,22 @@ section > .wrap > .eyebrow{display:block}
 
 /* services — flat colour blocks, same family as the hero/tile-row tiles */
 .route{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.5rem,1.5vw,.75rem)}
-.route>div{padding:2rem 1.85rem}
+.route-card{display:block;position:relative;padding:2rem 1.85rem;border-radius:var(--r-lg);
+  text-decoration:none;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease}
+.route-card:hover,.route-card:focus-visible{transform:scale(1.035);box-shadow:var(--shadow-md);outline:none}
 .route .tile-icon{margin-bottom:1.1rem}
-.route>div:nth-child(1){background:var(--land);color:var(--land-ink)}
-.route>div:nth-child(2){background:var(--grid);color:var(--grid-on)}
-.route>div:nth-child(3){background:var(--customer);color:var(--customer-on)}
+.route-card:nth-child(1){background:var(--land);color:var(--land-ink)}
+.route-card:nth-child(2){background:var(--grid);color:var(--grid-on)}
+.route-card:nth-child(3){background:var(--customer);color:var(--customer-on)}
+.route-num{position:absolute;top:1.6rem;right:1.7rem;width:2.1rem;height:2.1rem;border-radius:50%;
+  background:rgba(255,255,255,.24);display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:.95rem;color:inherit}
 .route h3{font-size:1.4rem;margin-bottom:.5rem;color:inherit !important}
 .route p{opacity:.85;margin:0 0 1rem}
 .route ul{margin:0 0 .25rem;padding-left:1.1rem}
 .route li{margin-bottom:.4rem}
-.route a.more{display:inline-block;margin-top:1rem;font-size:.9rem;font-weight:700;text-decoration:none;color:inherit}
-.route a.more:hover{text-decoration:underline}
+.route .more{display:inline-block;margin-top:1rem;font-size:.9rem;font-weight:700;color:inherit}
+.route-card:hover .more{text-decoration:underline}
 
 .two{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem}
 .two p{color:var(--ink-soft);margin:.5rem 0 0}
