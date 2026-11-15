@@ -333,6 +333,8 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
   background:rgba(23,77,59,.08);border:1px solid rgba(23,77,59,.2);padding:.3rem .7rem;border-radius:999px;
   margin-bottom:1rem}
 .founder p{color:var(--ink-soft);max-width:42rem}
+.founder-highlights{padding-left:1.1rem;color:var(--ink-soft);margin:.9rem 0 1.1rem;max-width:42rem}
+.founder-highlights li{margin-bottom:.5rem}
 .founder-linkedin{display:inline-flex;align-items:center;gap:.45rem;margin-top:1rem;color:var(--forest);
   font-size:.9rem;font-weight:600;text-decoration:none;border-bottom:1.5px solid transparent}
 .founder-linkedin:hover{border-bottom-color:currentColor}
