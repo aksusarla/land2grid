@@ -298,6 +298,14 @@ section > .wrap > .eyebrow{display:block}
 .two p{color:var(--ink-soft);margin:.5rem 0 0}
 .three{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
 .three p{color:var(--ink-soft);margin:.5rem 0 0}
+/* acronym reveal — hover or focus pops the spelled-out term in the
+   gap above the heading, so it never shifts the layout below it */
+.acronym{position:relative;display:inline-block;cursor:help;border-bottom:1px dashed var(--ink-soft)}
+.acronym-full{position:absolute;left:0;bottom:100%;margin-bottom:.5rem;white-space:nowrap;
+  background:var(--paper);border:1px solid var(--line);box-shadow:var(--shadow-sm);
+  color:var(--ink);font-size:.85rem;font-weight:600;padding:.4rem .7rem;border-radius:.5rem;
+  opacity:0;transform:translateY(4px);transition:opacity .16s ease,transform .16s ease;pointer-events:none;z-index:2}
+.acronym:hover .acronym-full,.acronym:focus-visible .acronym-full{opacity:1;transform:translateY(0)}
 
 .steps{list-style:none;padding:0;margin:0;counter-reset:s;max-width:44rem}
 .steps>li{counter-increment:s;padding:0 0 1.25rem 3rem;position:relative;border-left:1px solid var(--line);
