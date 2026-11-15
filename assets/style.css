@@ -220,12 +220,13 @@ body.has-cookie-banner .chat-panel{bottom:10.75rem}
 .flow-caption{color:var(--ink-soft);font-size:1.1rem;max-width:40rem;margin-top:1rem}
 .flow-track{display:flex;justify-content:space-between;align-items:flex-start;position:relative;gap:1rem;
   margin:2rem 0 2.75rem}
-.flow-track::before{content:"";position:absolute;left:1.15rem;right:1.15rem;top:1.15rem;height:2px;
+.flow-track::before{content:"";position:absolute;left:1.3rem;right:1.3rem;top:1.3rem;height:2px;
   background:linear-gradient(90deg,var(--land),var(--grid),var(--customer));z-index:0}
 .flow-node{display:flex;flex-direction:column;align-items:center;gap:.6rem;position:relative;z-index:1;flex:1;text-align:center;padding:0 .5rem}
 .flow-node strong{font-size:1rem;white-space:nowrap}
-.flow-dot{width:2.3rem;height:2.3rem;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
-  color:#fff;font-family:"Manrope",sans-serif;font-weight:800;font-size:.95rem;border:3px solid var(--paper)}
+.flow-dot{width:2.6rem;height:2.6rem;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+  background:var(--surface);border:2.5px solid var(--line);box-shadow:var(--shadow-sm)}
+.flow-dot img{width:1.35rem;height:1.35rem;object-fit:contain}
 .flow-sub{color:var(--ink-soft);font-size:.85rem;max-width:14rem}
 
 /* quick-access blocks — flat, sharp-edged, full-saturation tiles, the
