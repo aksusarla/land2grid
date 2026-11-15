@@ -91,26 +91,44 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // chat widget — a plain shortcut to the contact page, not a simulated
-  // live agent. Shows once per browser session so it doesn't nag on
-  // every page view; works from the root or from /services/.
-  var contactHref = location.pathname.indexOf('/services/') !== -1 ? '../contact.html' : 'contact.html';
+  // chat widget — a basic, rule-based assistant: it either points the
+  // visitor at the right page (keyword match against a fixed list of
+  // intents) or collects a few basic details and hands them to the team
+  // by email. No AI, no live agent on the other end — the panel says so
+  // up front rather than pretending otherwise.
+  var inServices = location.pathname.indexOf('/services/') !== -1;
+  var rel = function (href) { return inServices ? '../' + href : href; };
+
+  var CHAT_INTENTS = [
+    { keywords: ['land', 'lease', 'title', 'parcel', 'acquisition of land'], label: 'Land management', href: rel('services/land-management.html') },
+    { keywords: ['grid', 'connectivity', 'transmission', 'substation', 'interconnect', 'evacuation'], label: 'Grid connectivity', href: rel('services/grid-connectivity.html') },
+    { keywords: ['customer', 'offtake', 'ppa', 'buyer', 'c&i', 'industrial customer'], label: 'Customer acquisition', href: rel('services/customer-acquisition.html') },
+    { keywords: ['project', 'dashboard', 'listing', 'available', 'find projects'], label: 'Find projects', href: rel('dashboard.html') },
+    { keywords: ['case study', 'case studies', 'experience', 'track record', 'portfolio'], label: 'Our experience', href: rel('case-studies.html') },
+    { keywords: ['career', 'job', 'hire', 'join', 'vacanc'], label: 'Careers', href: rel('careers.html') },
+    { keywords: ['insight', 'news', 'blog', 'article'], label: 'News & insights', href: rel('insights.html') },
+    { keywords: ['about', 'who are you', 'team', 'company'], label: 'About us', href: rel('about.html') },
+    { keywords: ['privacy'], label: 'Privacy policy', href: rel('privacy.html') },
+    { keywords: ['terms'], label: 'Terms', href: rel('terms.html') },
+    { keywords: ['cookie'], label: 'Cookie policy', href: rel('cookie-policy.html') },
+    { keywords: ['contact', 'talk', 'reach', 'call', 'email', 'enquiry', 'enquire', 'speak', 'quote'], label: 'Talk to the team', action: 'lead-form' }
+  ];
+
+  var QUICK_REPLIES = ['Land management', 'Grid connectivity', 'Customer acquisition', 'Find projects', 'Talk to the team'];
+
   var fab = document.createElement('button');
   fab.className = 'chat-fab';
   fab.type = 'button';
-  fab.setAttribute('aria-label', 'Contact land2grid');
+  fab.setAttribute('aria-label', 'Open chat');
   fab.innerHTML = '<svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8A2.5 2.5 0 0 1 17.5 16H11l-4.5 4v-4H6.5A2.5 2.5 0 0 1 4 13.5v-8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="chat-dot" aria-hidden="true"></span>';
 
   var greeting = document.createElement('div');
   greeting.className = 'chat-greeting';
-  greeting.innerHTML = '<span>Hi! Have a project in mind? <a href="' + contactHref + '">Tell us about it →</a></span>' +
+  greeting.innerHTML = '<span>Hi! Need something? <a href="#" class="chat-greeting-open">Ask our chat →</a></span>' +
     '<button type="button" class="chat-greeting-close" aria-label="Dismiss">×</button>';
 
   document.body.appendChild(fab);
 
-  // skip auto-popping the greeting on a first visit where the cookie banner
-  // is also about to show — two unprompted popups at once is cluttered, and
-  // the greeting can sit over the footer's cookie-settings link
   var consentAlready = null;
   try { consentAlready = localStorage.getItem('l2g-cookie-consent'); } catch (e) {}
   var dismissed = sessionStorage.getItem('l2g-chat-dismissed') === '1';
@@ -122,12 +140,162 @@ document.addEventListener('DOMContentLoaded', function () {
     sessionStorage.setItem('l2g-chat-dismissed', '1');
   });
 
-  fab.addEventListener('click', function () {
-    if (document.body.contains(greeting)) {
-      greeting.remove();
-    } else {
-      document.body.appendChild(greeting);
+  var panel = null;
+  var panelBody = null;
+
+  function addBotMessage(html) {
+    var msg = document.createElement('div');
+    msg.className = 'chat-msg bot';
+    msg.innerHTML = html;
+    panelBody.appendChild(msg);
+    panelBody.scrollTop = panelBody.scrollHeight;
+    return msg;
+  }
+
+  function addUserMessage(text) {
+    var msg = document.createElement('div');
+    msg.className = 'chat-msg user';
+    msg.textContent = text;
+    panelBody.appendChild(msg);
+    panelBody.scrollTop = panelBody.scrollHeight;
+  }
+
+  function addQuickReplies(labels) {
+    var row = document.createElement('div');
+    row.className = 'chat-quick';
+    labels.forEach(function (label) {
+      var chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'chat-chip';
+      chip.textContent = label;
+      chip.addEventListener('click', function () { handleUserText(label); });
+      row.appendChild(chip);
+    });
+    panelBody.appendChild(row);
+    panelBody.scrollTop = panelBody.scrollHeight;
+  }
+
+  function matchIntent(text) {
+    var lower = text.toLowerCase();
+    for (var i = 0; i < CHAT_INTENTS.length; i++) {
+      var intent = CHAT_INTENTS[i];
+      for (var j = 0; j < intent.keywords.length; j++) {
+        if (lower.indexOf(intent.keywords[j]) !== -1) return intent;
+      }
     }
+    return null;
+  }
+
+  function showLeadForm() {
+    addBotMessage('Share a few details and I’ll open an email to our team with everything filled in.');
+    var wrap = document.createElement('form');
+    wrap.className = 'chat-lead';
+    wrap.innerHTML =
+      '<label>Your name<input type="text" name="name" required></label>' +
+      '<label>Email<input type="email" name="email" required></label>' +
+      '<label>Company<input type="text" name="company"></label>' +
+      '<label>What do you need help with?' +
+      '<select name="need">' +
+      '<option>Land management</option>' +
+      '<option>Grid connectivity</option>' +
+      '<option>Industrial customer acquisition</option>' +
+      '<option>All three</option>' +
+      '<option>Not sure yet</option>' +
+      '</select></label>' +
+      '<label>Message<textarea name="message" placeholder="Location, capacity, timeline — anything that helps."></textarea></label>' +
+      '<button type="submit" class="btn">Send to the team</button>';
+    panelBody.appendChild(wrap);
+    panelBody.scrollTop = panelBody.scrollHeight;
+
+    wrap.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var data = new FormData(wrap);
+      var name = (data.get('name') || '').toString().trim();
+      var email = (data.get('email') || '').toString().trim();
+      var company = (data.get('company') || '').toString().trim();
+      var need = (data.get('need') || '').toString();
+      var message = (data.get('message') || '').toString().trim();
+
+      var bodyLines = [
+        'Name: ' + name,
+        'Email: ' + email,
+        'Company: ' + (company || '-'),
+        'Need: ' + need,
+        '',
+        message || '(no additional message)'
+      ];
+      var mailto = 'mailto:hello@land2grid.com' +
+        '?subject=' + encodeURIComponent('New enquiry from ' + (name || 'website chat')) +
+        '&body=' + encodeURIComponent(bodyLines.join('\n'));
+
+      wrap.remove();
+      addUserMessage('Sent: ' + name + ' (' + need + ')');
+      addBotMessage('Thanks, ' + (name.split(' ')[0] || 'there') +
+        ' — that should have opened your email app with the details filled in. ' +
+        'Nothing happen? Write to us directly at <a class="chat-link" href="mailto:hello@land2grid.com">hello@land2grid.com</a>.');
+      window.location.href = mailto;
+    });
+  }
+
+  function handleUserText(text) {
+    if (!text) return;
+    addUserMessage(text);
+    var intent = matchIntent(text);
+    if (intent && intent.action === 'lead-form') {
+      showLeadForm();
+    } else if (intent) {
+      addBotMessage('That lives on our ' + intent.label + ' page — ' +
+        '<a class="chat-link" href="' + intent.href + '">open it →</a>');
+    } else {
+      addBotMessage('I couldn’t find a page for that. Want me to pass it to the team instead?');
+      addQuickReplies(['Talk to the team']);
+    }
+  }
+
+  function openPanel() {
+    if (panel) { panel.remove(); panel = null; return; }
+    if (document.body.contains(greeting)) greeting.remove();
+
+    panel = document.createElement('div');
+    panel.className = 'chat-panel';
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-label', 'land2grid chat');
+    panel.innerHTML =
+      '<div class="chat-panel-head">' +
+      '<div><strong>land2grid</strong><span>Automated — find a page or reach the team</span></div>' +
+      '<button type="button" class="chat-panel-close" aria-label="Close chat">×</button>' +
+      '</div>' +
+      '<div class="chat-panel-body"></div>' +
+      '<form class="chat-panel-input">' +
+      '<input type="text" placeholder="Ask about land, grid, offtake…" aria-label="Your message">' +
+      '<button type="submit" aria-label="Send">' +
+      '<svg viewBox="0 0 24 24" fill="none"><path d="M4 12 20 4l-6 16-2.5-7L4 12Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>' +
+      '</button>' +
+      '</form>';
+    document.body.appendChild(panel);
+
+    panelBody = panel.querySelector('.chat-panel-body');
+    addBotMessage('Hi! I’m the land2grid site assistant — not a live person. ' +
+      'Tell me what you’re looking for, or pick one below:');
+    addQuickReplies(QUICK_REPLIES);
+
+    panel.querySelector('.chat-panel-close').addEventListener('click', openPanel);
+    var form = panel.querySelector('.chat-panel-input');
+    var input = form.querySelector('input');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var val = input.value.trim();
+      if (!val) return;
+      input.value = '';
+      handleUserText(val);
+    });
+    input.focus();
+  }
+
+  fab.addEventListener('click', openPanel);
+  greeting.querySelector('.chat-greeting-open').addEventListener('click', function (e) {
+    e.preventDefault();
+    openPanel();
   });
 
   // cookie consent — a plain accept/reject banner shown until the visitor
