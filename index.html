@@ -11,7 +11,7 @@
 <meta property="og:type" content="website">
 <link rel="icon" href="assets/logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -38,6 +38,7 @@
 </header>
 
 <main id="top">
+<div class="hero-band band-navy">
 <div class="wrap">
 <div class="hero">
 <h1>One partner from land to grid to customer.</h1>
@@ -77,6 +78,7 @@
 </div>
 </div>
 </div>
+</div>
 
 <section id="who-we-are">
 <div class="wrap">
@@ -87,9 +89,18 @@
 <p style="margin-top:1rem"><a class="more" href="about.html">More on how we work →</a></p>
 </div>
 <div class="stats-strip">
-<div class="stat"><span class="num">18+</span><span class="label">Years in the Indian power sector</span></div>
-<div class="stat"><span class="num">2+ GW</span><span class="label">Solar and wind projects executed</span></div>
-<div class="stat"><span class="num">3-in-1</span><span class="label">Land, grid and offtake, one team</span></div>
+<div class="stat">
+<span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+<div><span class="num">18+</span><span class="label">Years in the Indian power sector</span></div>
+</div>
+<div class="stat">
+<span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></span>
+<div><span class="num">2+ GW</span><span class="label">Solar and wind projects executed</span></div>
+</div>
+<div class="stat">
+<span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="12" r="3"/><path d="M6 9v6M8.5 7.5 15.5 10.5M8.5 16.5 15.5 13.5"/></svg></span>
+<div><span class="num">3-in-1</span><span class="label">Land, grid and offtake, one team</span></div>
+</div>
 </div>
 </div>
 </div>
@@ -121,7 +132,7 @@
 </div>
 </section>
 
-<section id="deal-types">
+<section id="deal-types" class="band-navy">
 <div class="wrap">
 <h2>Whatever structure the deal needs.</h2>
 <div class="sector-grid">
@@ -221,18 +232,32 @@
 </section>
 </main>
 
-<footer class="site">
-<div class="wrap">
-<span>© 2026 land2grid · Bangalore, India</span>
-<div class="foot-links">
+<footer class="site band-navy">
+<div class="wrap footer-grid">
+<div class="footer-brand">
+<a class="logo" href="index.html"><img src="assets/logo.jpg" alt="land2grid" width="32" height="32">land2grid</a>
+<p>One partner for land, grid connectivity and industrial customer acquisition, for IPPs and EPCs building solar and wind projects in India.</p>
+</div>
+<div class="footer-col">
+<h4>Services</h4>
 <a href="services/land-management.html">Land management</a>
 <a href="services/grid-connectivity.html">Grid connectivity</a>
 <a href="services/customer-acquisition.html">Customer acquisition</a>
-<a href="case-studies.html">Case studies</a>
-<a href="about.html">About</a>
-<a href="contact.html">Contact</a>
-<a href="mailto:rajib@land2grid.com">rajib@land2grid.com</a>
 </div>
+<div class="footer-col">
+<h4>Company</h4>
+<a href="about.html">About</a>
+<a href="case-studies.html">Case studies</a>
+<a href="contact.html">Contact</a>
+</div>
+<div class="footer-col">
+<h4>Reach us</h4>
+<a href="mailto:rajib@land2grid.com">rajib@land2grid.com</a>
+<a href="#" style="pointer-events:none">Bangalore, India</a>
+</div>
+</div>
+<div class="wrap footer-bottom">
+<span>© 2026 land2grid</span>
 </div>
 </footer>
 
