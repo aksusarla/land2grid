@@ -7,18 +7,28 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=15">
+<link rel="stylesheet" href="assets/style.css?v=16">
 </head>
 <body>
 <header class="site">
 <div class="wrap">
+<button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
 <a class="logo" href="index.html"><span class="logo-mark"></span><span class="logo-word">land2grid</span></a>
 <nav class="primary" aria-label="Primary">
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
-<a href="contact.html" class="nav-cta">Contact</a>
+<a href="about.html">About Us</a>
+<div class="has-sub">
+<a href="services/land-management.html">What We Do</a>
+<div class="sub-menu">
+<a href="services/land-management.html">Land management</a>
+<a href="services/grid-connectivity.html">Grid connectivity</a>
+<a href="services/customer-acquisition.html">Customer acquisition</a>
+</div>
+</div>
+<a href="case-studies.html">Our Experience</a>
+<a href="insights.html">News &amp; Insights</a>
+<a href="careers.html">Careers</a>
 </nav>
-<button class="nav-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+<a href="contact.html" class="nav-cta">Contact Us</a>
 </div>
 </header>
 <main>
@@ -36,5 +46,7 @@
 <span>Bangalore, India</span>
 </div>
 </footer>
+
+<script src="assets/main.js?v=6"></script>
 </body>
 </html>

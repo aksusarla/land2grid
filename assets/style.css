@@ -36,14 +36,18 @@ p{margin:0}
 a{color:inherit}
 .wrap{max-width:68rem;margin:0 auto;padding:0 1.25rem}
 
-/* header / nav — always ink, independent of section theme below */
+/* header / nav — always ink, independent of section theme below.
+   Order in markup: hamburger toggle, logo, inline nav links, CTA pill —
+   the toggle is hidden on desktop and the CTA always rides the far
+   right via margin-left:auto, so it stays visible whether or not the
+   mobile drawer is open. */
 header.site{position:sticky;top:0;z-index:40;background:var(--dark);border-bottom:1px solid var(--line-on-dark)}
-header.site .wrap{display:flex;justify-content:space-between;align-items:center;padding:.85rem 1.25rem}
+header.site .wrap{display:flex;align-items:center;gap:1.5rem;padding:.85rem 1.25rem}
 .logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--on-dark)}
 .logo-mark{width:1.75rem;height:1.75rem;border-radius:.55rem;background:var(--accent);flex:none;display:block}
 .logo-word{font-family:"Manrope",sans-serif;font-weight:700;font-size:1.15rem;letter-spacing:-.01em;color:currentColor}
 footer.site .footer-brand .logo-mark{width:1.9rem;height:1.9rem}
-nav.primary{display:flex;align-items:center;gap:1.75rem}
+nav.primary{display:flex;align-items:center;gap:1.6rem}
 nav.primary a{color:var(--on-dark-soft);text-decoration:none;font-size:.95rem;white-space:nowrap}
 nav.primary a:hover,nav.primary a.active{color:var(--on-dark)}
 .has-sub{position:relative}
@@ -52,9 +56,16 @@ nav.primary a:hover,nav.primary a.active{color:var(--on-dark)}
 .has-sub:hover .sub-menu,.has-sub:focus-within .sub-menu{display:block}
 .sub-menu a{display:block;padding:.55rem .75rem;border-radius:1px;font-size:.9rem;color:var(--ink)}
 .sub-menu a:hover{background:var(--paper)}
-.nav-cta{color:var(--signal-ink) !important;font-weight:700;background:var(--signal);padding:.55rem 1.15rem;border-radius:var(--r-sm)}
+.nav-cta{color:var(--signal-ink) !important;font-weight:700;background:var(--signal);padding:.6rem 1.3rem;
+  border-radius:999px;margin-left:auto;text-transform:uppercase;font-size:.82rem;letter-spacing:.03em}
 .nav-cta:hover{background:#257a4c !important}
-.nav-toggle{display:none;background:none;border:0;color:var(--on-dark);font-size:1.5rem;cursor:pointer;line-height:1}
+.nav-toggle{display:none;align-items:center;justify-content:center;flex-direction:column;gap:3px;
+  width:2.5rem;height:2.5rem;background:var(--paper);border:0;border-radius:.5rem;cursor:pointer;flex:none;padding:0}
+.nav-toggle span{display:block;width:1.05rem;height:2px;background:var(--ink);border-radius:2px;
+  transition:transform .15s ease,opacity .15s ease}
+.nav-toggle.is-open span:nth-child(1){transform:translateY(5px) rotate(45deg)}
+.nav-toggle.is-open span:nth-child(2){opacity:0}
+.nav-toggle.is-open span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
 a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
 
 /* full-bleed ink band (deal-type grid, footer) */
@@ -111,6 +122,49 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
   color:var(--ink-soft)}
 .trust-strip .tag{color:var(--ink);background:rgba(16,42,54,.07);
   padding:.35rem .8rem;border-radius:999px;font-size:.82rem;font-weight:700;letter-spacing:0;text-transform:none}
+
+/* full-bleed video hero — looping background footage (renewable energy
+   infrastructure) behind a dark gradient, single-column text block over
+   it. The gradient is darkest on the left, where the text sits, and
+   lifts toward the right so the footage still reads. */
+.hero-video{position:relative;min-height:min(42rem,84vh);display:flex;align-items:center;overflow:hidden;background:var(--dark)}
+.hero-video-el{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.hero-video-overlay{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(100deg,rgba(16,42,54,.93) 0%,rgba(16,42,54,.82) 30%,rgba(16,42,54,.48) 62%,rgba(16,42,54,.22) 100%)}
+.hero-content{position:relative;z-index:2;padding:4.5rem 0;max-width:40rem;color:var(--on-dark)}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:.6rem;font-weight:700;font-size:.82rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--on-dark-soft);margin-bottom:1.5rem}
+.hero-eyebrow .dot{width:.5rem;height:.5rem;border-radius:50%;background:var(--accent);flex:none}
+.hero-heading{font-size:clamp(2.3rem,5.2vw,3.8rem);line-height:1.08;letter-spacing:-.02em;color:var(--on-dark)}
+.hero-heading .accent-line{display:block;color:var(--accent)}
+.hero-video .hero-sub{max-width:33rem;color:var(--on-dark-soft);font-size:1.12rem;margin:1.5rem 0 2rem}
+.hero-video .btn-row{margin-bottom:2rem}
+.hero-proof{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem 1rem;padding-top:1.5rem;
+  border-top:1px solid var(--line-on-dark)}
+.hero-proof .stat-num{font-family:"Manrope",sans-serif;font-weight:800;font-size:1.6rem;color:var(--on-dark)}
+.hero-proof .stat-caption{color:var(--on-dark-soft);font-size:.92rem}
+.hero-proof a{color:var(--accent);font-weight:700;text-decoration:none;font-size:.92rem;margin-left:auto;white-space:nowrap}
+.hero-proof a:hover{text-decoration:underline}
+.hero-video .trust-strip{margin-top:0}
+.hero-video .trust-strip span:first-child{color:var(--on-dark-soft)}
+.hero-video .trust-strip .tag{color:var(--on-dark);background:rgba(245,246,242,.14)}
+
+/* chat widget — fixed bottom-right shortcut to Contact, not a simulated
+   live agent: it is honest about being a link, not a person typing */
+.chat-fab{position:fixed;right:1.5rem;bottom:1.5rem;width:3.4rem;height:3.4rem;border-radius:50%;
+  background:var(--accent);color:#fff;border:0;display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-lg);cursor:pointer;z-index:70}
+.chat-fab:hover{background:#257a4c}
+.chat-fab svg{width:1.5rem;height:1.5rem}
+.chat-dot{position:absolute;top:-.1rem;right:-.1rem;width:.75rem;height:.75rem;border-radius:50%;
+  background:#e2574c;border:2px solid var(--paper)}
+.chat-greeting{position:fixed;right:5.3rem;bottom:1.65rem;max-width:17rem;background:var(--surface);color:var(--ink);
+  padding:.75rem 1rem;border-radius:999px 999px 4px 999px;box-shadow:var(--shadow-md);display:flex;align-items:center;
+  gap:.6rem;font-size:.88rem;z-index:70;animation:chat-pop .2s ease}
+.chat-greeting a{color:var(--accent);font-weight:700;text-decoration:none;white-space:nowrap}
+.chat-greeting a:hover{text-decoration:underline}
+.chat-greeting-close{background:none;border:0;color:var(--ink-soft);cursor:pointer;font-size:1rem;line-height:1;padding:0 .15rem;flex:none}
+@keyframes chat-pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 /* workflow strip — plain flexbox, evenly spaced and centred by
    construction (no SVG coordinates to keep in sync with the container) */
@@ -291,5 +345,8 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
   .sub-menu{display:block;position:static;transform:none;border:0;padding:0 0 0 1rem;margin-top:.25rem;background:none}
   .sub-menu a{color:var(--on-dark-soft)}
   .has-sub:hover .sub-menu,.has-sub:focus-within .sub-menu{display:block}
-  .nav-toggle{display:block}
+  .nav-toggle{display:flex}
+  .hero-proof{flex-direction:column;align-items:flex-start}
+  .hero-proof a{margin-left:0}
+  .chat-greeting{right:1.25rem;left:1.25rem;max-width:none}
 }

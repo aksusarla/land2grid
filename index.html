@@ -12,39 +12,45 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=15">
+<link rel="stylesheet" href="assets/style.css?v=16">
 </head>
 <body>
 
 <header class="site">
 <div class="wrap">
+<button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
 <a class="logo" href="index.html"><span class="logo-mark"></span><span class="logo-word">land2grid</span></a>
 <nav class="primary" aria-label="Primary">
-<a href="index.html">Home</a>
+<a href="about.html">About Us</a>
 <div class="has-sub">
-<a href="services/land-management.html">Services</a>
+<a href="services/land-management.html">What We Do</a>
 <div class="sub-menu">
 <a href="services/land-management.html">Land management</a>
 <a href="services/grid-connectivity.html">Grid connectivity</a>
 <a href="services/customer-acquisition.html">Customer acquisition</a>
 </div>
 </div>
-<a href="case-studies.html">Case studies</a>
-<a href="about.html">About</a>
-<a href="contact.html" class="nav-cta">Contact</a>
+<a href="case-studies.html">Our Experience</a>
+<a href="insights.html">News &amp; Insights</a>
+<a href="careers.html">Careers</a>
 </nav>
-<button class="nav-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+<a href="contact.html" class="nav-cta">Contact Us</a>
 </div>
 </header>
 
 <main id="top">
-<div class="hero-stage">
-<div class="wrap">
-<div class="hero-split">
-<div class="hero-tile hero-tile-light">
-<span class="pill-eyebrow"><span class="dot"></span> Land · Grid · Offtake</span>
-<h1>Your project. From land to grid to power buyer.</h1>
-<p>We bring together land, grid connectivity and industrial offtake so renewable energy projects move from opportunity to execution — coordinated by one accountable team instead of three disconnected vendors.</p>
+<!-- full-bleed video hero: looping renewable-energy footage (wind turbines)
+     behind a dark gradient. Sourced from Coverr under its royalty-free
+     commercial licence (no attribution required); see assets/VIDEO-CREDITS.md -->
+<div class="hero-video">
+<video class="hero-video-el" autoplay muted loop playsinline aria-hidden="true">
+<source src="https://cdn.coverr.co/videos/coverr-wind-turbines-in-the-field-7853/1080p.mp4" type="video/mp4">
+</video>
+<div class="hero-video-overlay"></div>
+<div class="wrap hero-content">
+<span class="hero-eyebrow"><span class="dot"></span>Welcome to land2grid</span>
+<h1 class="hero-heading">Your project.<span class="accent-line">From land to grid to power buyer.</span></h1>
+<p class="hero-sub">We bring together land, grid connectivity and industrial offtake so renewable energy projects move from opportunity to execution — coordinated by one accountable team instead of three disconnected vendors.</p>
 <div class="btn-row">
 <a class="btn alt" href="contact.html">Discuss a Project</a>
 <a class="btn outline" href="#capabilities">Explore Our Capabilities</a>
@@ -57,15 +63,16 @@
 <span class="tag">Group captive</span>
 <span class="tag">Solar + BESS</span>
 </div>
-</div>
-<div class="hero-tile hero-tile-navy">
-<span class="stat-label">Leadership track record</span>
+<div class="hero-proof">
 <span class="stat-num">2+ GW</span>
 <span class="stat-caption">of solar and wind capacity our leadership has executed in prior roles across India</span>
-<a class="btn alt" href="about.html">Read more</a>
+<a href="about.html">Read more →</a>
+</div>
 </div>
 </div>
 
+<div class="hero-stage">
+<div class="wrap">
 <!-- quick-access tiles: lets a visitor orient to all three workstreams in one glance -->
 <div class="tile-row">
 <a class="tile" href="services/land-management.html">
@@ -268,7 +275,7 @@
 <p>Land, grid connectivity and industrial offtake, coordinated by one accountable team — for IPPs and EPCs building solar and wind projects in India.</p>
 </div>
 <div class="footer-col">
-<h4>Services</h4>
+<h4>What We Do</h4>
 <a href="services/land-management.html">Land management</a>
 <a href="services/grid-connectivity.html">Grid connectivity</a>
 <a href="services/customer-acquisition.html">Customer acquisition</a>
@@ -276,7 +283,9 @@
 <div class="footer-col">
 <h4>Company</h4>
 <a href="about.html">About</a>
-<a href="case-studies.html">Case studies</a>
+<a href="case-studies.html">Our Experience</a>
+<a href="insights.html">News &amp; Insights</a>
+<a href="careers.html">Careers</a>
 <a href="contact.html">Contact</a>
 </div>
 <div class="footer-col">
@@ -298,6 +307,6 @@
 </div>
 </footer>
 
-<script src="assets/main.js?v=5"></script>
+<script src="assets/main.js?v=6"></script>
 </body>
 </html>
