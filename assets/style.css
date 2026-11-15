@@ -117,8 +117,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
    infrastructure) behind a dark gradient, single-column text block over
    it. The gradient is darkest on the left, where the text sits, and
    lifts toward the right so the footage still reads. */
-.hero-video{position:relative;min-height:min(42rem,84vh);display:flex;align-items:center;overflow:hidden;background:var(--dark)}
-.hero-video-el{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;
+.hero-video{position:relative;height:100vh;height:100svh;display:flex;align-items:center;overflow:hidden;background:var(--dark)}
+.hero-video-el{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;
   opacity:0;transition:opacity 1.1s ease}
 .hero-video-el.is-active{opacity:1}
 .hero-video-overlay{position:absolute;inset:0;z-index:1;
