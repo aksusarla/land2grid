@@ -115,16 +115,19 @@ document.addEventListener('DOMContentLoaded', function () {
   ];
 
   var QUICK_REPLIES = ['Land management', 'Grid connectivity', 'Customer acquisition', 'Find projects', 'Talk to the team'];
+  var BOT_NAME = 'Bot'; // placeholder display name — swap for a real one later
+
+  var botInitial = BOT_NAME.charAt(0).toUpperCase();
 
   var fab = document.createElement('button');
   fab.className = 'chat-fab';
   fab.type = 'button';
-  fab.setAttribute('aria-label', 'Open chat');
+  fab.setAttribute('aria-label', 'Chat with ' + BOT_NAME);
   fab.innerHTML = '<svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8A2.5 2.5 0 0 1 17.5 16H11l-4.5 4v-4H6.5A2.5 2.5 0 0 1 4 13.5v-8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="chat-dot" aria-hidden="true"></span>';
 
   var greeting = document.createElement('div');
   greeting.className = 'chat-greeting';
-  greeting.innerHTML = '<span>Hi! Need something? <a href="#" class="chat-greeting-open">Ask our chat →</a></span>' +
+  greeting.innerHTML = '<span>Hi! Need something? <a href="#" class="chat-greeting-open">Ask ' + BOT_NAME + ' →</a></span>' +
     '<button type="button" class="chat-greeting-close" aria-label="Dismiss">×</button>';
 
   document.body.appendChild(fab);
@@ -143,13 +146,45 @@ document.addEventListener('DOMContentLoaded', function () {
   var panel = null;
   var panelBody = null;
 
+  function avatarEl() {
+    var av = document.createElement('div');
+    av.className = 'chat-avatar';
+    av.textContent = botInitial;
+    av.setAttribute('aria-hidden', 'true');
+    return av;
+  }
+
   function addBotMessage(html) {
+    var row = document.createElement('div');
+    row.className = 'chat-row';
     var msg = document.createElement('div');
     msg.className = 'chat-msg bot';
     msg.innerHTML = html;
-    panelBody.appendChild(msg);
+    row.appendChild(avatarEl());
+    row.appendChild(msg);
+    panelBody.appendChild(row);
     panelBody.scrollTop = panelBody.scrollHeight;
-    return msg;
+    return row;
+  }
+
+  // shows a bouncing-dots "typing" row for a moment, then swaps it for the
+  // real message — a small delay so replies don't just snap into place
+  function addBotMessageDelayed(html, callback) {
+    var row = document.createElement('div');
+    row.className = 'chat-row';
+    var typing = document.createElement('div');
+    typing.className = 'chat-msg bot chat-typing';
+    typing.innerHTML = '<span></span><span></span><span></span>';
+    row.appendChild(avatarEl());
+    row.appendChild(typing);
+    panelBody.appendChild(row);
+    panelBody.scrollTop = panelBody.scrollHeight;
+
+    setTimeout(function () {
+      row.remove();
+      var result = addBotMessage(html);
+      if (typeof callback === 'function') callback(result);
+    }, 550 + Math.random() * 350);
   }
 
   function addUserMessage(text) {
@@ -187,7 +222,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function showLeadForm() {
-    addBotMessage('Share a few details and I’ll open an email to our team with everything filled in.');
     var wrap = document.createElement('form');
     wrap.className = 'chat-lead';
     wrap.innerHTML =
@@ -204,8 +238,11 @@ document.addEventListener('DOMContentLoaded', function () {
       '</select></label>' +
       '<label>Message<textarea name="message" placeholder="Location, capacity, timeline — anything that helps."></textarea></label>' +
       '<button type="submit" class="btn">Send to the team</button>';
-    panelBody.appendChild(wrap);
-    panelBody.scrollTop = panelBody.scrollHeight;
+
+    addBotMessageDelayed('Share a few details and I’ll open an email to our team with everything filled in.', function () {
+      panelBody.appendChild(wrap);
+      panelBody.scrollTop = panelBody.scrollHeight;
+    });
 
     wrap.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -230,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       wrap.remove();
       addUserMessage('Sent: ' + name + ' (' + need + ')');
-      addBotMessage('Thanks, ' + (name.split(' ')[0] || 'there') +
+      addBotMessageDelayed('Thanks, ' + (name.split(' ')[0] || 'there') +
         ' — that should have opened your email app with the details filled in. ' +
         'Nothing happen? Write to us directly at <a class="chat-link" href="mailto:hello@land2grid.com">hello@land2grid.com</a>.');
       window.location.href = mailto;
@@ -244,11 +281,12 @@ document.addEventListener('DOMContentLoaded', function () {
     if (intent && intent.action === 'lead-form') {
       showLeadForm();
     } else if (intent) {
-      addBotMessage('That lives on our ' + intent.label + ' page — ' +
+      addBotMessageDelayed('That lives on our ' + intent.label + ' page — ' +
         '<a class="chat-link" href="' + intent.href + '">open it →</a>');
     } else {
-      addBotMessage('I couldn’t find a page for that. Want me to pass it to the team instead?');
-      addQuickReplies(['Talk to the team']);
+      addBotMessageDelayed('I couldn’t find a page for that. Want me to pass it to the team instead?', function () {
+        addQuickReplies(['Talk to the team']);
+      });
     }
   }
 
@@ -262,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function () {
     panel.setAttribute('aria-label', 'land2grid chat');
     panel.innerHTML =
       '<div class="chat-panel-head">' +
-      '<div><strong>land2grid</strong><span>Automated — find a page or reach the team</span></div>' +
+      '<div><strong>' + BOT_NAME + ' · land2grid</strong><span>Automated — find a page or reach the team</span></div>' +
       '<button type="button" class="chat-panel-close" aria-label="Close chat">×</button>' +
       '</div>' +
       '<div class="chat-panel-body"></div>' +
@@ -275,9 +313,10 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.appendChild(panel);
 
     panelBody = panel.querySelector('.chat-panel-body');
-    addBotMessage('Hi! I’m the land2grid site assistant — not a live person. ' +
-      'Tell me what you’re looking for, or pick one below:');
-    addQuickReplies(QUICK_REPLIES);
+    addBotMessageDelayed('Hi, I’m ' + BOT_NAME + ' — land2grid’s site assistant, not a live person. ' +
+      'Tell me what you’re looking for, or pick one below:', function () {
+      addQuickReplies(QUICK_REPLIES);
+    });
 
     panel.querySelector('.chat-panel-close').addEventListener('click', openPanel);
     var form = panel.querySelector('.chat-panel-input');
