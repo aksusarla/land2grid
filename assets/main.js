@@ -6,9 +6,11 @@
 // not a cut. Clip list and credits: assets/VIDEO-CREDITS.md.
 var HERO_CLIPS = [
   'https://cdn.coverr.co/videos/coverr-wind-turbines-in-the-field-7853/1080p.mp4',
-  'https://cdn.coverr.co/videos/coverr-wind-turbines-in-a-field-5831/720p.mp4',
+  'https://videos.pexels.com/video-files/30583778/13097063_2560_1440_30fps.mp4',
+  'https://videos.pexels.com/video-files/30372395/13017165_3072_1440_24fps.mp4',
   'https://cdn.coverr.co/videos/coverr-wind-turbines-in-madeira-island-56/720p.mp4',
-  'https://cdn.coverr.co/videos/coverr-close-up-of-a-wind-turbine-7742/720p.mp4'
+  'https://videos.pexels.com/video-files/7042814/7042814-uhd_2732_1318_30fps.mp4',
+  'https://videos.pexels.com/video-files/6133235/6133235-uhd_2560_1440_30fps.mp4'
 ];
 
 document.addEventListener('DOMContentLoaded', function () {
