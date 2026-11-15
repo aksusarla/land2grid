@@ -18,13 +18,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // mark current nav link as active
-  var here = location.pathname.replace(/\/index\.html$/, '/');
+  // mark current nav link as active — compare by filename so this
+  // works the same whether the site sits at a domain root or under
+  // a GitHub Pages project subpath (e.g. /land2grid/)
+  var hereFile = location.pathname.split('/').filter(Boolean).pop() || 'index.html';
   document.querySelectorAll('nav.primary > a, .sub-menu a').forEach(function (link) {
     var href = link.getAttribute('href');
     if (!href) return;
-    var target = href.replace(/\/index\.html$/, '/');
-    if (target === here || (target !== '/' && here.endsWith(target))) {
+    var hrefFile = href.split('/').filter(Boolean).pop() || 'index.html';
+    if (hrefFile === hereFile) {
       link.classList.add('active');
     }
   });
