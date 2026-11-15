@@ -259,7 +259,7 @@ body.has-cookie-banner .chat-panel{bottom:10.75rem}
 .tile:nth-child(2){background:var(--grid);color:var(--grid-on)}
 .tile:nth-child(3){background:var(--customer);color:var(--customer-on)}
 
-/* page header, for non-home pages */
+/* page header, for non-home pages that don't use .service-hero */
 .page-head{padding:3rem 0 1rem}
 .page-head h1{font-size:clamp(2rem,5vw,2.9rem);max-width:22ch}
 .page-head p{color:var(--ink-soft);font-size:1.1rem;max-width:40rem;margin-top:1rem}
@@ -267,11 +267,24 @@ body.has-cookie-banner .chat-panel{bottom:10.75rem}
 .breadcrumb a{text-decoration:none;color:var(--ink-soft)}
 .breadcrumb a:hover{color:var(--ink)}
 
-/* static photo banner under a service page's page-head -- one real photo,
-   not a video, to keep subpages light. See assets/IMAGE-CREDITS.md */
-.page-banner{margin:1.75rem 0 0;border-radius:16px;overflow:hidden;height:20rem}
-.page-banner img{width:100%;height:100%;object-fit:cover;display:block}
-@media (max-width:720px){.page-banner{height:13rem}}
+/* service page hero -- same visual language as the homepage's video hero
+   (full-bleed background, dark gradient, heading over it) but a single
+   static photo and a shorter height, so a subpage doesn't carry video
+   weight. See assets/IMAGE-CREDITS.md for the three photos used. */
+.service-hero{position:relative;min-height:26rem;display:flex;align-items:flex-end;overflow:hidden;background:var(--dark)}
+.service-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0}
+.service-hero-overlay{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(180deg,rgba(16,42,54,.35) 0%,rgba(16,42,54,.78) 70%,rgba(16,42,54,.94) 100%)}
+.service-hero .wrap{position:relative;z-index:2;padding:3rem 1.75rem 2.25rem}
+.service-hero .page-head{padding:0}
+.service-hero .page-head .eyebrow{color:var(--on-dark-soft) !important}
+.service-hero h1{color:var(--on-dark);font-size:clamp(2rem,5vw,2.9rem);max-width:26ch}
+.service-hero p{color:var(--on-dark-soft);font-size:1.1rem;max-width:40rem;margin-top:1rem}
+.service-hero .pillar-nav{border-bottom-color:rgba(255,255,255,.25)}
+.service-hero .pillar-nav a{color:var(--on-dark-soft)}
+.service-hero .pillar-nav a.current{color:var(--on-dark);border-bottom-color:var(--on-dark)}
+.service-hero .pillar-nav a:hover:not(.current){color:var(--on-dark)}
+@media (max-width:720px){.service-hero{min-height:20rem}}
 
 section{padding:4.5rem 0;border-top:1px solid var(--line)}
 section.flush{border-top:0}
