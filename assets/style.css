@@ -131,8 +131,42 @@ footer.site a{text-decoration:none;color:var(--muted)}
 footer.site a:hover{color:var(--ink)}
 footer.site .foot-links{display:flex;gap:1.25rem}
 
+/* quick-access tiles under hero */
+.tile-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2.5rem}
+.tile{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);
+  border-radius:.6rem;padding:1.25rem 1.4rem;transition:border-color .15s ease}
+.tile:hover{border-color:var(--ink)}
+.tile .num{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:.85rem;color:var(--muted)}
+.tile h3{font-size:1.05rem;margin:.4rem 0 .35rem}
+.tile p{color:var(--muted);font-size:.9rem}
+
+/* stats strip */
+.stats-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2rem}
+.stat{text-align:left}
+.stat .num{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:clamp(1.8rem,4vw,2.6rem);
+  color:var(--grid);display:block;line-height:1}
+.stat .label{color:var(--muted);font-size:.9rem;margin-top:.35rem;display:block}
+
+/* sector / deal-structure grid */
+.sector-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.sector-card{border:1px solid var(--line);border-radius:.6rem;padding:1.5rem;background:var(--surface)}
+.sector-card h3{font-size:1.05rem;margin-bottom:.5rem}
+.sector-card p{color:var(--muted);font-size:.92rem}
+
+/* case studies */
+.case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.case-card{border:1px solid var(--line);border-radius:.6rem;padding:1.5rem;background:var(--surface);display:flex;
+  flex-direction:column}
+.case-tag{display:inline-block;font-size:.75rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;
+  color:var(--grid);margin-bottom:.6rem}
+.case-card h3{font-size:1.1rem;margin-bottom:.5rem}
+.case-card p{color:var(--muted);font-size:.92rem;flex-grow:1}
+.case-card ul{padding-left:1.1rem;color:var(--ink);font-size:.9rem;margin-top:.75rem}
+.case-card li{margin-bottom:.3rem}
+.case-note{color:var(--muted);font-size:.85rem;margin-top:1.75rem;max-width:40rem}
+
 @media (max-width:48rem){
-  .route,.two,.card-grid{grid-template-columns:1fr}
+  .route,.two,.card-grid,.tile-row,.stats-strip,.sector-grid,.case-grid{grid-template-columns:1fr}
   .route>div,.route>div+div{padding:0 0 1.5rem;border-left:0}
   form.contact-form .row{grid-template-columns:1fr}
   nav.primary{position:fixed;inset:4.2rem 0 0 0;background:var(--bg);flex-direction:column;align-items:flex-start;
