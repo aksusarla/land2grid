@@ -12,7 +12,7 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=8">
+<link rel="stylesheet" href="assets/style.css?v=9">
 </head>
 <body>
 
@@ -87,15 +87,13 @@
 </div>
 </div>
 
-<div class="line wrap" role="img" aria-label="A single line connecting land, grid connectivity and industrial customers">
-<svg viewBox="0 0 800 150" xmlns="http://www.w3.org/2000/svg">
-<path d="M0 118 Q60 98 120 112 T240 108" fill="none" stroke="var(--land)" stroke-width="2" opacity=".5"/>
-<path d="M0 132 Q70 112 140 126 T260 122" fill="none" stroke="var(--land)" stroke-width="2" opacity=".3"/>
-<line x1="60" y1="60" x2="740" y2="60" stroke="var(--grid)" stroke-width="3"/>
-<circle cx="60" cy="60" r="11" fill="var(--land)"/><circle cx="400" cy="60" r="11" fill="var(--grid)"/><circle cx="740" cy="60" r="11" fill="var(--customer)"/>
-<text x="60" y="26" text-anchor="start">Land</text><text x="400" y="26" text-anchor="middle">Grid connectivity</text><text x="740" y="26" text-anchor="end">Industrial customer</text>
-<text class="sub" x="400" y="98" text-anchor="middle">one contact, one accountable team</text>
-</svg>
+<div class="flow wrap">
+<div class="flow-track">
+<div class="flow-node"><strong>Land</strong><span class="flow-dot" style="background:var(--land)"></span></div>
+<div class="flow-node"><strong>Grid connectivity</strong><span class="flow-dot" style="background:var(--grid)"></span></div>
+<div class="flow-node"><strong>Industrial customer</strong><span class="flow-dot" style="background:var(--customer)"></span></div>
+</div>
+<p class="flow-caption">one contact, one accountable team</p>
 </div>
 
 <section id="who-we-are">
