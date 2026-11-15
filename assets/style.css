@@ -267,24 +267,26 @@ body.has-cookie-banner .chat-panel{bottom:10.75rem}
 .breadcrumb a{text-decoration:none;color:var(--ink-soft)}
 .breadcrumb a:hover{color:var(--ink)}
 
-/* service page hero -- same visual language as the homepage's video hero
-   (full-bleed background, dark gradient, heading over it) but a single
-   static photo and a shorter height, so a subpage doesn't carry video
-   weight. See assets/IMAGE-CREDITS.md for the three photos used. */
-.service-hero{position:relative;min-height:26rem;display:flex;align-items:flex-end;overflow:hidden;background:var(--dark)}
+/* service page hero -- identical format to the homepage's video hero:
+   same full-viewport height, same left-to-right dark gradient (darkest
+   on the left, where the text sits, lifting toward the right so the
+   photo still reads), text block vertically centered on the left. Only
+   difference is a single static photo instead of looping video, so a
+   subpage doesn't carry the video weight. See assets/IMAGE-CREDITS.md
+   for the three photos used. */
+.service-hero{position:relative;height:100vh;height:100svh;display:flex;align-items:center;overflow:hidden;background:var(--dark)}
 .service-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0}
 .service-hero-overlay{position:absolute;inset:0;z-index:1;
-  background:linear-gradient(180deg,rgba(16,42,54,.35) 0%,rgba(16,42,54,.78) 70%,rgba(16,42,54,.94) 100%)}
-.service-hero .wrap{position:relative;z-index:2;padding:3rem 1.75rem 2.25rem}
-.service-hero .page-head{padding:0}
+  background:linear-gradient(100deg,rgba(16,42,54,.93) 0%,rgba(16,42,54,.82) 30%,rgba(16,42,54,.48) 62%,rgba(16,42,54,.22) 100%)}
+.service-hero .wrap{position:relative;z-index:2;max-width:none;margin:0;padding:4.5rem 1.75rem}
+.service-hero .page-head{padding:0;max-width:40rem}
 .service-hero .page-head .eyebrow{color:var(--on-dark-soft) !important}
-.service-hero h1{color:var(--on-dark);font-size:clamp(2rem,5vw,2.9rem);max-width:26ch}
-.service-hero p{color:var(--on-dark-soft);font-size:1.1rem;max-width:40rem;margin-top:1rem}
-.service-hero .pillar-nav{border-bottom-color:rgba(255,255,255,.25)}
+.service-hero h1{color:var(--on-dark);font-size:clamp(2.3rem,5.2vw,3.8rem);line-height:1.08;letter-spacing:-.02em;max-width:none}
+.service-hero p{color:var(--on-dark-soft);font-size:1.12rem;max-width:36rem;margin-top:1.5rem}
+.service-hero .pillar-nav{border-bottom-color:rgba(255,255,255,.25);margin-top:2rem}
 .service-hero .pillar-nav a{color:var(--on-dark-soft)}
 .service-hero .pillar-nav a.current{color:var(--on-dark);border-bottom-color:var(--on-dark)}
 .service-hero .pillar-nav a:hover:not(.current){color:var(--on-dark)}
-@media (max-width:720px){.service-hero{min-height:20rem}}
 
 section{padding:4.5rem 0;border-top:1px solid var(--line)}
 section.flush{border-top:0}
