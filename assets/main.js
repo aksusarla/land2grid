@@ -489,6 +489,7 @@ document.addEventListener('DOMContentLoaded', function () {
     '.stat',
     '.card',
     '.case-card',
+    '.insight-card',
     '.flow-node',
     '.founder',
     '.steps > li',
