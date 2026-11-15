@@ -252,7 +252,9 @@ section > .wrap > .eyebrow{display:block}
 /* stats strip — flat full-saturation blocks, numeral-led like a sector
    association's headline-figure row */
 .stats-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.5rem,1.5vw,.75rem);margin-top:2rem}
-.stat{padding:1.75rem 1.6rem}
+.stat{padding:1.75rem 1.6rem;text-align:center;display:flex;flex-direction:column;align-items:center;
+  transition:transform .2s ease,box-shadow .2s ease;will-change:transform}
+.stat:hover{transform:scale(1.07);box-shadow:0 1.25rem 2.5rem rgba(16,42,54,.25);z-index:1;position:relative}
 .stat:nth-child(1){background:var(--land);color:var(--land-ink)}
 .stat:nth-child(2){background:var(--grid);color:var(--grid-on)}
 .stat:nth-child(3){background:var(--customer);color:var(--customer-on)}
