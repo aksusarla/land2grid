@@ -1,0 +1,8 @@
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="land2grid">
+<rect x="0" y="0" width="32" height="32" rx="6" fill="#15181a"/>
+<rect x="4" y="14.5" width="5" height="5" fill="#f1f1e9"/>
+<line x1="9" y1="17" x2="14" y2="17" stroke="#f1f1e9" stroke-width="1.8"/>
+<rect x="14" y="14.5" width="5" height="5" fill="#f1f1e9"/>
+<line x1="19" y1="17" x2="24" y2="17" stroke="#f1f1e9" stroke-width="1.8"/>
+<rect x="24" y="14.5" width="5" height="5" fill="#f1f1e9"/>
+</svg>
