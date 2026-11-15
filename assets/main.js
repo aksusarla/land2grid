@@ -157,9 +157,11 @@ document.addEventListener('DOMContentLoaded', function () {
     hideCookieBanner();
   });
 
-  var cookieSettingsLink = document.getElementById('cookie-settings-link');
-  if (cookieSettingsLink) {
-    cookieSettingsLink.addEventListener('click', function (e) {
+  // the footer's "Cookie policy" link now goes to a real page; the button
+  // there reopens this same banner so visitors can change their choice
+  var manageCookiesBtn = document.getElementById('manage-cookies-btn');
+  if (manageCookiesBtn) {
+    manageCookiesBtn.addEventListener('click', function (e) {
       e.preventDefault();
       showCookieBanner();
     });
