@@ -263,13 +263,6 @@ section > .wrap > .eyebrow{display:block}
 .stat .label{font-size:.9rem;margin-top:.5rem;display:block;opacity:.85}
 
 /* sector / deal-structure grid — flat blocks inside the ink band */
-.sector-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.5rem,1.5vw,.75rem)}
-.band-navy .sector-card{padding:1.85rem;background:rgba(243,243,236,.05);border-top:3px solid var(--accent, var(--land));border-radius:var(--r-lg)}
-.band-navy .sector-card h3{font-size:1.15rem;margin-bottom:.5rem;color:var(--on-dark)}
-.band-navy .sector-card p{color:var(--on-dark-soft);font-size:.92rem}
-.sector-card:nth-child(3n+1){--accent:var(--land-soft)}
-.sector-card:nth-child(3n+2){--accent:var(--grid-on)}
-.sector-card:nth-child(3n+3){--accent:var(--customer-on)}
 
 /* case studies — flat cards, tag carries the colour */
 .case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.5rem,1.5vw,.75rem)}
@@ -380,7 +373,7 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
 }
 
 @media (max-width:48rem){
-  .route,.two,.card-grid,.tile-row,.sector-grid,.case-grid{grid-template-columns:1fr}
+  .route,.two,.card-grid,.tile-row,.case-grid{grid-template-columns:1fr}
   .stats-strip{flex-direction:column}
   .stat:hover{flex-grow:1}
   .tile{min-height:0}
