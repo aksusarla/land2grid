@@ -330,10 +330,11 @@ section > .wrap > .eyebrow{display:block}
    hover/focus (desktop) or tap, which toggles .is-open via main.js (so
    touch devices, which have no hover, still get the content) */
 .step-detail{list-style:none;margin:0;padding:0 0 0 1rem;max-height:0;opacity:0;overflow:hidden;
-  transition:max-height .35s ease,opacity .25s ease,margin-top .35s ease}
-.step-detail li{all:unset;display:flex;gap:.5rem;counter-increment:none;border:0;padding:0;margin:0;
+  counter-reset:detail;transition:max-height .35s ease,opacity .25s ease,margin-top .35s ease}
+.step-detail li{all:unset;display:flex;gap:.5rem;counter-increment:detail;border:0;padding:0;margin:0;
   font-size:.92rem;color:var(--ink-soft);line-height:1.5}
-.step-detail li::before{content:"—";flex:none;color:var(--accent);position:static;width:auto;height:auto;
+.step-detail li::before{content:counter(s) counter(detail,lower-alpha);flex:none;color:var(--accent);
+  font-weight:700;font-size:.85rem;font-family:"Manrope",sans-serif;position:static;width:auto;height:auto;
   background:none;border-radius:0}
 .step-detail li+li{margin-top:.35rem}
 .steps>li:hover>.step-detail,.steps>li:focus>.step-detail,.steps>li.is-open>.step-detail{
