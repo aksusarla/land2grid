@@ -11,14 +11,14 @@
 <meta property="og:type" content="website">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=10">
+<link href="https://fonts.googleapis.com/css2?family=Parkinsans:wght@500;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=11">
 </head>
 <body>
 
 <header class="site">
 <div class="wrap">
-<a class="logo" href="index.html"><svg class="mark" viewBox="0 0 400 100" role="img" aria-label="land2grid"><text x="2" y="58" font-family="Archivo, sans-serif" font-weight="800" font-size="52" letter-spacing="-1" fill="currentColor">land2grid</text><path d="M4 72 Q 190 90 382 72" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M373 64 L384 72 L373 81" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="logo" href="index.html"><span class="logo-mark"></span><span class="logo-word">land2grid</span></a>
 <nav class="primary" aria-label="Primary">
 <a href="index.html">Home</a>
 <div class="has-sub">
@@ -69,16 +69,19 @@
 <!-- quick-access tiles: lets a visitor orient to all three workstreams in one glance -->
 <div class="tile-row">
 <a class="tile" href="services/land-management.html">
+<span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/></svg></span>
 <span class="num">01</span>
 <h3>Land management</h3>
 <p>Site screening, title and landowner negotiation.</p>
 </a>
 <a class="tile" href="services/grid-connectivity.html">
+<span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg></span>
 <span class="num">02</span>
 <h3>Grid connectivity</h3>
 <p>CTU/STU filings through to charging.</p>
 </a>
 <a class="tile" href="services/customer-acquisition.html">
+<span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 11h.01M15 11h.01M9 7h.01M15 7h.01"/></svg></span>
 <span class="num">03</span>
 <h3>Customer acquisition</h3>
 <p>Industrial offtake and PPA negotiation.</p>
@@ -126,18 +129,21 @@
 <h2>Three problems, handled together.</h2>
 <div class="route">
 <div>
+<span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/></svg></span>
 <h3>Land management</h3>
 <p>Secure, clean land for your project.</p>
 <ul><li>Site identification and screening</li><li>Landowner outreach and negotiation</li><li>Title, survey and documentation support</li><li>Lease or purchase coordination</li></ul>
 <a class="more" href="services/land-management.html">How we run this →</a>
 </div>
 <div>
+<span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg></span>
 <h3>Grid connectivity</h3>
 <p>Get the project to the network.</p>
 <ul><li>Connectivity applications (CTU/STU)</li><li>Substation and evacuation planning</li><li>Liaison with transmission utilities</li><li>Approvals tracking through to charging</li></ul>
 <a class="more" href="services/grid-connectivity.html">How we run this →</a>
 </div>
 <div>
+<span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 11h.01M15 11h.01M9 7h.01M15 7h.01"/></svg></span>
 <h3>Industrial customer acquisition</h3>
 <p>Find buyers for your power.</p>
 <ul><li>Open access and captive demand mapping</li><li>Outreach to industrial consumers</li><li>PPA structuring and negotiation support</li><li>Power trading expertise on call</li></ul>
@@ -255,7 +261,7 @@
 <footer class="site band-navy">
 <div class="wrap footer-grid">
 <div class="footer-brand">
-<a class="logo" href="index.html"><svg class="mark" viewBox="0 0 400 100" role="img" aria-label="land2grid"><text x="2" y="58" font-family="Archivo, sans-serif" font-weight="800" font-size="52" letter-spacing="-1" fill="currentColor">land2grid</text><path d="M4 72 Q 190 90 382 72" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M373 64 L384 72 L373 81" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="logo" href="index.html"><span class="logo-mark"></span><span class="logo-word">land2grid</span></a>
 <p>One partner for land, grid connectivity and industrial customer acquisition, for IPPs and EPCs building solar and wind projects in India.</p>
 </div>
 <div class="footer-col">

@@ -17,6 +17,7 @@
   --grid:#1f5c45;--grid-on:#bfe6d3;
   --customer:#4a3f73;--customer-on:#d9d3ef;
   --signal:#e2962f;--signal-ink:#1a1304;
+  --icon-blue:#3451e0;
 
   --shadow-sm:0 1px 2px rgba(16,19,22,.04),0 1px 1px rgba(16,19,22,.03);
   --shadow-md:0 8px 24px -8px rgba(16,19,22,.14),0 2px 6px rgba(16,19,22,.06);
@@ -26,9 +27,9 @@
 
 html{scroll-padding-top:5.5rem;scroll-behavior:smooth}
 *,*::before,*::after{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.6 "IBM Plex Sans",system-ui,sans-serif;
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.6 "Outfit",system-ui,sans-serif;
   padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-h1,h2,h3{font-family:"Archivo","IBM Plex Sans",sans-serif;line-height:1.15;margin:0;font-weight:700;letter-spacing:-.01em}
+h1,h2,h3{font-family:"Parkinsans","Outfit",sans-serif;line-height:1.15;margin:0;font-weight:700;letter-spacing:-.01em}
 p{margin:0}
 a{color:inherit}
 .wrap{max-width:68rem;margin:0 auto;padding:0 1.25rem}
@@ -36,9 +37,10 @@ a{color:inherit}
 /* header / nav — always ink, independent of section theme below */
 header.site{position:sticky;top:0;z-index:40;background:var(--dark);border-bottom:1px solid var(--line-on-dark)}
 header.site .wrap{display:flex;justify-content:space-between;align-items:center;padding:.85rem 1.25rem}
-.logo{display:flex;align-items:center;text-decoration:none;color:var(--on-dark)}
-.logo .mark{height:1.5rem;width:auto;display:block;flex:none}
-footer.site .footer-brand .logo .mark{height:1.65rem}
+.logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--on-dark)}
+.logo-mark{width:1.75rem;height:1.75rem;border-radius:.55rem;background:var(--land);flex:none;display:block}
+.logo-word{font-family:"Parkinsans",sans-serif;font-weight:700;font-size:1.15rem;letter-spacing:-.01em;color:currentColor}
+footer.site .footer-brand .logo-mark{width:1.9rem;height:1.9rem}
 nav.primary{display:flex;align-items:center;gap:1.75rem}
 nav.primary a{color:var(--on-dark-soft);text-decoration:none;font-size:.95rem;white-space:nowrap}
 nav.primary a:hover,nav.primary a.active{color:var(--on-dark)}
@@ -84,7 +86,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
 .hero-tile-amber p{max-width:34rem;color:var(--land-ink);opacity:.82;font-size:1.15rem;margin:1.5rem 0 2rem}
 
 .hero-tile-navy .stat-label{font-size:1rem;color:var(--on-dark-soft);margin-bottom:.5rem}
-.hero-tile-navy .stat-num{font-family:"Archivo",sans-serif;font-weight:800;font-size:clamp(3rem,6vw,4.4rem);
+.hero-tile-navy .stat-num{font-family:"Parkinsans",sans-serif;font-weight:800;font-size:clamp(3rem,6vw,4.4rem);
   line-height:1;letter-spacing:-.02em;color:var(--on-dark)}
 .hero-tile-navy .stat-caption{color:var(--on-dark-soft);font-size:1rem;margin:.9rem 0 1.75rem}
 
@@ -123,7 +125,10 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
    cards a sector-association site runs right under its hero */
 .tile-row{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.5rem,1.5vw,.75rem)}
 .tile{display:flex;flex-direction:column;text-decoration:none;padding:2rem 1.75rem;min-height:11rem}
-.tile .num{font-family:"IBM Plex Sans",sans-serif;font-weight:600;font-size:.85rem;opacity:.65}
+.tile-icon{width:2.75rem;height:2.75rem;border-radius:.8rem;background:rgba(255,255,255,.92);
+  display:flex;align-items:center;justify-content:center;flex:none;margin-bottom:1rem}
+.tile-icon svg{width:1.4rem;height:1.4rem;color:var(--icon-blue)}
+.tile .num{font-family:"Outfit",sans-serif;font-weight:600;font-size:.85rem;opacity:.65}
 .tile h3{font-size:1.3rem;margin:.6rem 0 .5rem !important;color:inherit !important}
 .tile p{font-size:.95rem;margin-top:auto;opacity:.85}
 .tile:nth-child(1){background:var(--land);color:var(--land-ink)}
@@ -147,6 +152,7 @@ section > .wrap > .eyebrow{display:block}
 /* services — flat colour blocks, same family as the hero/tile-row tiles */
 .route{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.5rem,1.5vw,.75rem)}
 .route>div{padding:2rem 1.85rem}
+.route .tile-icon{margin-bottom:1.1rem}
 .route>div:nth-child(1){background:var(--land);color:var(--land-ink)}
 .route>div:nth-child(2){background:var(--grid);color:var(--grid-on)}
 .route>div:nth-child(3){background:var(--customer);color:var(--customer-on)}
@@ -164,9 +170,9 @@ section > .wrap > .eyebrow{display:block}
 .steps li{counter-increment:s;padding:0 0 1.25rem 3rem;position:relative;border-left:1px solid var(--line);margin-left:.9rem}
 .steps li::before{content:counter(s);position:absolute;left:-1.1rem;top:0;width:2.2rem;height:2.2rem;border-radius:999px;
   background:var(--signal);color:var(--signal-ink);display:grid;place-items:center;font-weight:700;font-size:.95rem;
-  font-family:"Archivo",sans-serif}
+  font-family:"Parkinsans",sans-serif}
 .steps li:last-child{border-left-color:transparent}
-.steps strong{display:block;font-family:"Archivo",sans-serif;font-size:1.1rem}.steps span{color:var(--ink-soft)}
+.steps strong{display:block;font-family:"Parkinsans",sans-serif;font-size:1.1rem}.steps span{color:var(--ink-soft)}
 
 .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:1.75rem;
@@ -194,7 +200,7 @@ section > .wrap > .eyebrow{display:block}
 .stat:nth-child(1){background:var(--land);color:var(--land-ink)}
 .stat:nth-child(2){background:var(--grid);color:var(--grid-on)}
 .stat:nth-child(3){background:var(--customer);color:var(--customer-on)}
-.stat .num{font-family:"Archivo",sans-serif;font-weight:800;font-size:clamp(1.6rem,4vw,2.4rem);display:block;line-height:1.05;white-space:nowrap}
+.stat .num{font-family:"Parkinsans",sans-serif;font-weight:800;font-size:clamp(1.6rem,4vw,2.4rem);display:block;line-height:1.05;white-space:nowrap}
 .stat .label{font-size:.9rem;margin-top:.5rem;display:block;opacity:.85}
 
 /* sector / deal-structure grid — flat blocks inside the ink band */
@@ -226,9 +232,9 @@ section > .wrap > .eyebrow{display:block}
    provenance tag for prior-company credibility */
 .founder{display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:start;margin-top:1.5rem}
 .founder-avatar{width:5.5rem;height:5.5rem;border-radius:50%;background:linear-gradient(145deg,var(--signal),#b9701f);
-  color:var(--signal-ink);display:grid;place-items:center;font-family:"Archivo",sans-serif;font-weight:800;
+  color:var(--signal-ink);display:grid;place-items:center;font-family:"Parkinsans",sans-serif;font-weight:800;
   font-size:1.6rem;flex:none;box-shadow:var(--shadow-sm)}
-.founder-name{font-family:"Archivo",sans-serif;font-weight:700;font-size:1.25rem;margin-bottom:.15rem}
+.founder-name{font-family:"Parkinsans",sans-serif;font-weight:700;font-size:1.25rem;margin-bottom:.15rem}
 .founder-role{color:var(--ink-soft);font-size:.92rem;margin-bottom:.85rem}
 .founder-tag{display:inline-flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:600;color:var(--grid);
   background:rgba(44,128,100,.08);border:1px solid rgba(44,128,100,.2);padding:.3rem .7rem;border-radius:999px;
@@ -251,7 +257,7 @@ footer.site{padding:3rem 0 0;font-size:.92rem}
 footer.site .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem;padding-bottom:2.5rem}
 footer.site .footer-brand p{color:var(--on-dark-soft);margin-top:.85rem;max-width:22rem;font-size:.9rem}
 footer.site .footer-brand .logo{margin-bottom:0}
-footer.site .footer-col h4{color:var(--on-dark);font-family:"Archivo",sans-serif;font-size:.95rem;margin-bottom:.9rem}
+footer.site .footer-col h4{color:var(--on-dark);font-family:"Parkinsans",sans-serif;font-size:.95rem;margin-bottom:.9rem}
 footer.site .footer-col a{display:block;color:var(--on-dark-soft);text-decoration:none;margin-bottom:.6rem;font-size:.9rem}
 footer.site .footer-col a:hover{color:var(--on-dark)}
 footer.site .footer-bottom{border-top:1px solid var(--line-on-dark);padding:1.25rem 0;color:var(--on-dark-soft);
