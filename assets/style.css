@@ -200,8 +200,14 @@ body.has-cookie-banner .chat-greeting{bottom:6.9rem}
 section{padding:4.5rem 0;border-top:1px solid var(--line)}
 section.flush{border-top:0}
 section h2{font-size:clamp(1.85rem,4.4vw,2.6rem);max-width:24ch;margin-bottom:1.75rem;letter-spacing:-.02em}
-#capabilities h2{max-width:none;white-space:nowrap}
-@media (max-width:40rem){#capabilities h2{white-space:normal}}
+#capabilities h2,#who-we-are h2{max-width:none;white-space:nowrap}
+/* who-we-are's heading is longer than capabilities', so the fluid
+   clamp above would still overflow its line across a wide middle band
+   of viewport widths (~650-950px) before growing to the full .wrap
+   width — give it its own, slightly smaller clamp calibrated to fit
+   that whole range without wrapping */
+#who-we-are h2{font-size:clamp(1.6rem,2.8vw,2.4rem)}
+@media (max-width:40rem){#capabilities h2,#who-we-are h2{white-space:normal}}
 section h3{font-size:1.2rem;margin-bottom:.5rem}
 section > .wrap > .eyebrow{display:block}
 
@@ -267,6 +273,7 @@ section > .wrap > .eyebrow{display:block}
 /* stats strip — flat full-saturation blocks, numeral-led like a sector
    association's headline-figure row */
 .stats-strip{display:flex;gap:clamp(.5rem,1.5vw,.75rem);margin-top:2rem}
+#who-we-are .stats-strip{margin-top:0}
 .stat{flex:1 1 0;min-width:0;padding:1.75rem 1.6rem;text-align:center;display:flex;flex-direction:column;
   align-items:center;justify-content:center;border-radius:var(--r-lg);
   transition:flex-grow .35s ease,box-shadow .35s ease}
