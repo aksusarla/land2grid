@@ -194,24 +194,17 @@ section > .wrap > .eyebrow{display:block}
 .stat:nth-child(1){background:var(--land);color:var(--land-ink)}
 .stat:nth-child(2){background:var(--grid);color:var(--grid-on)}
 .stat:nth-child(3){background:var(--customer);color:var(--customer-on)}
-.stat .num{font-family:"Archivo",sans-serif;font-weight:800;font-size:2.4rem;display:block;line-height:1.05}
+.stat .num{font-family:"Archivo",sans-serif;font-weight:800;font-size:clamp(1.6rem,4vw,2.4rem);display:block;line-height:1.05;white-space:nowrap}
 .stat .label{font-size:.9rem;margin-top:.5rem;display:block;opacity:.85}
 
 /* sector / deal-structure grid — flat blocks inside the ink band */
 .sector-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.5rem,1.5vw,.75rem)}
-.band-navy .sector-card{padding:1.85rem}
+.band-navy .sector-card{padding:1.85rem;background:rgba(243,243,236,.05);border-top:3px solid var(--accent, var(--land))}
 .band-navy .sector-card h3{font-size:1.15rem;margin-bottom:.5rem;color:var(--on-dark)}
 .band-navy .sector-card p{color:var(--on-dark-soft);font-size:.92rem}
-.sector-card:nth-child(6n+1){background:rgba(243,243,236,.05)}
-.sector-card:nth-child(6n+2){background:rgba(226,150,47,.1)}
-.sector-card:nth-child(6n+2) h3{color:var(--land)}
-.sector-card:nth-child(6n+3){background:rgba(31,92,69,.18)}
-.sector-card:nth-child(6n+3) h3{color:var(--grid-on)}
-.sector-card:nth-child(6n+4){background:rgba(74,63,115,.2)}
-.sector-card:nth-child(6n+4) h3{color:var(--customer-on)}
-.sector-card:nth-child(6n+5){background:rgba(243,243,236,.05)}
-.sector-card:nth-child(6n+6){background:rgba(226,150,47,.1)}
-.sector-card:nth-child(6n+6) h3{color:var(--land)}
+.sector-card:nth-child(3n+1){--accent:var(--land)}
+.sector-card:nth-child(3n+2){--accent:var(--grid-on)}
+.sector-card:nth-child(3n+3){--accent:var(--customer-on)}
 
 /* case studies — flat cards, tag carries the colour, sharp corners */
 .case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.5rem,1.5vw,.75rem)}
