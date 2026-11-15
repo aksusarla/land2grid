@@ -25,10 +25,9 @@ a{color:inherit}
 /* header / nav — always ink, independent of section theme below */
 header.site{position:sticky;top:0;z-index:40;background:var(--dark);border-bottom:1px solid var(--line-on-dark)}
 header.site .wrap{display:flex;justify-content:space-between;align-items:center;padding:.85rem 1.25rem}
-.logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--on-dark);font-weight:700;
-  font-family:"Archivo",sans-serif;font-size:1.05rem;letter-spacing:-.01em}
-.logo .mark{height:.85rem;width:auto;display:block;flex:none}
-footer.site .footer-brand .logo{font-size:1.1rem}
+.logo{display:flex;align-items:center;text-decoration:none;color:var(--on-dark)}
+.logo .mark{height:1.5rem;width:auto;display:block;flex:none}
+footer.site .footer-brand .logo .mark{height:1.65rem}
 nav.primary{display:flex;align-items:center;gap:1.75rem}
 nav.primary a{color:var(--on-dark-soft);text-decoration:none;font-size:.95rem;white-space:nowrap}
 nav.primary a:hover,nav.primary a.active{color:var(--on-dark)}
