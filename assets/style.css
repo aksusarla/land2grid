@@ -256,14 +256,22 @@ form.contact-form .btn:hover{background:#000}
 
 /* footer — ink, multi-column */
 footer.site{padding:3rem 0 0;font-size:.92rem}
-footer.site .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem;padding-bottom:2.5rem}
+footer.site .footer-grid{display:grid;grid-template-columns:1.3fr .85fr .85fr .85fr 1fr;gap:1.75rem;padding-bottom:2.5rem}
 footer.site .footer-brand p{color:var(--on-dark-soft);margin-top:.85rem;max-width:22rem;font-size:.9rem}
 footer.site .footer-brand .logo{margin-bottom:0}
 footer.site .footer-col h4{color:var(--on-dark);font-family:"Parkinsans",sans-serif;font-size:.95rem;margin-bottom:.9rem}
 footer.site .footer-col a{display:block;color:var(--on-dark-soft);text-decoration:none;margin-bottom:.6rem;font-size:.9rem}
 footer.site .footer-col a:hover{color:var(--on-dark)}
-footer.site .footer-bottom{border-top:1px solid var(--line-on-dark);padding:1.25rem 0;color:var(--on-dark-soft);
-  font-size:.85rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+footer.site .social-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem 1rem}
+footer.site .social-grid a{display:flex;align-items:center;gap:.6rem;margin-bottom:0}
+footer.site .social-grid svg{flex:none;opacity:.9}
+footer.site .footer-address{color:var(--on-dark-soft);font-size:.9rem;margin:0 0 .75rem;line-height:1.6}
+footer.site .footer-bottom{border-top:1px solid var(--line-on-dark);padding:1.5rem 0 2rem;color:var(--on-dark-soft);
+  font-size:.85rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+footer.site .footer-bottom .logo{margin-bottom:0}
+footer.site .footer-legal{display:flex;gap:1.75rem}
+footer.site .footer-legal a{color:var(--on-dark-soft);text-decoration:none;font-size:.85rem}
+footer.site .footer-legal a:hover{color:var(--on-dark)}
 
 @media (max-width:48rem){
   .route,.two,.card-grid,.tile-row,.stats-strip,.sector-grid,.case-grid{grid-template-columns:1fr}
@@ -271,7 +279,8 @@ footer.site .footer-bottom{border-top:1px solid var(--line-on-dark);padding:1.25
   .hero-tile-amber,.hero-tile-navy{grid-column:span 1}
   .hero-tile-navy{align-items:flex-start;text-align:left}
   .founder{grid-template-columns:1fr;text-align:left}
-  footer.site .footer-grid{grid-template-columns:1fr 1fr;gap:1.75rem}
+  footer.site .footer-grid{grid-template-columns:1fr 1fr;gap:1.75rem 1.25rem}
+  footer.site .footer-brand{grid-column:1/-1}
   form.contact-form .row{grid-template-columns:1fr}
   nav.primary{position:fixed;inset:4.2rem 0 0 0;background:var(--dark);flex-direction:column;align-items:flex-start;
     padding:1.5rem 1.25rem;gap:0;border-top:1px solid var(--line-on-dark);transform:translateX(100%);transition:transform .2s ease}
