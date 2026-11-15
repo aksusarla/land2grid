@@ -12,7 +12,7 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=17">
+<link rel="stylesheet" href="assets/style.css?v=18">
 </head>
 <body>
 
@@ -39,13 +39,13 @@
 </header>
 
 <main id="top">
-<!-- full-bleed video hero: looping renewable-energy footage (wind turbines)
-     behind a dark gradient. Sourced from Coverr under its royalty-free
-     commercial licence (no attribution required); see assets/VIDEO-CREDITS.md -->
-<div class="hero-video">
-<video class="hero-video-el" autoplay muted loop playsinline aria-hidden="true">
-<source src="https://cdn.coverr.co/videos/coverr-wind-turbines-in-the-field-7853/1080p.mp4" type="video/mp4">
-</video>
+<!-- full-bleed video hero: a rotating set of looping renewable-energy clips
+     (wind turbines) cross-fading behind a dark gradient, driven by
+     assets/main.js. Sourced from Coverr under its royalty-free commercial
+     licence (no attribution required); see assets/VIDEO-CREDITS.md -->
+<div class="hero-video" id="hero-video">
+<video class="hero-video-el is-active" autoplay muted loop playsinline aria-hidden="true"></video>
+<video class="hero-video-el" autoplay muted loop playsinline aria-hidden="true"></video>
 <div class="hero-video-overlay"></div>
 <div class="wrap hero-content">
 <span class="hero-eyebrow"><span class="dot"></span>Welcome to land2grid</span>
@@ -335,6 +335,6 @@
 </div>
 </footer>
 
-<script src="assets/main.js?v=6"></script>
+<script src="assets/main.js?v=7"></script>
 </body>
 </html>

@@ -1,6 +1,49 @@
 // land2grid — shared behaviour
 
+// Homepage hero: rotate through a set of renewable-energy background clips,
+// cross-fading to the next one every 6 seconds. Two stacked <video>
+// elements (see index.html) swap which is on top so the change is a fade,
+// not a cut. Clip list and credits: assets/VIDEO-CREDITS.md.
+var HERO_CLIPS = [
+  'https://cdn.coverr.co/videos/coverr-wind-turbines-in-the-field-7853/1080p.mp4',
+  'https://cdn.coverr.co/videos/coverr-wind-turbines-in-a-field-5831/720p.mp4',
+  'https://cdn.coverr.co/videos/coverr-wind-turbines-in-madeira-island-56/720p.mp4',
+  'https://cdn.coverr.co/videos/coverr-close-up-of-a-wind-turbine-7742/720p.mp4'
+];
+
 document.addEventListener('DOMContentLoaded', function () {
+  var heroWrap = document.getElementById('hero-video');
+  if (heroWrap) {
+    var vids = heroWrap.querySelectorAll('.hero-video-el');
+    if (vids.length === 2 && HERO_CLIPS.length) {
+      var active = 0;
+      var idx = 0;
+      vids[0].src = HERO_CLIPS[0];
+      vids[0].play().catch(function () {});
+
+      setInterval(function () {
+        var nextIdx = (idx + 1) % HERO_CLIPS.length;
+        var incoming = vids[1 - active];
+        var outgoing = vids[active];
+        incoming.src = HERO_CLIPS[nextIdx];
+        incoming.currentTime = 0;
+
+        var swap = function () {
+          incoming.classList.add('is-active');
+          outgoing.classList.remove('is-active');
+          active = 1 - active;
+          idx = nextIdx;
+        };
+        var playPromise = incoming.play();
+        if (playPromise && typeof playPromise.then === 'function') {
+          playPromise.then(swap).catch(swap);
+        } else {
+          swap();
+        }
+      }, 6000);
+    }
+  }
+
   var toggle = document.querySelector('.nav-toggle');
   var nav = document.querySelector('nav.primary');
   if (toggle && nav) {
