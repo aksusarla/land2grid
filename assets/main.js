@@ -74,6 +74,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  // "How an engagement runs" steps — each has a collapsed detail list that
+  // opens on hover/focus via CSS alone. Touch devices have no hover, so a
+  // tap toggles an .is-open class instead (and tapping a second, already-open
+  // step closes the first, so only one detail panel is open at a time).
+  var stepItems = document.querySelectorAll('.steps > li');
+  if (stepItems.length) {
+    stepItems.forEach(function (item) {
+      item.addEventListener('click', function () {
+        var alreadyOpen = item.classList.contains('is-open');
+        stepItems.forEach(function (other) { other.classList.remove('is-open'); });
+        if (!alreadyOpen) item.classList.add('is-open');
+      });
+    });
+  }
+
   // chat widget — a plain shortcut to the contact page, not a simulated
   // live agent. Shows once per browser session so it doesn't nag on
   // every page view; works from the root or from /services/.

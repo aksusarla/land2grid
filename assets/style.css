@@ -223,12 +223,27 @@ section > .wrap > .eyebrow{display:block}
 .two p{color:var(--ink-soft);margin:.5rem 0 0}
 
 .steps{list-style:none;padding:0;margin:0;counter-reset:s;max-width:44rem}
-.steps li{counter-increment:s;padding:0 0 1.25rem 3rem;position:relative;border-left:1px solid var(--line);margin-left:.9rem}
-.steps li::before{content:counter(s);position:absolute;left:-1.1rem;top:0;width:2.2rem;height:2.2rem;border-radius:999px;
+.steps>li{counter-increment:s;padding:0 0 1.25rem 3rem;position:relative;border-left:1px solid var(--line);
+  margin-left:.9rem;cursor:default;border-radius:0 .5rem .5rem 0;transition:background .2s ease;outline:none}
+.steps>li::before{content:counter(s);position:absolute;left:-1.1rem;top:0;width:2.2rem;height:2.2rem;border-radius:999px;
   background:var(--signal);color:var(--signal-ink);display:grid;place-items:center;font-weight:700;font-size:.95rem;
   font-family:"Manrope",sans-serif}
-.steps li:last-child{border-left-color:transparent}
+.steps>li:last-child{border-left-color:transparent}
 .steps strong{display:block;font-family:"Manrope",sans-serif;font-size:1.1rem}.steps span{color:var(--ink-soft)}
+
+/* expandable detail — collapsed to zero height by default, revealed on
+   hover/focus (desktop) or tap, which toggles .is-open via main.js (so
+   touch devices, which have no hover, still get the content) */
+.step-detail{list-style:none;margin:0;padding:0 0 0 1rem;max-height:0;opacity:0;overflow:hidden;
+  transition:max-height .35s ease,opacity .25s ease,margin-top .35s ease}
+.step-detail li{all:unset;display:flex;gap:.5rem;counter-increment:none;border:0;padding:0;margin:0;
+  font-size:.92rem;color:var(--ink-soft);line-height:1.5}
+.step-detail li::before{content:"—";flex:none;color:var(--accent);position:static;width:auto;height:auto;
+  background:none;border-radius:0}
+.step-detail li+li{margin-top:.35rem}
+.steps>li:hover>.step-detail,.steps>li:focus>.step-detail,.steps>li.is-open>.step-detail{
+  max-height:10rem;opacity:1;margin-top:.65rem}
+.steps>li:hover,.steps>li:focus,.steps>li.is-open{background:var(--stage)}
 
 .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:1.75rem;
