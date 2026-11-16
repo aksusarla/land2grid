@@ -689,6 +689,13 @@ nav.primary a:hover::after,.nav-sub-label:hover::after{right:0}
 .state.has-projects{stroke:var(--customer);stroke-width:1.6}
 .state.is-active{fill:var(--customer);transform:scale(1.045)}
 .state.is-active:hover{fill:var(--customer)}
+.project-dot{fill:var(--on-dark);stroke:var(--forest);stroke-width:2;cursor:pointer;outline:none;
+  transition:transform .15s ease;transform-box:fill-box;transform-origin:center;
+  filter:drop-shadow(0 1px 2px rgba(16,42,54,.35))}
+.project-dot:hover{transform:scale(1.5)}
+.project-dot:focus-visible{transform:scale(1.5);
+  filter:drop-shadow(0 0 3px var(--signal)) drop-shadow(0 0 3px var(--signal))}
+.project-dot.is-active{fill:var(--signal);stroke:var(--on-dark)}
 
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
   padding:1.6rem;position:sticky;top:6.5rem}
