@@ -658,3 +658,63 @@ nav.primary a:hover::after,.nav-sub-label:hover::after{right:0}
 @media (max-width:48rem){
   .insight-grid{grid-template-columns:1fr}
 }
+
+/* project dashboard ("Find Projects") — KPI strip, filter bar and a
+   filterable grid of listing cards. Each card carries a left accent
+   bar in the same land / grid-connectivity / customer-acquisition
+   colours used for the service tiles elsewhere on the site, so a
+   listing's type reads at a glance without another legend. */
+.dash-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.5rem,1.5vw,.75rem);margin-top:2rem}
+.dash-kpi{background:var(--stage);border-radius:var(--r-lg);padding:1.5rem 1.4rem}
+.dash-kpi .num{display:block;font-family:"Manrope",sans-serif;font-weight:800;
+  font-size:clamp(1.5rem,3vw,2.1rem);color:var(--ink);line-height:1.05}
+.dash-kpi .label{display:block;color:var(--ink-soft);font-size:.85rem;margin-top:.4rem}
+
+.dash-filters{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:1.25rem 1.5rem;display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;margin-top:2.5rem}
+.filter-field{display:flex;flex-direction:column;gap:.35rem;min-width:9.5rem;flex:1 1 9.5rem}
+.filter-field label{font-size:.78rem;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.filter-field select,.filter-field input{padding:.6rem .75rem;border:1.5px solid var(--line);border-radius:var(--r-sm);
+  background:var(--surface);color:var(--ink);font:inherit;font-size:.92rem}
+.filter-reset{background:none;border:0;color:var(--ink-soft);font-size:.85rem;font-weight:600;
+  cursor:pointer;text-decoration:underline;text-decoration-color:var(--line);padding:.6rem 0;flex:none}
+.filter-reset:hover{color:var(--ink)}
+.dash-count{color:var(--ink-soft);font-size:.92rem;margin-top:1.5rem}
+.dash-count strong{color:var(--ink)}
+
+.listing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:1.25rem}
+.listing-card{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--line);
+  border-radius:var(--r-md);padding:1.5rem 1.6rem;box-shadow:var(--shadow-sm);
+  transition:box-shadow .15s ease,transform .15s ease;display:flex;flex-direction:column}
+.listing-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.listing-card.type-land{border-left-color:var(--land)}
+.listing-card.type-grid{border-left-color:var(--grid)}
+.listing-card.type-customer{border-left-color:var(--customer)}
+.listing-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem}
+.listing-type{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+.type-land .listing-type{color:var(--land)}
+.type-grid .listing-type{color:var(--grid)}
+.type-customer .listing-type{color:var(--customer)}
+.listing-card h3{font-size:1.1rem;margin:.5rem 0 .3rem}
+.listing-loc{color:var(--ink-soft);font-size:.88rem}
+.listing-card p{color:var(--ink-soft);font-size:.9rem;margin-top:.6rem;flex-grow:1}
+.listing-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:1rem;
+  padding-top:1rem;border-top:1px solid var(--line)}
+.stage-pill{display:inline-block;font-size:.76rem;font-weight:700;padding:.3rem .7rem;border-radius:999px}
+.stage-early{background:rgba(16,42,54,.08);color:var(--ink-soft)}
+.stage-progress{background:rgba(47,143,91,.12);color:#1f6e43}
+.stage-ready{background:var(--customer);color:var(--customer-on)}
+.listing-enquire{font-size:.85rem;font-weight:700;color:var(--forest);text-decoration:none}
+.listing-enquire:hover{text-decoration:underline}
+.listing-updated{color:var(--ink-soft);font-size:.78rem;margin-top:.6rem}
+.no-results{grid-column:1/-1;text-align:center;color:var(--ink-soft);padding:3rem 1rem}
+
+@media (max-width:64rem){
+  .dash-kpis{grid-template-columns:repeat(2,1fr)}
+  .listing-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:48rem){
+  .dash-kpis{grid-template-columns:1fr 1fr}
+  .listing-grid{grid-template-columns:1fr}
+  .dash-filters{padding:1.1rem}
+}

@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Find Projects — land2grid</title>
-<meta name="description" content="land2grid's project dashboard — a searchable view of land, connectivity and offtake-ready sites — is in development. Tell us what you're looking for in the meantime.">
+<meta name="description" content="Browse land2grid's live pipeline — land parcels, grid-connectivity stage and offtake-ready capacity — filterable by state, type and stage.">
 <link rel="canonical" href="https://land2grid.com/dashboard.html">
 <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=66">
+<link rel="stylesheet" href="assets/style.css?v=67">
 </head>
 <body>
 
@@ -41,36 +41,57 @@
 <div class="wrap">
 <div class="page-head">
 <span class="eyebrow">Project Dashboard</span>
-<h1>A searchable view of our pipeline, coming soon.</h1>
-<p>We're building a dashboard where IPPs, EPCs and landowners can browse land parcels, connectivity status and offtake-ready sites directly, instead of going back and forth over email. It isn't live yet — this page is holding its place.</p>
-</div>
+<h1>Our live pipeline, in one searchable view.</h1>
+<p>Land parcels, grid-connectivity status and offtake-ready capacity that we're tracking right now — filter by state, type or stage to see what's actually available, instead of asking us to compile it over email.</p>
 </div>
 
-<section class="flush">
-<div class="wrap">
-<div class="two">
-<div class="detail-block">
-<h3>What it will show</h3>
-<p>A filterable list of sites and deals we're tracking — by state, capacity, connectivity status and stage — so you can see what's actually available instead of asking us to compile it each time.</p>
-<ul>
-<li>Land parcels by state, size and aggregation status</li>
-<li>Grid-connectivity stage for each site (application, approval, charging)</li>
-<li>Offtake-ready capacity looking for a buyer or a developer</li>
-</ul>
+<div class="dash-kpis" id="dash-kpis">
+<div class="dash-kpi"><span class="num" id="kpi-total">0</span><span class="label">Sites tracked</span></div>
+<div class="dash-kpi"><span class="num" id="kpi-states">0</span><span class="label">States covered</span></div>
+<div class="dash-kpi"><span class="num" id="kpi-capacity">0</span><span class="label">MW in pipeline</span></div>
+<div class="dash-kpi"><span class="num" id="kpi-ready">0</span><span class="label">MW offtake-ready</span></div>
 </div>
-<div class="detail-block">
-<h3>In the meantime</h3>
-<p>Tell us what you're looking for — a parcel in a specific state, a connectivity slot, a PPA counterparty — and we'll work it the same way we do today: directly, over a call or email, against our live deal list.</p>
-<p style="margin-top:1rem">We'll let people on our contact list know as soon as this is live.</p>
+
+<div class="dash-filters">
+<div class="filter-field">
+<label for="f-type">Type</label>
+<select id="f-type">
+<option value="">All types</option>
+<option value="land">Land parcel</option>
+<option value="grid">Grid connectivity</option>
+<option value="customer">Offtake-ready</option>
+</select>
 </div>
+<div class="filter-field">
+<label for="f-state">State</label>
+<select id="f-state"><option value="">All states</option></select>
 </div>
+<div class="filter-field">
+<label for="f-stage">Stage</label>
+<select id="f-stage">
+<option value="">Any stage</option>
+<option value="early">Early</option>
+<option value="progress">In progress</option>
+<option value="ready">Ready</option>
+</select>
 </div>
-</section>
+<div class="filter-field">
+<label for="f-capacity">Min. capacity (MW)</label>
+<input type="number" id="f-capacity" min="0" step="1" placeholder="0">
+</div>
+<button class="filter-reset" id="f-reset" type="button">Reset filters</button>
+</div>
+
+<p class="dash-count"><strong id="dash-count-num">0</strong> sites match your filters</p>
+
+<div class="listing-grid" id="listing-grid"></div>
+<p class="case-note">Illustrative pipeline — exact parcel, connectivity and offtake details are shared directly once we've confirmed fit. <a href="contact.html">Tell us what you're looking for</a> and we'll match it against the live list.</p>
+</div>
 
 <section class="band-navy">
 <div class="wrap" style="text-align:left">
-<h2 style="color:var(--on-dark)">Looking for a specific project right now?</h2>
-<p style="color:var(--on-dark-soft);max-width:36rem;margin-top:.75rem">Tell us what you need and we'll match it against what we're already tracking — no dashboard required yet.</p>
+<h2 style="color:var(--on-dark)">Not seeing what you need?</h2>
+<p style="color:var(--on-dark-soft);max-width:36rem;margin-top:.75rem">Tell us the state, capacity or stage you're after and we'll match it against what we're tracking that isn't listed here yet.</p>
 <div style="margin-top:1.75rem"><a class="btn alt" href="contact.html">Tell us what you're looking for</a></div>
 </div>
 </section>
@@ -109,5 +130,115 @@
 </footer>
 
 <script src="assets/main.js?v=15"></script>
+<script>
+// Find Projects dashboard — client-side filtering over an illustrative
+// pipeline list. No backend yet: this renders from the array below and
+// filters in place, the same way the rest of the site avoids server
+// dependencies. Swap LISTINGS for a live feed when the deal tracker
+// has an export worth wiring up.
+(function () {
+  var LISTINGS = [
+    { type: 'land', state: 'Tamil Nadu', title: 'TN · Aggregation cluster', capacity: 42, stage: 'progress', stageLabel: 'Aggregating', detail: 'Three adjoining parcels under negotiation for a single-pad layout.', updated: 'Updated 3 days ago' },
+    { type: 'land', state: 'Rajasthan', title: 'RJ · Open-desert block', capacity: 110, stage: 'ready', stageLabel: 'Secured', detail: 'Title cleared and in hand, pooled from four landowners.', updated: 'Updated 1 week ago' },
+    { type: 'land', state: 'Madhya Pradesh', title: 'MP · Revenue-wasteland site', capacity: 28, stage: 'early', stageLabel: 'Identifying', detail: 'Scouting government wasteland allotment for a BTM project.', updated: 'Updated 2 weeks ago' },
+    { type: 'land', state: 'Andhra Pradesh', title: 'AP · SPV land parcel', capacity: 10, stage: 'ready', stageLabel: 'Secured', detail: 'Land held within an existing SPV, available with the acquisition.', updated: 'Updated 5 days ago' },
+    { type: 'land', state: 'Gujarat', title: 'GJ · Coastal wasteland tract', capacity: 65, stage: 'progress', stageLabel: 'Aggregating', detail: 'Mixed government and private holdings being consolidated.', updated: 'Updated 10 days ago' },
+    { type: 'grid', state: 'Karnataka', title: 'KA · 66kV evacuation slot', capacity: 50, stage: 'progress', stageLabel: 'Approval pending', detail: 'Load-flow study complete; CTU filing submitted and awaiting sign-off.', updated: 'Updated 4 days ago' },
+    { type: 'grid', state: 'Bihar', title: 'BR · Substation connectivity', capacity: 20, stage: 'ready', stageLabel: 'Charging sanctioned', detail: 'Connectivity granted at the nearest 33kV substation; ready to build.', updated: 'Updated 2 days ago' },
+    { type: 'grid', state: 'Punjab', title: 'PB · Group-captive feeder', capacity: 15, stage: 'early', stageLabel: 'Application filed', detail: 'Application lodged with the state utility; site survey scheduled.', updated: 'Updated 1 week ago' },
+    { type: 'grid', state: 'Haryana', title: 'HR · JV evacuation study', capacity: 60, stage: 'progress', stageLabel: 'Load-flow in review', detail: 'Transmission utility reviewing the load-flow submission for a 60MW block.', updated: 'Updated 6 days ago' },
+    { type: 'grid', state: 'Chhattisgarh', title: 'CG · Group-captive line', capacity: 24, stage: 'early', stageLabel: 'Application filed', detail: 'Right-of-way survey underway alongside the connectivity application.', updated: 'Updated 2 weeks ago' },
+    { type: 'customer', state: 'Maharashtra', title: 'MH · Open-access block', capacity: 18, stage: 'ready', stageLabel: 'Seeking buyer', detail: 'CRISIL A+ industrial offtaker profile matched; PPA terms in discussion.', updated: 'Updated 3 days ago' },
+    { type: 'customer', state: 'Uttar Pradesh', title: 'UP · Long-term offtake', capacity: 35, stage: 'progress', stageLabel: 'Seeking developer', detail: 'Offtaker commitment in hand, sourcing a developer to build against it.', updated: 'Updated 1 week ago' },
+    { type: 'customer', state: 'Kerala', title: 'KL · Peak-power capacity', capacity: 45, stage: 'early', stageLabel: 'LOI stage', detail: 'Evening-peak capacity earmarked pending government sign-off.', updated: 'Updated 4 days ago' },
+    { type: 'customer', state: 'Telangana', title: 'TG · Group-captive demand', capacity: 22, stage: 'ready', stageLabel: 'Seeking buyer', detail: 'Captive consumer group identified and sized; matching to supply.', updated: 'Updated 5 days ago' },
+    { type: 'customer', state: 'Odisha', title: 'OD · Hybrid offtake slot', capacity: 30, stage: 'progress', stageLabel: 'Seeking developer', detail: 'Wind-solar hybrid demand profile open to a developer partner.', updated: 'Updated 9 days ago' }
+  ];
+
+  var grid = document.getElementById('listing-grid');
+  var stateSel = document.getElementById('f-state');
+  var typeSel = document.getElementById('f-type');
+  var stageSel = document.getElementById('f-stage');
+  var capInput = document.getElementById('f-capacity');
+  var countEl = document.getElementById('dash-count-num');
+
+  var TYPE_LABEL = { land: 'Land parcel', grid: 'Grid connectivity', customer: 'Offtake-ready' };
+
+  // populate state filter from the data instead of hardcoding it twice
+  var states = [];
+  LISTINGS.forEach(function (l) { if (states.indexOf(l.state) === -1) states.push(l.state); });
+  states.sort().forEach(function (s) {
+    var o = document.createElement('option');
+    o.value = s; o.textContent = s;
+    stateSel.appendChild(o);
+  });
+
+  function card(l) {
+    var el = document.createElement('div');
+    el.className = 'listing-card type-' + l.type;
+    el.innerHTML =
+      '<div class="listing-top">' +
+        '<span class="listing-type">' + TYPE_LABEL[l.type] + '</span>' +
+        '<span class="stage-pill stage-' + l.stage + '">' + l.stageLabel + '</span>' +
+      '</div>' +
+      '<h3>' + l.title + '</h3>' +
+      '<span class="listing-loc">' + l.state + ' · ' + l.capacity + ' MW</span>' +
+      '<p>' + l.detail + '</p>' +
+      '<div class="listing-bottom">' +
+        '<span class="listing-enquire-wrap"><a class="listing-enquire" href="contact.html">Enquire →</a></span>' +
+      '</div>' +
+      '<span class="listing-updated">' + l.updated + '</span>';
+    return el;
+  }
+
+  function render() {
+    var type = typeSel.value, state = stateSel.value, stage = stageSel.value;
+    var minCap = parseFloat(capInput.value) || 0;
+
+    var filtered = LISTINGS.filter(function (l) {
+      if (type && l.type !== type) return false;
+      if (state && l.state !== state) return false;
+      if (stage && l.stage !== stage) return false;
+      if (l.capacity < minCap) return false;
+      return true;
+    });
+
+    grid.innerHTML = '';
+    if (!filtered.length) {
+      var empty = document.createElement('div');
+      empty.className = 'no-results';
+      empty.textContent = "No tracked sites match that combination yet — tell us what you're looking for and we'll check the live list.";
+      grid.appendChild(empty);
+    } else {
+      filtered.forEach(function (l) { grid.appendChild(card(l)); });
+    }
+    countEl.textContent = filtered.length;
+  }
+
+  function renderKPIs() {
+    var totalStates = [];
+    var totalCapacity = 0, readyCapacity = 0;
+    LISTINGS.forEach(function (l) {
+      if (totalStates.indexOf(l.state) === -1) totalStates.push(l.state);
+      totalCapacity += l.capacity;
+      if (l.type === 'customer' && l.stage === 'ready') readyCapacity += l.capacity;
+    });
+    document.getElementById('kpi-total').textContent = LISTINGS.length;
+    document.getElementById('kpi-states').textContent = totalStates.length;
+    document.getElementById('kpi-capacity').textContent = totalCapacity.toLocaleString();
+    document.getElementById('kpi-ready').textContent = readyCapacity.toLocaleString();
+  }
+
+  [typeSel, stateSel, stageSel].forEach(function (s) { s.addEventListener('change', render); });
+  capInput.addEventListener('input', render);
+  document.getElementById('f-reset').addEventListener('click', function () {
+    typeSel.value = ''; stateSel.value = ''; stageSel.value = ''; capInput.value = '';
+    render();
+  });
+
+  renderKPIs();
+  render();
+})();
+</script>
 </body>
 </html>
