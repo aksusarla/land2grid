@@ -34,7 +34,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.6 "I
 h1,h2,h3{font-family:"Manrope","Inter",sans-serif;line-height:1.15;margin:0;font-weight:700;letter-spacing:-.01em}
 p{margin:0}
 a{color:inherit}
-.wrap{max-width:68rem;margin:0 auto;padding:0 1.25rem}
+.wrap{max-width:80rem;margin:0 auto;padding:0 1.75rem}
 
 /* header / nav — always ink, independent of section theme below.
    Order in markup: hamburger toggle, logo, inline nav links, CTA pill —
