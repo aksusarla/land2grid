@@ -15,6 +15,8 @@
 
   --forest:#174d3b;--accent:#2f8f5b;--accent-ink:#fff;
 
+  --sun-gold:#fbbf24;--sun-orange:#f2994a;
+
   --land:#102a36;--land-ink:#f5f6f2;--land-soft:#8fa9b8;
   --grid:#174d3b;--grid-on:#9fd6b8;
   --customer:#2f8f5b;--customer-on:#cfeedc;
@@ -46,6 +48,8 @@ header.site .wrap{display:flex;align-items:center;gap:1.5rem;max-width:none;marg
 .logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--on-dark)}
 .logo-mark{height:2.1rem;width:auto;flex:none;display:block}
 .logo-word{font-family:"Manrope",sans-serif;font-weight:700;font-size:1.15rem;letter-spacing:-.01em;color:currentColor}
+.logo-two{background:linear-gradient(180deg,var(--sun-gold) 0 55%,var(--sun-orange) 55% 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 footer.site .footer-brand .logo-mark{height:2.3rem}
 nav.primary{display:flex;align-items:center;gap:1.6rem}
 nav.primary a{color:var(--on-dark-soft);text-decoration:none;font-size:.95rem;white-space:nowrap}
