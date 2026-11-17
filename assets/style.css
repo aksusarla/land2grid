@@ -43,8 +43,7 @@ a{color:inherit}
    the toggle is hidden on desktop and the CTA always rides the far
    right via margin-left:auto, so it stays visible whether or not the
    mobile drawer is open. */
-header.site{position:sticky;top:0;z-index:40;background:var(--dark);border-bottom:1px solid var(--line-on-dark);
-  border-top:3px solid;border-image:linear-gradient(90deg,var(--sun-gold),var(--sun-orange)) 1}
+header.site{position:sticky;top:0;z-index:40;background:var(--dark);border-bottom:1px solid var(--line-on-dark)}
 header.site .wrap{display:flex;align-items:center;gap:1.5rem;max-width:none;margin:0;padding:.85rem 1.75rem}
 .logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--on-dark);
   transition:opacity .15s ease}
