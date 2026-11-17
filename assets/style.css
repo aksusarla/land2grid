@@ -79,8 +79,13 @@ nav.primary a:hover,nav.primary a.active{color:var(--on-dark)}
 a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
 /* an SVG <path> has an irregular silhouette, so a CSS outline draws a
    rectangle around its bounding box instead of hugging the shape —
-   a drop-shadow glow follows the actual path outline instead */
-.state:focus-visible{outline:none;filter:drop-shadow(0 0 3px var(--signal)) drop-shadow(0 0 3px var(--signal))}
+   a drop-shadow glow follows the actual path outline instead. Chromium
+   only matches :focus-visible for keyboard focus, not a mouse click on
+   a tabindex'd path, so :focus (which always matches) is what needs
+   outline:none — otherwise the UA's own "auto" focus ring still shows
+   on click even though our :focus-visible override never fires. */
+.state:focus{outline:none}
+.state:focus-visible{filter:drop-shadow(0 0 3px var(--signal)) drop-shadow(0 0 3px var(--signal))}
 
 /* full-bleed ink band (deal-type grid, footer) */
 .band-navy{background:var(--dark);color:var(--on-dark)}
