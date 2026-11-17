@@ -13,17 +13,17 @@
 
   --dark:#102a36;--on-dark:#f5f6f2;--on-dark-soft:#9fb2b9;--line-on-dark:rgba(245,246,242,.14);
 
-  --forest:#174d3b;--accent:#2f8f5b;--accent-ink:#fff;--accent-hover:#257a4c;
+  --forest:#102a36;--accent:#fbbf24;--accent-ink:#102a36;--accent-hover:#f2994a;--accent-text:#92400e;
 
   --sun-gold:#fbbf24;--sun-orange:#f2994a;
 
   --land:#102a36;--land-ink:#f5f6f2;--land-soft:#8fa9b8;
-  --grid:#174d3b;--grid-on:#9fd6b8;
-  --customer:#2f8f5b;--customer-on:#cfeedc;
-  --signal:#2f8f5b;--signal-ink:#fff;
+  --grid:#f2994a;--grid-on:#102a36;
+  --customer:#fbbf24;--customer-on:#102a36;
+  --signal:#f2994a;--signal-ink:#102a36;
   --icon-blue:#2f8f5b;
 
-  --success-ink:#1f6e43;--notify:#e2574c;--ink-max:#000;
+  --success-ink:#2f6b2f;--notify:#e2574c;--ink-max:#000;
 
   --shadow-sm:0 1px 2px rgba(16,42,54,.05),0 1px 1px rgba(16,42,54,.04);
   --shadow-md:0 8px 24px -8px rgba(16,42,54,.16),0 2px 6px rgba(16,42,54,.07);
@@ -107,7 +107,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
   align-items:flex-start;justify-content:center;text-align:left}
 
 .pill-eyebrow{display:inline-flex;align-items:center;gap:.55rem;font-weight:700;font-size:.9rem;
-  margin-bottom:var(--space-md);color:var(--accent)}
+  margin-bottom:var(--space-md);color:var(--accent-text)}
 .pill-eyebrow .dot{width:.55rem;height:.55rem;border-radius:50%;background:currentColor;flex:none}
 
 .hero-tile-light h1{font-size:clamp(2.6rem,5.8vw,4.6rem);line-height:1.02;letter-spacing:-.025em;
@@ -115,7 +115,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
 .hero-tile-light p{max-width:34rem;color:var(--ink-soft);font-size:1.15rem;margin:var(--space-md) 0 var(--space-lg)}
 
 
-.eyebrow{display:inline-block;color:var(--accent);font-weight:700;font-size:.9rem;letter-spacing:.06em;
+.eyebrow{display:inline-block;color:var(--accent-text);font-weight:700;font-size:.9rem;letter-spacing:.06em;
   text-transform:uppercase;margin-bottom:var(--space-xs)}
 
 .btn{display:inline-flex;align-items:center;gap:.5rem;background:var(--dark);color:var(--on-dark);
@@ -156,7 +156,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
 .chat-greeting{position:fixed;right:5.3rem;bottom:1.65rem;max-width:17rem;background:var(--surface);color:var(--ink);
   padding:var(--space-xs) var(--space-sm);border-radius:999px 999px 4px 999px;box-shadow:var(--shadow-md);display:flex;align-items:center;
   gap:.6rem;font-size:.88rem;z-index:70;animation:chat-pop .2s ease}
-.chat-greeting a{color:var(--accent);font-weight:700;text-decoration:none;white-space:nowrap}
+.chat-greeting a{color:var(--accent-text);font-weight:700;text-decoration:none;white-space:nowrap}
 .chat-greeting a:hover{text-decoration:underline}
 .chat-greeting-close{background:none;border:0;color:var(--ink-soft);cursor:pointer;font-size:1rem;line-height:1;padding:0 .15rem;flex:none}
 @keyframes chat-pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
@@ -180,7 +180,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
 .chat-quick{display:flex;flex-wrap:wrap;gap:.45rem;align-self:flex-start;max-width:100%}
 .chat-chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;
   padding:.4rem .8rem;font-size:.82rem;cursor:pointer;font:inherit}
-.chat-chip:hover{border-color:var(--accent);color:var(--accent)}
+.chat-chip:hover{border-color:var(--accent-text);color:var(--accent-text)}
 .chat-msg.bot a.chat-link{color:var(--forest);font-weight:700;text-decoration:none}
 .chat-msg.bot a.chat-link:hover{text-decoration:underline}
 .chat-avatar{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--accent);color:var(--accent-ink);flex:none;
@@ -360,7 +360,7 @@ section > .wrap > .eyebrow{display:block}
   counter-reset:detail;transition:max-height .35s ease,opacity .25s ease,margin-top .35s ease}
 .step-detail li{all:unset;display:flex;gap:.5rem;counter-increment:detail;border:0;padding:0;margin:0;
   font-size:.92rem;color:var(--ink-soft);line-height:1.5}
-.step-detail li::before{content:counter(s) counter(detail,lower-alpha);flex:none;color:var(--accent);
+.step-detail li::before{content:counter(s) counter(detail,lower-alpha);flex:none;color:var(--accent-text);
   font-weight:700;font-size:.85rem;font-family:"Figtree",sans-serif;position:static;width:auto;height:auto;
   background:none;border-radius:0}
 .step-detail li+li{margin-top:.35rem}
@@ -659,7 +659,7 @@ nav.primary a:hover::after{right:0}
 .map-reset:hover{border-color:var(--customer);color:var(--forest)}
 .state{fill:#d7ded9;stroke:#f5f6f2;stroke-width:1.1;cursor:pointer;
   transition:fill .15s ease,transform .15s ease;transform-box:fill-box;transform-origin:center}
-.state:hover,.state:focus-visible{fill:#a9c9b8;transform:scale(1.06)}
+.state:hover,.state:focus-visible{fill:#e9ddc3;transform:scale(1.06)}
 .state.has-projects{stroke:var(--customer);stroke-width:1.6}
 .state.is-active{fill:var(--customer);transform:scale(1.045)}
 .state.is-active:hover{fill:var(--customer)}
@@ -685,7 +685,7 @@ nav.primary a:hover::after{right:0}
 .project-meta{display:block;color:var(--ink-soft);font-size:.82rem;margin-top:.15rem}
 .project-badge{font-size:.72rem;font-weight:700;padding:.3rem .65rem;border-radius:999px;
   background:rgba(16,42,54,.07);color:var(--ink-soft);white-space:nowrap;flex:none}
-.project-badge.is-done{background:rgba(47,143,91,.14);color:var(--success-ink)}
+.project-badge.is-done{background:rgba(92,184,92,.14);color:var(--success-ink)}
 
 .project-detail{margin-top:var(--space-2xs);padding-top:1.4rem;border-top:1px dashed var(--line)}
 .status-row{display:flex;gap:.85rem;align-items:flex-start;padding:.55rem 0}
