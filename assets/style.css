@@ -43,9 +43,12 @@ a{color:inherit}
    the toggle is hidden on desktop and the CTA always rides the far
    right via margin-left:auto, so it stays visible whether or not the
    mobile drawer is open. */
-header.site{position:sticky;top:0;z-index:40;background:var(--dark);border-bottom:1px solid var(--line-on-dark)}
+header.site{position:sticky;top:0;z-index:40;background:var(--dark);border-bottom:1px solid var(--line-on-dark);
+  border-top:3px solid;border-image:linear-gradient(90deg,var(--sun-gold),var(--sun-orange)) 1}
 header.site .wrap{display:flex;align-items:center;gap:1.5rem;max-width:none;margin:0;padding:.85rem 1.75rem}
-.logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--on-dark)}
+.logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--on-dark);
+  transition:opacity .15s ease}
+.logo:hover{opacity:.8}
 .logo-mark{height:2.1rem;width:auto;flex:none;display:block}
 .logo-word{font-family:"Manrope",sans-serif;font-weight:700;font-size:1.15rem;letter-spacing:-.01em;color:currentColor}
 .logo-two{background:linear-gradient(180deg,var(--sun-gold) 0 55%,var(--sun-orange) 55% 100%);
@@ -575,7 +578,12 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
 }
 
 @media (max-width:26rem){
-  .logo-word{display:none}
+  /* Drop "land"/"grid" to save width, but keep the two-tone "2" —
+     it's the one part of the mark that's actually ownable, and the
+     icon alone can't carry that on its own. aria-label="land2grid"
+     on the <a class="logo"> keeps the accessible name intact either way. */
+  .logo-land,.logo-grid{display:none}
+  .logo-two{font-size:1.3rem;font-weight:800}
   .nav-find .full{display:none}
   .nav-find .short{display:inline}
 }
