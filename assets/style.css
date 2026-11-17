@@ -57,20 +57,6 @@ footer.site .footer-brand .logo-mark{height:2.3rem}
 nav.primary{display:flex;align-items:center;gap:1.6rem}
 nav.primary a{color:var(--on-dark-soft);text-decoration:none;font-size:.95rem;white-space:nowrap}
 nav.primary a:hover,nav.primary a.active{color:var(--on-dark)}
-/* "What We Do" no longer navigates on its own — it only reveals the
-   3-item dropdown, so a click can't jump to Land management before
-   the visitor has seen Grid connectivity / Customer acquisition */
-.nav-sub-label{display:inline-flex;align-items:center;gap:.35rem;color:var(--on-dark-soft);
-  font-size:.95rem;white-space:nowrap;cursor:default}
-.has-sub:hover .nav-sub-label,.has-sub:focus-within .nav-sub-label{color:var(--on-dark)}
-.nav-caret{transition:transform .2s ease;flex:none}
-.has-sub:hover .nav-caret,.has-sub:focus-within .nav-caret{transform:rotate(180deg)}
-.has-sub{position:relative}
-.sub-menu{display:none;position:absolute;top:calc(100% + .5rem);left:50%;transform:translateX(-50%);
-  background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:.35rem;min-width:13rem}
-.has-sub:hover .sub-menu,.has-sub:focus-within .sub-menu{display:block}
-.sub-menu a{display:block;padding:.55rem .75rem;border-radius:1px;font-size:.9rem;color:var(--ink)}
-.sub-menu a:hover{background:var(--paper)}
 .nav-find{color:var(--signal-ink) !important;font-weight:700;background:var(--signal);border:1px solid var(--signal);
   padding:.6rem 1.3rem;border-radius:.4rem;margin-left:auto;text-decoration:none;text-transform:uppercase;
   font-size:.82rem;letter-spacing:.03em;white-space:nowrap}
@@ -549,10 +535,6 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
     padding:1.5rem 1.25rem;gap:0;border-top:1px solid var(--line-on-dark);transform:translateX(100%);transition:transform .2s ease}
   nav.primary.open{transform:translateX(0)}
   nav.primary a{padding:.85rem 0;width:100%;border-bottom:1px solid var(--line-on-dark)}
-  .nav-sub-label{padding:.85rem 0 .3rem;width:100%}
-  .sub-menu{display:block;position:static;transform:none;border:0;padding:0 0 0 1rem;margin-top:.25rem;background:none}
-  .sub-menu a{color:var(--on-dark-soft)}
-  .has-sub:hover .sub-menu,.has-sub:focus-within .sub-menu{display:block}
   .nav-toggle{display:flex}
 }
 
@@ -616,10 +598,10 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
 .hero-video .hero-sub{animation-delay:.2s}
 .hero-video .btn-row{animation-delay:.35s}
 
-nav.primary a,.nav-sub-label{position:relative}
-nav.primary a::after,.nav-sub-label::after{content:"";position:absolute;left:0;right:100%;bottom:-4px;
+nav.primary a{position:relative}
+nav.primary a::after{content:"";position:absolute;left:0;right:100%;bottom:-4px;
   height:1.5px;background:currentColor;transition:right .25s ease}
-nav.primary a:hover::after,.nav-sub-label:hover::after{right:0}
+nav.primary a:hover::after{right:0}
 
 .btn{transition:background .2s ease,transform .2s ease}
 .btn:hover{transform:translateY(-1px)}
@@ -627,7 +609,7 @@ nav.primary a:hover::after,.nav-sub-label:hover::after{right:0}
 @media (prefers-reduced-motion:reduce){
   .reveal{opacity:1;transform:none;transition:none}
   .hero-heading,.hero-video .hero-sub,.hero-video .btn-row{opacity:1;animation:none}
-  nav.primary a::after,.nav-sub-label::after{transition:none}
+  nav.primary a::after{transition:none}
   .btn:hover{transform:none}
 }
 
