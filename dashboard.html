@@ -147,27 +147,27 @@
         capacity: 50,
         badge: 'Load application pending',
         badgeDone: false,
-        land: '370 acres, contiguous corporate land · lease or purchase, ₹10 lakh/acre (under negotiation)',
-        connectivity: 'Load application pending · 110kV, 5.5 km from substation',
-        ppa: 'To be confirmed'
+        land: 'Under process',
+        connectivity: 'Applied, LFS underway',
+        ppa: 'Under discussion'
       },
       {
         name: 'Ottapidaram',
         capacity: 100,
         badge: 'Load application pending',
         badgeDone: false,
-        land: '280 acres, contiguous corporate land · lease or purchase, ₹13 lakh/acre',
-        connectivity: 'Load application pending · 110kV, 8.25 km from substation',
-        ppa: 'To be confirmed'
+        land: 'Under process',
+        connectivity: 'Applied, LFS underway',
+        ppa: 'Under discussion'
       },
       {
         name: 'Kanchipuram',
         capacity: 50,
         badge: 'LFS completed',
         badgeDone: true,
-        land: 'Acquisition in progress · ₹24 lakh/acre · close to Chennai',
-        connectivity: 'LFS completed · LILO allowed within the site',
-        ppa: 'Under confirmation'
+        land: 'Under process',
+        connectivity: 'Applied, LFS completed',
+        ppa: 'Under discussion'
       }
     ]
   };
@@ -265,9 +265,9 @@
   function detailHTML(p) {
     return (
       '<div class="project-detail">' +
-        statusRow('land', 'Land status', p.land) +
-        statusRow('grid', 'Connectivity status', p.connectivity) +
-        statusRow('customer', 'PPA status', p.ppa) +
+        statusRow('land', 'Land acquisition', p.land) +
+        statusRow('grid', 'Connectivity', p.connectivity) +
+        statusRow('customer', 'Customer PPA', p.ppa) +
       '</div>'
     );
   }
