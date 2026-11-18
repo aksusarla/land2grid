@@ -564,12 +564,6 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
 }
 
 @media (max-width:26rem){
-  /* Drop "land"/"grid" to save width, but keep the two-tone "2" —
-     it's the one part of the mark that's actually ownable, and the
-     icon alone can't carry that on its own. aria-label="land2grid"
-     on the <a class="logo"> keeps the accessible name intact either way. */
-  .logo-land,.logo-grid{display:none}
-  .logo-two{font-size:1.3rem;font-weight:800}
   .nav-find .full{display:none}
   .nav-find .short{display:inline}
 }
