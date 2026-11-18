@@ -147,87 +147,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
 .hero-video .hero-sub{max-width:36rem;color:var(--on-dark-soft);font-size:1.12rem;margin:var(--space-md) 0 var(--space-lg)}
 .hero-video .btn-row{margin-bottom:0}
 
-/* chat widget — fixed bottom-right shortcut to Contact, not a simulated
-   live agent: it is honest about being a link, not a person typing */
-.chat-fab{position:fixed;right:1.5rem;bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));width:3.4rem;height:3.4rem;border-radius:50%;
-  background:var(--accent);color:var(--accent-ink);border:0;display:flex;align-items:center;justify-content:center;
-  box-shadow:var(--shadow-lg);cursor:pointer;z-index:70;transition:opacity .2s ease}
-.chat-fab:hover{background:var(--accent-hover)}
-.chat-fab svg{width:1.5rem;height:1.5rem}
-/* on narrow screens the fixed button sits over whatever body copy, form
-   field or list row happens to scroll underneath it. Rather than reserve
-   dead space on every block that might run under it, fade it back while
-   the page is actively moving and bring it back once scrolling settles. */
-@media (max-width:48rem){
-  .chat-fab.is-scrolling{opacity:.32;pointer-events:none}
-}
-.chat-dot{position:absolute;top:-.1rem;right:-.1rem;width:.75rem;height:.75rem;border-radius:50%;
-  background:var(--notify);border:2px solid var(--paper)}
-.chat-greeting{position:fixed;right:5.3rem;bottom:calc(1.65rem + env(safe-area-inset-bottom,0px));max-width:17rem;background:var(--surface);color:var(--ink);
-  padding:var(--space-xs) var(--space-sm);border-radius:999px 999px 4px 999px;box-shadow:var(--shadow-md);display:flex;align-items:center;
-  gap:.6rem;font-size:.88rem;z-index:70;animation:chat-pop .2s ease}
-.chat-greeting a{color:var(--accent-text);font-weight:700;text-decoration:none;white-space:nowrap}
-.chat-greeting a:hover{text-decoration:underline}
-.chat-greeting-close{background:none;border:0;color:var(--ink-soft);cursor:pointer;font-size:1rem;line-height:1;padding:0 .15rem;flex:none}
-@keyframes chat-pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-
-/* chat panel — basic, rule-based: quick links to the right page, or a
-   form that hands details to the team. Never claims to be a live person. */
-.chat-panel{position:fixed;right:1.5rem;bottom:calc(5.5rem + env(safe-area-inset-bottom,0px));width:21rem;max-height:min(32rem,70vh);
-  background:var(--surface);color:var(--ink);border-radius:var(--r-lg);box-shadow:var(--shadow-lg);
-  display:flex;flex-direction:column;overflow:hidden;z-index:70;animation:chat-pop .18s ease}
-.chat-panel-head{background:var(--dark);color:var(--on-dark);padding:.9rem 1.1rem;display:flex;
-  align-items:center;justify-content:space-between;flex:none}
-.chat-panel-head strong{font-family:"Figtree",sans-serif;font-size:.95rem;display:block}
-.chat-panel-head span{display:block;color:var(--on-dark-soft);font-size:.78rem;margin-top:.1rem}
-.chat-panel-close{background:none;border:0;color:var(--on-dark);cursor:pointer;font-size:1.15rem;
-  line-height:1;padding:.1rem .3rem;flex:none}
-.chat-panel-body{flex:1;overflow-y:auto;padding:var(--space-sm);display:flex;flex-direction:column;gap:.65rem;
-  font-size:.92rem}
-.chat-msg{max-width:92%;padding:.55rem var(--space-xs);border-radius:var(--r-md);line-height:1.45}
-.chat-msg.bot{background:var(--stage);color:var(--ink);align-self:flex-start;border-radius:4px var(--r-md) var(--r-md) var(--r-md)}
-.chat-msg.user{background:var(--accent);color:var(--accent-ink);align-self:flex-end;border-radius:var(--r-md) 4px var(--r-md) var(--r-md)}
-.chat-quick{display:flex;flex-wrap:wrap;gap:.45rem;align-self:flex-start;max-width:100%}
-.chat-chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;
-  padding:.4rem .8rem;font-size:.82rem;cursor:pointer;font:inherit}
-.chat-chip:hover{border-color:var(--accent-text);color:var(--accent-text)}
-.chat-msg.bot a.chat-link{color:var(--forest);font-weight:700;text-decoration:none}
-.chat-msg.bot a.chat-link:hover{text-decoration:underline}
-.chat-avatar{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--accent);color:var(--accent-ink);flex:none;
-  display:flex;align-items:center;justify-content:center;font-family:"Figtree",sans-serif;font-weight:700;font-size:.8rem}
-.chat-row{display:flex;gap:.5rem;align-items:flex-end;max-width:92%}
-.chat-row .chat-msg{max-width:100%}
-.chat-typing{display:flex;gap:.25rem;align-items:center;padding:.65rem .8rem}
-.chat-typing span{width:.4rem;height:.4rem;border-radius:50%;background:var(--ink-soft);display:block;
-  animation:chat-bounce 1.1s infinite ease-in-out}
-.chat-typing span:nth-child(2){animation-delay:.15s}
-.chat-typing span:nth-child(3){animation-delay:.3s}
-@keyframes chat-bounce{0%,80%,100%{transform:translateY(0);opacity:.5}40%{transform:translateY(-.2rem);opacity:1}}
-.chat-lead{background:var(--stage);border-radius:var(--r-md);padding:.8rem;align-self:stretch;
-  display:flex;flex-direction:column;gap:.55rem}
-.chat-lead label{font-size:.78rem;color:var(--ink-soft)}
-.chat-lead input,.chat-lead select,.chat-lead textarea{width:100%;margin-top:.2rem;padding:var(--space-2xs) .6rem;
-  border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);color:var(--ink);font:inherit;font-size:.88rem}
-.chat-lead textarea{resize:vertical;min-height:3.2rem}
-.chat-lead button{align-self:flex-start;margin-top:.1rem}
-.chat-panel-input{display:flex;gap:.5rem;padding:var(--space-xs);border-top:1px solid var(--line);flex:none}
-.chat-panel-input input{flex:1;border:1px solid var(--line);border-radius:999px;padding:.55rem var(--space-sm);
-  font:inherit;font-size:.88rem;background:var(--paper);color:var(--ink)}
-.chat-panel-input button{flex:none;border:0;border-radius:50%;width:2.4rem;height:2.4rem;background:var(--accent);
-  color:var(--accent-ink);cursor:pointer;display:flex;align-items:center;justify-content:center}
-.chat-panel-input button:hover{background:var(--accent-hover)}
-.chat-panel-input button svg{width:1.1rem;height:1.1rem}
-/* while the cookie banner is up, lift the chat widget clear of it */
 body.nav-locked{overflow:hidden}
-body.has-cookie-banner .chat-fab{bottom:calc(6.75rem + env(safe-area-inset-bottom,0px))}
-body.has-cookie-banner .chat-greeting{bottom:calc(6.9rem + env(safe-area-inset-bottom,0px))}
-body.has-cookie-banner .chat-panel{bottom:calc(10.75rem + env(safe-area-inset-bottom,0px))}
-@media (max-width:30rem){
-  .chat-panel{right:.75rem;left:.75rem;bottom:calc(5.25rem + env(safe-area-inset-bottom,0px));width:auto;max-height:65vh}
-  body.has-cookie-banner .chat-fab{bottom:calc(9.5rem + env(safe-area-inset-bottom,0px))}
-  body.has-cookie-banner .chat-greeting{bottom:calc(9.65rem + env(safe-area-inset-bottom,0px))}
-  body.has-cookie-banner .chat-panel{bottom:calc(13.25rem + env(safe-area-inset-bottom,0px))}
-}
 
 /* workflow strip — plain flexbox, evenly spaced and centred by
    construction (no SVG coordinates to keep in sync with the container) */
@@ -564,11 +484,6 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
      bright phone screens than on a desktop monitor — nudge it up so the
      pattern doesn't look like a flat block of colour */
   .contact::before{opacity:.48}
-  /* the floating chat button sits fixed in the bottom-right corner of the
-     viewport; on narrow screens the pillar tabs can scroll to a position
-     where their last item lands right under it. Reserve clearance so a
-     tab never renders in that corner. */
-  .pillar-nav{padding-right:4.5rem}
   /* the full-bleed heroes are a fixed viewport height with the text block
      centered inside — on a tall narrow phone that puts the headline
      ~200-300px down the screen, under a wall of empty space. Anchor the
@@ -606,7 +521,6 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
   form.contact-form .row{grid-template-columns:1fr}
   header.site .wrap{gap:.5rem;padding:var(--space-xs) var(--space-sm)}
   .nav-find{padding:var(--space-2xs) .7rem;font-size:.7rem;letter-spacing:.01em}
-  .chat-greeting{right:1.25rem;left:1.25rem;max-width:none}
 }
 
 @media (max-width:26rem){
