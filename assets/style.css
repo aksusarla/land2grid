@@ -552,6 +552,11 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
      bright phone screens than on a desktop monitor — nudge it up so the
      pattern doesn't look like a flat block of colour */
   .contact::before{opacity:.48}
+  /* the floating chat button sits fixed in the bottom-right corner of the
+     viewport; on narrow screens the pillar tabs can scroll to a position
+     where their last item lands right under it. Reserve clearance so a
+     tab never renders in that corner. */
+  .pillar-nav{padding-right:4.5rem}
   .route,.two,.three,.card-grid,.tile-row,.case-grid{grid-template-columns:1fr}
   .stats-strip{flex-direction:column}
   .stat:hover{flex-grow:1}
