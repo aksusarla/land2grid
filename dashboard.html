@@ -132,6 +132,11 @@
 // No backend yet: PROJECTS is keyed by state name and the map's
 // data-state attributes are matched against those keys directly.
 (function () {
+  // Each project carries its own [x, y] position in the map's SVG
+  // coordinate space, derived from its real latitude/longitude through
+  // the same equirectangular projection used to draw the state paths
+  // (minx 68.1005, maxy 37.077, scale 20.4869, pad 10) — so dots sit at
+  // their actual site location within the state, not a single shared pin.
   var PROJECTS = {
     'Tamil Nadu': [
       {
@@ -141,7 +146,8 @@
         badgeDone: false,
         land: 'Under process',
         connectivity: 'Applied, LFS underway',
-        ppa: 'Under discussion'
+        ppa: 'Under discussion',
+        pos: [216.8, 574.5]
       },
       {
         name: 'Ottapidaram',
@@ -150,7 +156,8 @@
         badgeDone: false,
         land: 'Under process',
         connectivity: 'Applied, LFS underway',
-        ppa: 'Under discussion'
+        ppa: 'Under discussion',
+        pos: [213.3, 586.9]
       },
       {
         name: 'Kanchipuram',
@@ -159,7 +166,8 @@
         badgeDone: true,
         land: 'Under process',
         connectivity: 'Applied, LFS completed',
-        ppa: 'Under discussion'
+        ppa: 'Under discussion',
+        pos: [247.7, 506.7]
       }
     ],
     'Punjab': [
@@ -170,7 +178,8 @@
         badgeDone: false,
         land: 'Identified',
         connectivity: 'Identified, 66kV STU',
-        ppa: 'Under discussion'
+        ppa: 'Under discussion',
+        pos: [168.9, 136.5]
       }
     ]
   };
@@ -187,13 +196,6 @@
   var BOUNDS = {"Andhra Pradesh":[187.5, 377.7, 351.4, 510.9],"Arunachal Pradesh":[490.6, 166.0, 610.0, 223.6],"Assam":[452.5, 196.5, 581.9, 275.1],"Bihar":[321.8, 205.9, 423.5, 272.0],"Chhattisgarh":[259.3, 275.8, 343.9, 405.0],"Goa":[124.4, 446.9, 137.5, 464.3],"Gujarat":[10.0, 263.3, 140.4, 357.4],"Haryana":[140.7, 136.0, 204.3, 203.0],"Himachal Pradesh":[164.4, 88.4, 233.5, 147.2],"Jharkhand":[322.0, 250.6, 416.9, 319.2],"Karnataka":[132.6, 391.8, 224.8, 531.8],"Kerala":[148.6, 507.6, 200.5, 599.7],"Madhya Pradesh":[132.0, 219.1, 311.4, 337.8],"Maharashtra":[103.3, 318.4, 272.1, 449.8],"Manipur":[519.9, 243.2, 555.8, 281.0],"Meghalaya":[454.9, 234.5, 515.6, 256.7],"Mizoram":[504.9, 267.4, 528.8, 319.2],"Nagaland":[527.3, 215.7, 565.9, 253.3],"Odisha":[282.4, 307.5, 407.1, 404.5],"Punjab":[128.4, 103.5, 190.9, 164.4],"Rajasthan":[38.3, 150.9, 218.4, 297.2],"Sikkim":[418.3, 194.0, 436.5, 214.8],"Tamil Nadu":[176.8, 491.7, 260.9, 604.1],"Telangana":[197.3, 362.2, 280.8, 445.1],"Tripura":[482.4, 267.1, 506.4, 299.1],"Uttarakhand":[204.1, 125.2, 275.2, 181.1],"Uttar Pradesh":[194.3, 146.8, 348.5, 280.5],"West Bengal":[373.0, 211.9, 456.0, 328.0],"Andaman and Nicobar":[504.0, 491.5, 538.8, 631.0],"Chandigarh":[186.4, 139.4, 189.0, 141.0],"Dadra Nagar Haveli and Daman Diu":[106.9, 350.6, 114.7, 358.1],"Delhi":[189.2, 178.4, 199.4, 187.7],"Jammu and Kashmir":[118.4, 50.2, 187.6, 107.7],"Ladakh":[100.8, 10.0, 260.5, 107.1],"Lakshadweep":[110.7, 600.1, 111.5, 600.3],"Puducherry":[247.6, 524.2, 250.7, 547.8]};
   var FULL_VIEW = [0, 0, 620, 641];
 
-  // Simple project-location markers, one per state with active sites.
-  // Clicking a dot does exactly what clicking the state shape does.
-  var DOT_POS = {
-    'Tamil Nadu': [219, 548],
-    'Punjab': [160, 134]
-  };
-
   var svg = document.getElementById('india-svg');
   var resetBtn = document.getElementById('map-reset');
   var panel = document.getElementById('panel');
@@ -202,19 +204,23 @@
   var activeDot = null;
   var zoomToken = 0;
 
+  // One marker per project, placed at its own pos[] rather than one
+  // shared pin per state — clicking a dot opens that specific project.
   var SVG_NS = 'http://www.w3.org/2000/svg';
-  Object.keys(DOT_POS).forEach(function (stateName) {
-    var pos = DOT_POS[stateName];
-    var dot = document.createElementNS(SVG_NS, 'circle');
-    dot.setAttribute('class', 'project-dot');
-    dot.setAttribute('cx', pos[0]);
-    dot.setAttribute('cy', pos[1]);
-    dot.setAttribute('r', 6);
-    dot.setAttribute('data-state', stateName);
-    dot.setAttribute('tabindex', '0');
-    dot.setAttribute('role', 'button');
-    dot.setAttribute('aria-label', stateName + ' projects');
-    svg.appendChild(dot);
+  Object.keys(PROJECTS).forEach(function (stateName) {
+    PROJECTS[stateName].forEach(function (p, i) {
+      var dot = document.createElementNS(SVG_NS, 'circle');
+      dot.setAttribute('class', 'project-dot');
+      dot.setAttribute('cx', p.pos[0]);
+      dot.setAttribute('cy', p.pos[1]);
+      dot.setAttribute('r', 6);
+      dot.setAttribute('data-state', stateName);
+      dot.setAttribute('data-index', i);
+      dot.setAttribute('tabindex', '0');
+      dot.setAttribute('role', 'button');
+      dot.setAttribute('aria-label', p.name + ' project');
+      svg.appendChild(dot);
+    });
   });
   var dots = document.querySelectorAll('.project-dot');
 
@@ -289,8 +295,21 @@
     );
   }
 
-  function renderPanel(stateName) {
+  // Marks which dot is "active" to match whichever project is currently
+  // selected in the panel (by state + index, since several dots can sit
+  // in the same state now).
+  function markActiveDot(stateName, index) {
+    if (activeDot) activeDot.classList.remove('is-active');
+    var dot = document.querySelector('.project-dot[data-state="' + stateName + '"][data-index="' + index + '"]');
+    if (dot) dot.classList.add('is-active');
+    activeDot = dot;
+  }
+
+  function renderPanel(stateName, activeIndex) {
     var list = PROJECTS[stateName];
+    activeIndex = activeIndex || 0;
+
+    if (activeDot) { activeDot.classList.remove('is-active'); activeDot = null; }
 
     if (!list) {
       panel.innerHTML =
@@ -301,7 +320,7 @@
 
     var rowsHTML = list.map(function (p, i) {
       return (
-        '<div class="project-row' + (i === 0 ? ' is-active' : '') + '" data-index="' + i + '" tabindex="0" role="button">' +
+        '<div class="project-row' + (i === activeIndex ? ' is-active' : '') + '" data-index="' + i + '" tabindex="0" role="button">' +
           '<span><span class="project-name">' + p.name + '</span>' +
           '<span class="project-meta">' + p.capacity + ' MW</span></span>' +
           '<span class="project-badge' + (p.badgeDone ? ' is-done' : '') + '">' + p.badge + '</span>' +
@@ -313,7 +332,7 @@
       '<span class="panel-state">' + stateName + '</span>' +
       '<p class="panel-sub">' + list.length + ' active site' + (list.length === 1 ? '' : 's') + '</p>' +
       rowsHTML +
-      detailHTML(list[0]);
+      detailHTML(list[activeIndex]);
 
     var rows = panel.querySelectorAll('.project-row');
     function select(i) {
@@ -322,34 +341,30 @@
       var old = panel.querySelector('.project-detail');
       if (old) old.remove();
       panel.insertAdjacentHTML('beforeend', detailHTML(list[i]));
+      markActiveDot(stateName, i);
     }
     rows.forEach(function (r, i) {
-      r.addEventListener('mouseenter', function () { select(i); });
       r.addEventListener('click', function () { select(i); });
       r.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(i); }
       });
     });
+
+    markActiveDot(stateName, activeIndex);
   }
 
-  function selectState(el) {
+  function selectState(el, activeIndex) {
     if (activeState) activeState.classList.remove('is-active');
     el.classList.add('is-active');
     activeState = el;
     var stateName = el.getAttribute('data-state');
-
-    if (activeDot) activeDot.classList.remove('is-active');
-    var dot = document.querySelector('.project-dot[data-state="' + stateName + '"]');
-    if (dot) dot.classList.add('is-active');
-    activeDot = dot;
-
-    renderPanel(stateName);
+    renderPanel(stateName, activeIndex);
     zoomToState(stateName);
   }
 
-  function selectStateByName(stateName) {
+  function selectProjectDot(stateName, index) {
     var el = document.querySelector('.state[data-state="' + stateName + '"]');
-    if (el) selectState(el);
+    if (el) selectState(el, index);
   }
 
   states.forEach(function (el) {
@@ -362,10 +377,13 @@
   dots.forEach(function (d) {
     d.addEventListener('click', function (e) {
       e.stopPropagation();
-      selectStateByName(d.getAttribute('data-state'));
+      selectProjectDot(d.getAttribute('data-state'), parseInt(d.getAttribute('data-index'), 10));
     });
     d.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectStateByName(d.getAttribute('data-state')); }
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectProjectDot(d.getAttribute('data-state'), parseInt(d.getAttribute('data-index'), 10));
+      }
     });
   });
 
