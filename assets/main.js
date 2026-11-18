@@ -1,4 +1,4 @@
-// land2grid — shared behaviour
+// land2grid: shared behaviour
 
 // Homepage hero: rotate through a set of renewable-energy background clips,
 // cross-fading to the next one every 6 seconds. Two stacked <video>
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // mark current nav link as active — compare by filename so this
+  // mark current nav link as active: compare by filename so this
   // works the same whether the site sits at a domain root or under
   // a GitHub Pages project subpath (e.g. /land2grid/)
   var hereFile = location.pathname.split('/').filter(Boolean).pop() || 'index.html';
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // "How an engagement runs" steps — each has a collapsed detail list that
+  // "How an engagement runs" steps: each has a collapsed detail list that
   // opens on hover/focus via CSS alone. Touch devices have no hover, so a
   // tap toggles an .is-open class instead (and tapping a second, already-open
   // step closes the first, so only one detail panel is open at a time).
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // cookie consent — a plain accept/reject banner shown until the visitor
+  // cookie consent: a plain accept/reject banner shown until the visitor
   // picks one, stored in localStorage so the choice persists across pages
   // and visits. This site doesn't currently set any analytics/marketing
   // cookies; the banner and the stored choice are here so that if/when one
@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // "IPPs" / "EPCs" / "C&I" acronym reveal — on hover or focus, the
+  // "IPPs" / "EPCs" / "C&I" acronym reveal: on hover or focus, the
   // spelled-out term's own letters slide out from the same spot the
   // abbreviation sits in. Positions are measured per letter (not
   // hardcoded) so this keeps working if the wording ever changes.
@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Scroll-reveal: content fades and lifts in as it enters the viewport.
-// Progressive enhancement — if IntersectionObserver isn't available, or
+// Progressive enhancement: if IntersectionObserver isn't available, or
 // the person has asked for reduced motion, everything just shows up
 // immediately instead.
 document.addEventListener('DOMContentLoaded', function () {

@@ -1,7 +1,7 @@
 # Icon credits
 
 The icons in this folder started as downloads from [The Noun Project](https://thenounproject.com)
-(free tier, which requires visible attribution — see the site footer).
+(free tier, which requires visible attribution: see the site footer).
 `source/` holds the original downloaded files exactly as received, with
 their baked-in "Created by … from Noun Project" credit intact. The
 top-level `.svg` files are derived from them: attribution text stripped
@@ -17,5 +17,5 @@ site palette.
 
 If this site ever moves to a Noun Project Pro / royalty-free license,
 the footer credit line in the page templates (search for "Icons by" in
-`assets/main.js` or the page `<footer>`) can be removed — Pro licensing
+`assets/main.js` or the page `<footer>`) can be removed: Pro licensing
 doesn't require attribution.
