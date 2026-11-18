@@ -535,4 +535,13 @@ document.addEventListener('DOMContentLoaded', function () {
   }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
 
   targets.forEach(function (el) { io.observe(el); });
+
+  // Safety net: on some phones (slow layout, a resize mid-scroll, a tab
+  // restored from the background) the observer can miss an element that's
+  // already sitting in view. Nothing should stay invisible forever, so
+  // anything not revealed within a couple of seconds is shown anyway.
+  setTimeout(function () {
+    targets.forEach(function (el) { el.classList.add('is-visible'); });
+    io.disconnect();
+  }, 2000);
 });
