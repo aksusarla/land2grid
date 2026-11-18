@@ -49,17 +49,25 @@ document.addEventListener('DOMContentLoaded', function () {
   var toggle = document.querySelector('.nav-toggle');
   var nav = document.querySelector('nav.primary');
   if (toggle && nav) {
-    toggle.addEventListener('click', function () {
-      var open = nav.classList.toggle('open');
+    var setNavOpen = function (open) {
+      nav.classList.toggle('open', open);
       toggle.classList.toggle('is-open', open);
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      // lock the page behind the drawer so a swipe doesn't scroll the
+      // homepage underneath while the menu is covering the screen
+      document.body.classList.toggle('nav-locked', open);
+    };
+    toggle.addEventListener('click', function () {
+      setNavOpen(!nav.classList.contains('open'));
     });
     nav.querySelectorAll('a').forEach(function (link) {
-      link.addEventListener('click', function () {
-        nav.classList.remove('open');
-        toggle.classList.remove('is-open');
-        toggle.setAttribute('aria-expanded', 'false');
-      });
+      link.addEventListener('click', function () { setNavOpen(false); });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && nav.classList.contains('open')) {
+        setNavOpen(false);
+        toggle.focus();
+      }
     });
   }
 
