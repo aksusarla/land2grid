@@ -158,7 +158,7 @@ body.nav-locked{overflow:hidden}
 .flow-track{display:flex;justify-content:space-between;align-items:flex-start;position:relative;gap:1rem;
   margin:var(--space-lg) 0 2.75rem}
 .flow-track::before{content:"";position:absolute;left:2.125rem;right:2.125rem;top:2.125rem;height:2px;
-  background:linear-gradient(90deg,var(--land),var(--grid),var(--customer));z-index:0}
+  background:var(--line);z-index:0}
 .flow-node{display:flex;flex-direction:column;align-items:center;gap:.6rem;position:relative;z-index:1;flex:1;text-align:center;padding:0 var(--space-2xs)}
 .flow-node strong{font-size:1rem;white-space:nowrap}
 .flow-dot{width:4.25rem;height:4.25rem;border-radius:var(--r-lg);flex:none;display:flex;align-items:center;justify-content:center;
