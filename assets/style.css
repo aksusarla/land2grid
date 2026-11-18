@@ -149,7 +149,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
 
 /* chat widget — fixed bottom-right shortcut to Contact, not a simulated
    live agent: it is honest about being a link, not a person typing */
-.chat-fab{position:fixed;right:1.5rem;bottom:1.5rem;width:3.4rem;height:3.4rem;border-radius:50%;
+.chat-fab{position:fixed;right:1.5rem;bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));width:3.4rem;height:3.4rem;border-radius:50%;
   background:var(--accent);color:var(--accent-ink);border:0;display:flex;align-items:center;justify-content:center;
   box-shadow:var(--shadow-lg);cursor:pointer;z-index:70;transition:opacity .2s ease}
 .chat-fab:hover{background:var(--accent-hover)}
@@ -163,7 +163,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
 }
 .chat-dot{position:absolute;top:-.1rem;right:-.1rem;width:.75rem;height:.75rem;border-radius:50%;
   background:var(--notify);border:2px solid var(--paper)}
-.chat-greeting{position:fixed;right:5.3rem;bottom:1.65rem;max-width:17rem;background:var(--surface);color:var(--ink);
+.chat-greeting{position:fixed;right:5.3rem;bottom:calc(1.65rem + env(safe-area-inset-bottom,0px));max-width:17rem;background:var(--surface);color:var(--ink);
   padding:var(--space-xs) var(--space-sm);border-radius:999px 999px 4px 999px;box-shadow:var(--shadow-md);display:flex;align-items:center;
   gap:.6rem;font-size:.88rem;z-index:70;animation:chat-pop .2s ease}
 .chat-greeting a{color:var(--accent-text);font-weight:700;text-decoration:none;white-space:nowrap}
@@ -173,7 +173,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
 
 /* chat panel — basic, rule-based: quick links to the right page, or a
    form that hands details to the team. Never claims to be a live person. */
-.chat-panel{position:fixed;right:1.5rem;bottom:5.5rem;width:21rem;max-height:min(32rem,70vh);
+.chat-panel{position:fixed;right:1.5rem;bottom:calc(5.5rem + env(safe-area-inset-bottom,0px));width:21rem;max-height:min(32rem,70vh);
   background:var(--surface);color:var(--ink);border-radius:var(--r-lg);box-shadow:var(--shadow-lg);
   display:flex;flex-direction:column;overflow:hidden;z-index:70;animation:chat-pop .18s ease}
 .chat-panel-head{background:var(--dark);color:var(--on-dark);padding:.9rem 1.1rem;display:flex;
@@ -219,14 +219,14 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
 .chat-panel-input button svg{width:1.1rem;height:1.1rem}
 /* while the cookie banner is up, lift the chat widget clear of it */
 body.nav-locked{overflow:hidden}
-body.has-cookie-banner .chat-fab{bottom:6.75rem}
-body.has-cookie-banner .chat-greeting{bottom:6.9rem}
-body.has-cookie-banner .chat-panel{bottom:10.75rem}
+body.has-cookie-banner .chat-fab{bottom:calc(6.75rem + env(safe-area-inset-bottom,0px))}
+body.has-cookie-banner .chat-greeting{bottom:calc(6.9rem + env(safe-area-inset-bottom,0px))}
+body.has-cookie-banner .chat-panel{bottom:calc(10.75rem + env(safe-area-inset-bottom,0px))}
 @media (max-width:30rem){
-  .chat-panel{right:.75rem;left:.75rem;bottom:5.25rem;width:auto;max-height:65vh}
-  body.has-cookie-banner .chat-fab{bottom:9.5rem}
-  body.has-cookie-banner .chat-greeting{bottom:9.65rem}
-  body.has-cookie-banner .chat-panel{bottom:13.25rem}
+  .chat-panel{right:.75rem;left:.75rem;bottom:calc(5.25rem + env(safe-area-inset-bottom,0px));width:auto;max-height:65vh}
+  body.has-cookie-banner .chat-fab{bottom:calc(9.5rem + env(safe-area-inset-bottom,0px))}
+  body.has-cookie-banner .chat-greeting{bottom:calc(9.65rem + env(safe-area-inset-bottom,0px))}
+  body.has-cookie-banner .chat-panel{bottom:calc(13.25rem + env(safe-area-inset-bottom,0px))}
 }
 
 /* workflow strip — plain flexbox, evenly spaced and centred by
@@ -525,7 +525,7 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
 /* cookie consent banner — fixed to the bottom, shown until the visitor
    picks accept or reject; see assets/main.js for the logic */
 .cookie-banner{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--dark);color:var(--on-dark);
-  border-top:1px solid var(--line-on-dark);padding:1.1rem var(--space-md);display:flex;align-items:center;gap:1.5rem;
+  border-top:1px solid var(--line-on-dark);padding:1.1rem var(--space-md) calc(1.1rem + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:1.5rem;
   flex-wrap:wrap;box-shadow:0 -4px 20px rgba(0,0,0,.25)}
 .cookie-banner p{flex:1 1 20rem;margin:0;font-size:.88rem;color:var(--on-dark-soft);line-height:1.5}
 .cookie-banner p a{color:var(--on-dark);text-decoration:underline}
@@ -537,7 +537,7 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
 .cookie-banner .cookie-accept{background:var(--signal);color:var(--signal-ink)}
 .cookie-banner .cookie-accept:hover{background:var(--accent-hover)}
 @media (max-width:30rem){
-  .cookie-banner{padding:var(--space-sm);gap:1rem}
+  .cookie-banner{padding:var(--space-sm);padding-bottom:calc(var(--space-sm) + env(safe-area-inset-bottom,0px));gap:1rem}
   .cookie-banner .cookie-actions{width:100%}
   .cookie-banner button{flex:1}
 }
