@@ -64,11 +64,71 @@ nav.primary{display:flex;align-items:center;gap:1.6rem}
 .nav-home{display:none}
 nav.primary a{color:var(--on-dark-soft);text-decoration:none;font-size:.95rem;white-space:nowrap}
 nav.primary a:hover,nav.primary a.active{color:var(--on-dark)}
-.nav-find{color:var(--signal-ink) !important;font-weight:700;background:var(--signal);border:1px solid var(--signal);
-  padding:.6rem 1.3rem;border-radius:.4rem;margin-left:auto;text-decoration:none;text-transform:uppercase;
-  font-size:.82rem;letter-spacing:.03em;white-space:nowrap}
-.nav-find:hover{background:var(--accent-hover) !important;border-color:var(--accent-hover)}
+.nav-find{position:relative;display:inline-flex;align-items:center;justify-content:center;
+  width:11rem;height:2.75rem;color:var(--signal-ink) !important;font-weight:700;background:var(--signal);
+  border:none;margin-left:auto;text-decoration:none;text-transform:uppercase;
+  font-size:.82rem;letter-spacing:.03em;white-space:nowrap;border-radius:999px;
+  transition:background .25s ease,transform .25s ease}
+.nav-find:hover,.nav-find:focus-visible{background:var(--accent-hover) !important;transform:scale(1.04)}
+.nav-find .full,.nav-find .short{position:relative;z-index:1}
 .nav-find .short{display:none}
+
+/* animated double-ring outline, sitting right on the pill's own edge --
+   three fixed-geometry copies (one per nav-find size breakpoint) so the
+   ring is always pixel-true to the button, never stretched or distorted */
+.nav-find-ring{position:absolute;top:0;left:0;width:100%;height:100%;display:none;pointer-events:none}
+.nav-find-ring--lg{display:block}
+.nav-find-line{fill:none;stroke-linecap:round;animation-timing-function:linear;animation-iteration-count:infinite}
+.nav-find-line--outer{stroke:var(--sun-gold)}
+.nav-find-line--inner{stroke:var(--sun-orange)}
+.nav-find:hover .nav-find-line,.nav-find:focus-visible .nav-find-line{animation-play-state:paused}
+
+.nav-find-ring--lg .nav-find-line--outer{stroke-width:3;stroke-dasharray:196.41 196.41;
+  animation-name:nav-find-outer-lg;animation-duration:6s}
+.nav-find-ring--lg .nav-find-line--inner{stroke-width:1.5;stroke-dasharray:198.76 198.76;
+  animation-name:nav-find-inner-lg;animation-duration:5s}
+.nav-find-ring--md .nav-find-line--outer{stroke-width:2.5;stroke-dasharray:167.76 167.76;
+  animation-name:nav-find-outer-md;animation-duration:6s}
+.nav-find-ring--md .nav-find-line--inner{stroke-width:1.25;stroke-dasharray:169.72 169.72;
+  animation-name:nav-find-inner-md;animation-duration:5s}
+.nav-find-ring--sm .nav-find-line--outer{stroke-width:2.5;stroke-dasharray:129.76 129.76;
+  animation-name:nav-find-outer-sm;animation-duration:6s}
+.nav-find-ring--sm .nav-find-line--inner{stroke-width:1.25;stroke-dasharray:131.72 131.72;
+  animation-name:nav-find-inner-sm;animation-duration:5s}
+
+@keyframes nav-find-outer-lg{
+  0%{stroke-dashoffset:0;stroke-dasharray:196.41 196.41}
+  50%{stroke-dasharray:130.94 261.87}
+  100%{stroke-dashoffset:392.81;stroke-dasharray:196.41 196.41}
+}
+@keyframes nav-find-inner-lg{
+  0%{stroke-dashoffset:0;stroke-dasharray:198.76 198.76}
+  50%{stroke-dasharray:132.51 265.01}
+  100%{stroke-dashoffset:-397.52;stroke-dasharray:198.76 198.76}
+}
+@keyframes nav-find-outer-md{
+  0%{stroke-dashoffset:0;stroke-dasharray:167.76 167.76}
+  50%{stroke-dasharray:111.84 223.69}
+  100%{stroke-dashoffset:335.53;stroke-dasharray:167.76 167.76}
+}
+@keyframes nav-find-inner-md{
+  0%{stroke-dashoffset:0;stroke-dasharray:169.72 169.72}
+  50%{stroke-dasharray:113.15 226.30}
+  100%{stroke-dashoffset:-339.45;stroke-dasharray:169.72 169.72}
+}
+@keyframes nav-find-outer-sm{
+  0%{stroke-dashoffset:0;stroke-dasharray:129.76 129.76}
+  50%{stroke-dasharray:86.51 173.02}
+  100%{stroke-dashoffset:259.53;stroke-dasharray:129.76 129.76}
+}
+@keyframes nav-find-inner-sm{
+  0%{stroke-dashoffset:0;stroke-dasharray:131.72 131.72}
+  50%{stroke-dasharray:87.82 175.63}
+  100%{stroke-dashoffset:-263.45;stroke-dasharray:131.72 131.72}
+}
+@media (prefers-reduced-motion:reduce){
+  .nav-find-line{animation:none}
+}
 .nav-toggle{display:none;align-items:center;justify-content:center;flex-direction:column;gap:3px;
   width:2.5rem;height:2.5rem;background:var(--paper);border:0;border-radius:.5rem;cursor:pointer;flex:none;padding:0}
 .nav-toggle span{display:block;width:1.05rem;height:2px;background:var(--ink);border-radius:2px;
@@ -501,12 +561,17 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
   footer.site .footer-brand{grid-column:1/-1}
   form.contact-form .row{grid-template-columns:1fr}
   header.site .wrap{gap:.5rem;padding:var(--space-xs) var(--space-sm)}
-  .nav-find{padding:var(--space-2xs) .7rem;font-size:.7rem;letter-spacing:.01em}
+  .nav-find{width:9.375rem;height:2.375rem;font-size:.7rem;letter-spacing:.01em}
+  .nav-find-ring--lg{display:none}
+  .nav-find-ring--md{display:block}
 }
 
 @media (max-width:26rem){
   .nav-find .full{display:none}
   .nav-find .short{display:inline}
+  .nav-find{width:7rem}
+  .nav-find-ring--md{display:none}
+  .nav-find-ring--sm{display:block}
 }
 
 @media (max-width:26.5rem){
