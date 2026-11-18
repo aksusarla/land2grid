@@ -469,6 +469,11 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
 .founder{display:grid;grid-template-columns:14rem 1fr;gap:1.75rem;margin-top:var(--space-md);align-items:start}
 .founder-media{display:flex;flex-direction:column;align-items:center;flex:none}
 .founder-photo{width:14rem;height:14rem;border-radius:var(--r-lg);object-fit:cover;flex:none}
+@media (min-width:64rem){
+  /* bigger founder photo on desktop only -- mobile/tablet keep the base size above */
+  .founder{grid-template-columns:19rem 1fr}
+  .founder-photo{width:19rem;height:19rem}
+}
 .founder-name{font-family:"Figtree",sans-serif;font-weight:700;font-size:1.25rem;margin-bottom:.15rem}
 .founder-role{color:var(--ink-soft);font-size:.92rem;margin-bottom:.85rem}
 .founder p{color:var(--ink-soft);max-width:42rem}
