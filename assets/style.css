@@ -567,10 +567,15 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
   /* the full-bleed heroes are a fixed viewport height with the text block
      centered inside — on a tall narrow phone that puts the headline
      ~200-300px down the screen, under a wall of empty space. Anchor the
-     text toward the bottom third instead, and trim the height slightly,
-     so the headline reads immediately and the next section peeks in as
-     a cue that there's more below. */
-  .hero-video,.service-hero{height:90svh;height:90vh;align-items:flex-end}
+     text toward the bottom third instead so the headline reads
+     immediately. Height is left alone (still the same 100svh/100vh as
+     desktop) rather than trimmed: svh resolves to Safari's *smallest*
+     toolbar state, so shrinking it further risked the real, larger
+     viewport pulling bottom-anchored content up into the sticky header
+     on devices where the toolbar is already compact. A safe min-height
+     plus a guaranteed top gap is a sturdier way to get the same result. */
+  .hero-video,.service-hero{align-items:flex-end;min-height:34rem}
+  .hero-video .wrap.hero-content,.service-hero .wrap{padding-top:6rem}
   .route,.two,.three,.card-grid,.tile-row,.case-grid{grid-template-columns:1fr}
   .stats-strip{flex-direction:column}
   .stat:hover{flex-grow:1}
