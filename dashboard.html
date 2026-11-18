@@ -262,6 +262,9 @@
   function zoomToIndia() {
     animateViewBox(FULL_VIEW, 500);
     resetBtn.classList.remove('is-visible');
+    if (activeState) { activeState.classList.remove('is-active'); activeState = null; }
+    if (activeDot) { activeDot.classList.remove('is-active'); activeDot = null; }
+    renderDefaultPanel();
   }
 
   resetBtn.addEventListener('click', zoomToIndia);
@@ -366,9 +369,26 @@
     });
   });
 
-  // default view: Tamil Nadu, since that's where the live sites are
-  var tn = document.querySelector('.state[data-state="Tamil Nadu"]');
-  if (tn) selectState(tn);
+  // default view: the whole India map, zoomed out, with no state
+  // pre-selected — a first-time visitor should see the country before
+  // being dropped into one state's detail.
+  renderDefaultPanel();
+
+  function renderDefaultPanel() {
+    var stateNames = Object.keys(PROJECTS);
+    var siteCount = 0, mwTotal = 0;
+    stateNames.forEach(function (name) {
+      PROJECTS[name].forEach(function (p) {
+        siteCount += 1;
+        mwTotal += p.capacity;
+      });
+    });
+    panel.innerHTML =
+      '<span class="panel-state">All India</span>' +
+      '<p class="panel-empty">' + siteCount + ' active site' + (siteCount === 1 ? '' : 's') +
+      ' across ' + stateNames.length + ' state' + (stateNames.length === 1 ? '' : 's') +
+      ' (' + mwTotal + ' MW tracked). Click a state on the map to see what\'s live there.</p>';
+  }
 })();
 </script>
 </body>
