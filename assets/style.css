@@ -73,58 +73,60 @@ nav.primary a:hover,nav.primary a.active{color:var(--on-dark)}
 .nav-find .full,.nav-find .short{position:relative;z-index:1}
 .nav-find .short{display:none}
 
-/* animated double-ring outline, sitting right on the pill's own edge --
-   three fixed-geometry copies (one per nav-find size breakpoint) so the
-   ring is always pixel-true to the button, never stretched or distorted */
-.nav-find-ring{position:absolute;top:0;left:0;width:100%;height:100%;display:none;pointer-events:none}
-.nav-find-ring--lg{display:block}
+/* animated double-ring halo, floating just outside the pill against the
+   dark header background for real contrast (sitting directly on the
+   orange fill made the lines nearly invisible) -- three fixed-geometry
+   copies (one per nav-find size breakpoint) so the ring is always
+   pixel-true to the button, never stretched or distorted */
+.nav-find-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none;pointer-events:none}
+.nav-find-ring--lg{display:block;width:12.25rem;height:4rem}
 .nav-find-line{fill:none;stroke-linecap:round;animation-timing-function:linear;animation-iteration-count:infinite}
 .nav-find-line--outer{stroke:var(--sun-gold)}
 .nav-find-line--inner{stroke:var(--sun-orange)}
 .nav-find:hover .nav-find-line,.nav-find:focus-visible .nav-find-line{animation-play-state:paused}
 
-.nav-find-ring--lg .nav-find-line--outer{stroke-width:3;stroke-dasharray:196.41 196.41;
+.nav-find-ring--lg .nav-find-line--outer{stroke-width:2;stroke-dasharray:229.39 229.39;
   animation-name:nav-find-outer-lg;animation-duration:6s}
-.nav-find-ring--lg .nav-find-line--inner{stroke-width:1.5;stroke-dasharray:198.76 198.76;
+.nav-find-ring--lg .nav-find-line--inner{stroke-width:1.5;stroke-dasharray:216.83 216.83;
   animation-name:nav-find-inner-lg;animation-duration:5s}
-.nav-find-ring--md .nav-find-line--outer{stroke-width:2.5;stroke-dasharray:167.76 167.76;
+.nav-find-ring--md .nav-find-line--outer{stroke-width:2;stroke-dasharray:199.97 199.97;
   animation-name:nav-find-outer-md;animation-duration:6s}
-.nav-find-ring--md .nav-find-line--inner{stroke-width:1.25;stroke-dasharray:169.72 169.72;
+.nav-find-ring--md .nav-find-line--inner{stroke-width:1.5;stroke-dasharray:187.4 187.4;
   animation-name:nav-find-inner-md;animation-duration:5s}
-.nav-find-ring--sm .nav-find-line--outer{stroke-width:2.5;stroke-dasharray:129.76 129.76;
+.nav-find-ring--sm .nav-find-line--outer{stroke-width:2;stroke-dasharray:161.97 161.97;
   animation-name:nav-find-outer-sm;animation-duration:6s}
-.nav-find-ring--sm .nav-find-line--inner{stroke-width:1.25;stroke-dasharray:131.72 131.72;
+.nav-find-ring--sm .nav-find-line--inner{stroke-width:1.5;stroke-dasharray:149.4 149.4;
   animation-name:nav-find-inner-sm;animation-duration:5s}
 
 @keyframes nav-find-outer-lg{
-  0%{stroke-dashoffset:0;stroke-dasharray:196.41 196.41}
-  50%{stroke-dasharray:130.94 261.87}
-  100%{stroke-dashoffset:392.81;stroke-dasharray:196.41 196.41}
+  0%{stroke-dashoffset:0;stroke-dasharray:229.39 229.39}
+  50%{stroke-dasharray:152.93 305.86}
+  100%{stroke-dashoffset:458.78;stroke-dasharray:229.39 229.39}
 }
 @keyframes nav-find-inner-lg{
-  0%{stroke-dashoffset:0;stroke-dasharray:198.76 198.76}
-  50%{stroke-dasharray:132.51 265.01}
-  100%{stroke-dashoffset:-397.52;stroke-dasharray:198.76 198.76}
+  0%{stroke-dashoffset:0;stroke-dasharray:216.83 216.83}
+  50%{stroke-dasharray:144.55 289.1}
+  100%{stroke-dashoffset:-433.65;stroke-dasharray:216.83 216.83}
 }
 @keyframes nav-find-outer-md{
-  0%{stroke-dashoffset:0;stroke-dasharray:167.76 167.76}
-  50%{stroke-dasharray:111.84 223.69}
-  100%{stroke-dashoffset:335.53;stroke-dasharray:167.76 167.76}
+  0%{stroke-dashoffset:0;stroke-dasharray:199.97 199.97}
+  50%{stroke-dasharray:133.31 266.62}
+  100%{stroke-dashoffset:399.93;stroke-dasharray:199.97 199.97}
 }
 @keyframes nav-find-inner-md{
-  0%{stroke-dashoffset:0;stroke-dasharray:169.72 169.72}
-  50%{stroke-dasharray:113.15 226.30}
-  100%{stroke-dashoffset:-339.45;stroke-dasharray:169.72 169.72}
+  0%{stroke-dashoffset:0;stroke-dasharray:187.4 187.4}
+  50%{stroke-dasharray:124.93 249.87}
+  100%{stroke-dashoffset:-374.8;stroke-dasharray:187.4 187.4}
 }
 @keyframes nav-find-outer-sm{
-  0%{stroke-dashoffset:0;stroke-dasharray:129.76 129.76}
-  50%{stroke-dasharray:86.51 173.02}
-  100%{stroke-dashoffset:259.53;stroke-dasharray:129.76 129.76}
+  0%{stroke-dashoffset:0;stroke-dasharray:161.97 161.97}
+  50%{stroke-dasharray:107.98 215.95}
+  100%{stroke-dashoffset:323.93;stroke-dasharray:161.97 161.97}
 }
 @keyframes nav-find-inner-sm{
-  0%{stroke-dashoffset:0;stroke-dasharray:131.72 131.72}
-  50%{stroke-dasharray:87.82 175.63}
-  100%{stroke-dashoffset:-263.45;stroke-dasharray:131.72 131.72}
+  0%{stroke-dashoffset:0;stroke-dasharray:149.4 149.4}
+  50%{stroke-dasharray:99.6 199.2}
+  100%{stroke-dashoffset:-298.8;stroke-dasharray:149.4 149.4}
 }
 @media (prefers-reduced-motion:reduce){
   .nav-find-line{animation:none}
@@ -563,7 +565,7 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
   header.site .wrap{gap:.5rem;padding:var(--space-xs) var(--space-sm)}
   .nav-find{width:9.375rem;height:2.375rem;font-size:.7rem;letter-spacing:.01em}
   .nav-find-ring--lg{display:none}
-  .nav-find-ring--md{display:block}
+  .nav-find-ring--md{display:block;width:10.625rem;height:3.625rem}
 }
 
 @media (max-width:26rem){
@@ -571,7 +573,7 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
   .nav-find .short{display:inline}
   .nav-find{width:7rem}
   .nav-find-ring--md{display:none}
-  .nav-find-ring--sm{display:block}
+  .nav-find-ring--sm{display:block;width:8.25rem;height:3.625rem}
 }
 
 @media (max-width:26.5rem){
