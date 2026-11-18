@@ -140,6 +140,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.body.appendChild(fab);
 
+  // Fade the button out while the page is moving so it never sits on top
+  // of text the user is mid-read on, and bring it back once scrolling
+  // settles. The opacity dip itself is CSS-only (@media max-width:48rem),
+  // so this listener is a harmless no-op on desktop widths.
+  var scrollFadeTimer = null;
+  window.addEventListener('scroll', function () {
+    fab.classList.add('is-scrolling');
+    clearTimeout(scrollFadeTimer);
+    scrollFadeTimer = setTimeout(function () {
+      fab.classList.remove('is-scrolling');
+    }, 400);
+  }, { passive: true });
+
   var consentAlready = null;
   try { consentAlready = localStorage.getItem('l2g-cookie-consent'); } catch (e) {}
   var dismissed = sessionStorage.getItem('l2g-chat-dismissed') === '1';

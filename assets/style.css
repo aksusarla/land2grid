@@ -151,9 +151,16 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
    live agent: it is honest about being a link, not a person typing */
 .chat-fab{position:fixed;right:1.5rem;bottom:1.5rem;width:3.4rem;height:3.4rem;border-radius:50%;
   background:var(--accent);color:var(--accent-ink);border:0;display:flex;align-items:center;justify-content:center;
-  box-shadow:var(--shadow-lg);cursor:pointer;z-index:70}
+  box-shadow:var(--shadow-lg);cursor:pointer;z-index:70;transition:opacity .2s ease}
 .chat-fab:hover{background:var(--accent-hover)}
 .chat-fab svg{width:1.5rem;height:1.5rem}
+/* on narrow screens the fixed button sits over whatever body copy, form
+   field or list row happens to scroll underneath it. Rather than reserve
+   dead space on every block that might run under it, fade it back while
+   the page is actively moving and bring it back once scrolling settles. */
+@media (max-width:48rem){
+  .chat-fab.is-scrolling{opacity:.32;pointer-events:none}
+}
 .chat-dot{position:absolute;top:-.1rem;right:-.1rem;width:.75rem;height:.75rem;border-radius:50%;
   background:var(--notify);border:2px solid var(--paper)}
 .chat-greeting{position:fixed;right:5.3rem;bottom:1.65rem;max-width:17rem;background:var(--surface);color:var(--ink);
@@ -557,6 +564,13 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
      where their last item lands right under it. Reserve clearance so a
      tab never renders in that corner. */
   .pillar-nav{padding-right:4.5rem}
+  /* the full-bleed heroes are a fixed viewport height with the text block
+     centered inside — on a tall narrow phone that puts the headline
+     ~200-300px down the screen, under a wall of empty space. Anchor the
+     text toward the bottom third instead, and trim the height slightly,
+     so the headline reads immediately and the next section peeks in as
+     a cue that there's more below. */
+  .hero-video,.service-hero{height:90svh;height:90vh;align-items:flex-end}
   .route,.two,.three,.card-grid,.tile-row,.case-grid{grid-template-columns:1fr}
   .stats-strip{flex-direction:column}
   .stat:hover{flex-grow:1}
