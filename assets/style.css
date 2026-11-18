@@ -242,7 +242,7 @@ body.has-cookie-banner .chat-panel{bottom:10.75rem}
 .flow-node{display:flex;flex-direction:column;align-items:center;gap:.6rem;position:relative;z-index:1;flex:1;text-align:center;padding:0 var(--space-2xs)}
 .flow-node strong{font-size:1rem;white-space:nowrap}
 .flow-dot{width:4.25rem;height:4.25rem;border-radius:var(--r-lg);flex:none;display:flex;align-items:center;justify-content:center;
-  background:var(--surface);border:2.5px solid var(--line);box-shadow:var(--shadow-sm)}
+  background:var(--surface);border:2.5px solid var(--accent,var(--line));box-shadow:var(--shadow-sm)}
 .flow-dot img{width:2.4rem;height:2.4rem;object-fit:contain}
 .flow-sub{color:var(--ink-soft);font-size:.85rem;max-width:14rem}
 
@@ -575,10 +575,18 @@ footer.site .footer-legal a:hover{color:var(--on-dark)}
   .stats-strip{flex-direction:column}
   .stat:hover{flex-grow:1}
   .tile{min-height:0}
-  .flow-track{flex-direction:column;align-items:stretch;gap:1.75rem}
+  /* the connecting line only makes sense running between dots in a row,
+     so once the steps stack we drop it and turn each step into its own
+     card instead, with the accent colour carried on the left edge */
+  .flow-track{flex-direction:column;align-items:stretch;gap:.85rem}
   .flow-track::before{display:none}
-  .flow-node{flex-direction:row;text-align:left;gap:1rem}
-  .flow-sub{max-width:none}
+  .flow-node{flex-direction:row;align-items:center;text-align:left;gap:1rem;
+    background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent,var(--line));
+    border-radius:var(--r-lg);padding:1rem 1.1rem}
+  .flow-dot{width:3.25rem;height:3.25rem;border:none;box-shadow:none;background:var(--paper)}
+  .flow-dot img{width:1.9rem;height:1.9rem}
+  .flow-node strong{white-space:normal}
+  .flow-sub{max-width:none;display:block;margin-top:.15rem}
   .hero-split{grid-template-columns:1fr}
   .hero-tile-light,.hero-tile-navy{grid-column:span 1}
   .hero-tile-navy{align-items:flex-start;text-align:left}
