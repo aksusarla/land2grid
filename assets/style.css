@@ -34,7 +34,7 @@
   --space-md:1.5rem;--space-lg:2rem;--space-xl:3rem;--space-2xl:4.5rem;
 }
 
-html{scroll-padding-top:5.5rem;scroll-behavior:smooth}
+html{scroll-padding-top:5.5rem;scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.6 "Inter",system-ui,sans-serif;
   padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -490,7 +490,9 @@ footer.site .footer-col h4{color:var(--on-dark);font-family:"Figtree",sans-serif
 footer.site .footer-col a{display:block;color:var(--on-dark-soft);text-decoration:none;margin-bottom:.6rem;font-size:.9rem}
 footer.site .footer-col a:hover{color:var(--on-dark)}
 footer.site .social-grid{display:grid;grid-template-columns:1fr;gap:.6rem}
-footer.site .social-grid a{display:flex;align-items:center;gap:.6rem;margin-bottom:0;min-height:2.75rem}
+footer.site .social-grid a{display:flex;align-items:center;gap:.6rem;margin-bottom:0;min-height:2.75rem;
+  border-radius:var(--r-sm);transition:background-color .15s}
+footer.site .social-grid a:hover,footer.site .social-grid a:active{background:rgba(245,246,242,.06)}
 footer.site .social-grid svg{flex:none;opacity:.9}
 footer.site .footer-address{color:var(--on-dark-soft);font-size:.9rem;margin:1.1rem 0 .6rem;line-height:1.6}
 footer.site .footer-brand>a[href^="mailto:"]{color:var(--on-dark-soft);text-decoration:none;font-size:.9rem}
