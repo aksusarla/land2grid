@@ -360,6 +360,7 @@ section > .wrap > .eyebrow{display:block}
 
 .detail-block{max-width:44rem}
 .detail-block + .detail-block{margin-top:2.5rem}
+.detail-block h3{font-size:clamp(1.4rem,3vw,1.85rem);margin-bottom:.75rem;letter-spacing:-.015em}
 .detail-block ul{padding-left:1.1rem;color:var(--ink)}
 .detail-block li{margin-bottom:.4rem}
 .detail-block p{color:var(--ink-soft);margin-bottom:var(--space-xs)}
@@ -368,6 +369,18 @@ section > .wrap > .eyebrow{display:block}
 .pillar-nav a{padding:.65rem var(--space-sm);text-decoration:none;color:var(--ink-soft);font-size:.92rem;
   border-bottom:2px solid transparent;margin-bottom:-1px}
 .pillar-nav a.current{color:var(--ink);font-weight:600;border-bottom-color:var(--ink)}
+
+/* the combined "What We Do" page replaces page-to-page tabs with one
+   continuous scroll through all three services. This sticky strip
+   tucks under the main header and keeps the same jump-between-sections
+   affordance the old tabs gave, but as in-page anchors with the
+   current section highlighted as you scroll (see main.js). */
+.service-jump-nav{position:sticky;top:4.4rem;z-index:30;background:var(--paper);
+  border-bottom:1px solid var(--line);box-shadow:0 1px 0 rgba(0,0,0,.02)}
+.service-jump-nav .wrap{padding-top:0;padding-bottom:0}
+.service-jump-nav .pillar-nav{margin-top:0;border-bottom:0}
+section[id]{scroll-margin-top:7.3rem}
+.section-intro{color:var(--ink-soft);max-width:40rem;margin-bottom:var(--space-lg)}
 .pillar-nav a:hover:not(.current){color:var(--ink)}
 
 /* stats strip: flat full-saturation blocks, numeral-led like a sector

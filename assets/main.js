@@ -214,3 +214,54 @@ document.addEventListener('DOMContentLoaded', function () {
     io.disconnect();
   }, 2000);
 });
+
+// Sticky in-page jump nav for the combined "What We Do" page: highlight
+// whichever service section is actually in view as the page scrolls, so
+// the nav reads as "you are here" rather than a static set of links.
+// No-ops entirely on any page that doesn't have this nav.
+document.addEventListener('DOMContentLoaded', function () {
+  var nav = document.querySelector('.service-jump-nav');
+  if (!nav || typeof IntersectionObserver === 'undefined') return;
+
+  var links = nav.querySelectorAll('a');
+  var sections = [];
+  for (var i = 0; i < links.length; i++) {
+    var id = (links[i].getAttribute('href') || '').replace('#', '');
+    var el = id && document.getElementById(id);
+    if (el) sections.push({ link: links[i], el: el });
+  }
+  if (!sections.length) return;
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      for (var j = 0; j < sections.length; j++) {
+        if (sections[j].el === entry.target) {
+          for (var k = 0; k < links.length; k++) links[k].classList.remove('current');
+          sections[j].link.classList.add('current');
+          break;
+        }
+      }
+    });
+    // a thin band just above the vertical middle of the viewport — a
+    // section "becomes current" when it crosses that line, which tracks
+    // naturally with what the reader is actually looking at.
+  }, { threshold: 0, rootMargin: '-45% 0px -50% 0px' });
+
+  sections.forEach(function (s) { io.observe(s.el); });
+});
+
+// A direct link to a specific section (old bookmarked service URLs now
+// redirect here with a #hash, and the homepage's service cards link
+// straight to one) relies on the browser's own on-load scroll-to-anchor.
+// That native scroll can fire before the webfonts finish swapping in,
+// and on a page this long the cumulative height change between the
+// fallback font and Figtree/Inter is enough to land a section or two
+// short of the real target. Re-run the scroll once fonts are actually
+// ready to correct for that.
+if (location.hash && document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(function () {
+    var target = document.querySelector(location.hash);
+    if (target) target.scrollIntoView({ behavior: 'auto', block: 'start' });
+  });
+}
