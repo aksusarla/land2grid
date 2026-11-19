@@ -670,10 +670,11 @@ nav.primary a:hover::after{right:0}
 
 /* project dashboard ("Find Projects"): an interactive India map next
    to a project panel. A state enlarges slightly on hover as a click
-   affordance; clicking one selects it and filters the panel. Tamil
-   Nadu (the one state with listings right now) is marked with
-   .has-projects and carries a quiet accent-coloured outline so it
-   reads as active even before anyone touches the map. */
+   affordance; clicking one selects it and filters the panel. States
+   with live listings are marked with .has-projects and get a warm
+   amber fill plus a solid accent-coloured border, so they read as
+   active against the neutral grey of every other state even at a
+   glance on a small screen, before anyone touches the map. */
 .dash-layout{display:grid;grid-template-columns:1.25fr 1fr;gap:2rem;margin-top:var(--space-lg);align-items:start}
 .map-panel{background:var(--stage);border-radius:var(--r-lg);padding:var(--space-md);position:relative}
 .map-panel svg{width:100%;height:auto;display:block}
@@ -684,10 +685,11 @@ nav.primary a:hover::after{right:0}
 .map-reset.is-visible{opacity:1;transform:none;pointer-events:auto}
 .map-reset:hover{border-color:var(--customer);color:var(--forest)}
 .state{fill:#d7ded9;stroke:#f5f6f2;stroke-width:1.1;cursor:pointer;
-  transition:fill .15s ease,transform .15s ease;transform-box:fill-box;transform-origin:center}
+  transition:fill .15s ease,stroke .15s ease,transform .15s ease;transform-box:fill-box;transform-origin:center}
 .state:hover,.state:focus-visible{fill:#e9ddc3;transform:scale(1.06)}
-.state.has-projects{stroke:var(--customer);stroke-width:1.6}
-.state.is-active{fill:var(--customer);transform:scale(1.045)}
+.state.has-projects{fill:#fde6a6;stroke:var(--customer);stroke-width:1.8}
+.state.has-projects:hover,.state.has-projects:focus-visible{fill:#fbd877}
+.state.is-active{fill:var(--customer);stroke:var(--signal);stroke-width:1.8;transform:scale(1.045)}
 .state.is-active:hover{fill:var(--customer)}
 .project-dot{fill:var(--on-dark);stroke:var(--forest);stroke-width:2;cursor:pointer;outline:none;
   transition:transform .15s ease;transform-box:fill-box;transform-origin:center;
