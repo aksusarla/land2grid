@@ -329,26 +329,45 @@ section > .wrap > .eyebrow{display:block}
 .three p{color:var(--ink-soft);margin:var(--space-2xs) 0 0}
 .steps{list-style:none;padding:0;margin:0;counter-reset:s;max-width:44rem}
 .steps>li{counter-increment:s;padding:0 0 1.25rem var(--space-xl);position:relative;border-left:1px solid var(--line);
-  margin-left:.9rem;cursor:default;border-radius:0 .5rem .5rem 0;transition:background .2s ease;outline:none}
+  margin-left:.9rem;cursor:pointer;border-radius:0 .5rem .5rem 0;
+  transition:background .2s ease,border-left-color .5s ease;outline:none}
 .steps>li::before{content:counter(s);position:absolute;left:-1.1rem;top:0;width:2.2rem;height:2.2rem;border-radius:999px;
   background:var(--signal);color:var(--signal-ink);display:grid;place-items:center;font-weight:700;font-size:.95rem;
-  font-family:"Figtree",sans-serif}
+  font-family:"Figtree",sans-serif;transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
 .steps>li:last-child{border-left-color:transparent}
 .steps strong{display:block;font-family:"Figtree",sans-serif;font-size:1.1rem}.steps span{color:var(--ink-soft)}
 
-/* expandable detail: collapsed to zero height by default, revealed on
-   hover/focus (desktop) or tap, which toggles .is-open via main.js (so
-   touch devices, which have no hover, still get the content) */
-.step-detail{list-style:none;margin:0;padding:0 0 0 var(--space-sm);max-height:0;opacity:0;overflow:hidden;
-  counter-reset:detail;transition:max-height .35s ease,opacity .25s ease,margin-top .35s ease}
+/* line "lights up" step by step as each one scrolls into view, reusing
+   the site-wide .reveal/.is-visible scroll system (see main.js) rather
+   than a separate animation -- gives the sequence a sense of progress */
+.steps.reveal-group>li.reveal{border-left-color:var(--line)}
+.steps.reveal-group>li.reveal.is-visible{border-left-color:var(--signal)}
+.steps.reveal-group>li.reveal.is-visible::before{transform:scale(1)}
+.steps.reveal-group>li.reveal::before{transform:scale(.001)}
+.steps.reveal-group>li.reveal.is-visible:last-child{border-left-color:transparent}
+
+.step-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+.step-toggle{flex:none;margin-top:.35rem;color:var(--ink-soft);transition:transform .3s ease,color .2s ease}
+.step-toggle svg{display:block;width:1rem;height:1rem}
+.step-toggle path{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.steps>li:hover .step-toggle,.steps>li:focus .step-toggle,.steps>li.is-open .step-toggle{color:var(--accent-text)}
+.steps>li:hover .step-toggle,.steps>li:focus .step-toggle,.steps>li.is-open .step-toggle{transform:rotate(180deg)}
+
+/* expandable detail: a 0fr/1fr grid track animates to the content's
+   natural height however long it is (no arbitrary max-height guess),
+   revealed on hover/focus (desktop) or tap, which toggles .is-open via
+   main.js (so touch devices, which have no hover, still get the content) */
+.step-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease}
+.step-wrap>.step-detail{overflow:hidden}
+.step-detail{list-style:none;margin:0;padding:0 0 0 var(--space-sm);counter-reset:detail}
 .step-detail li{all:unset;display:flex;gap:.5rem;counter-increment:detail;border:0;padding:0;margin:0;
   font-size:.92rem;color:var(--ink-soft);line-height:1.5}
 .step-detail li::before{content:counter(s) counter(detail,lower-alpha);flex:none;color:var(--accent-text);
   font-weight:700;font-size:.85rem;font-family:"Figtree",sans-serif;position:static;width:auto;height:auto;
   background:none;border-radius:0}
 .step-detail li+li{margin-top:.35rem}
-.steps>li:hover>.step-detail,.steps>li:focus>.step-detail,.steps>li.is-open>.step-detail{
-  max-height:10rem;opacity:1;margin-top:.65rem}
+.step-detail>li:first-child{margin-top:.65rem}
+.steps>li:hover .step-wrap,.steps>li:focus .step-wrap,.steps>li.is-open .step-wrap{grid-template-rows:1fr}
 .steps>li:hover,.steps>li:focus,.steps>li.is-open{background:var(--stage)}
 
 .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
@@ -641,6 +660,10 @@ nav.primary a:hover::after{right:0}
   .hero-heading,.hero-video .hero-sub,.hero-video .btn-row{opacity:1;animation:none}
   nav.primary a::after{transition:none}
   .btn:hover{transform:none}
+  .steps>li::before{transform:none;transition:none}
+  .steps.reveal-group>li.reveal{border-left-color:var(--signal)}
+  .steps.reveal-group>li.reveal:last-child{border-left-color:transparent}
+  .steps>li{transition:background .2s ease}
 }
 
 /* insights: article listing cards and individual article pages */

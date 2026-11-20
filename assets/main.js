@@ -93,8 +93,14 @@ document.addEventListener('DOMContentLoaded', function () {
     stepItems.forEach(function (item) {
       item.addEventListener('click', function () {
         var alreadyOpen = item.classList.contains('is-open');
-        stepItems.forEach(function (other) { other.classList.remove('is-open'); });
-        if (!alreadyOpen) item.classList.add('is-open');
+        stepItems.forEach(function (other) {
+          other.classList.remove('is-open');
+          other.setAttribute('aria-expanded', 'false');
+        });
+        if (!alreadyOpen) {
+          item.classList.add('is-open');
+          item.setAttribute('aria-expanded', 'true');
+        }
       });
     });
   }
