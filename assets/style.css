@@ -700,6 +700,11 @@ nav.primary a:hover::after{right:0}
    of the rest even at a glance on a small screen, before anyone
    touches the map. The selected state goes a deeper orange so it
    still stands out from the rest of the gold states. */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:var(--space-lg)}
+.kpi-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:1.1rem 1.2rem;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:.2rem}
+.kpi-value{font-family:"Figtree",sans-serif;font-weight:800;font-size:1.9rem;color:var(--ink);line-height:1.1}
+.kpi-label{color:var(--ink-soft);font-size:.82rem}
 .dash-layout{display:grid;grid-template-columns:1.25fr 1fr;gap:2rem;margin-top:var(--space-lg);align-items:start}
 .map-panel{background:var(--stage);border-radius:var(--r-lg);padding:var(--space-md);position:relative}
 .map-panel svg{width:100%;height:auto;display:block}
@@ -729,24 +734,25 @@ nav.primary a:hover::after{right:0}
 .panel-state{font-family:"Figtree",sans-serif;font-weight:700;font-size:1.25rem}
 .panel-sub{color:var(--ink-soft);font-size:.88rem;margin-top:.2rem;margin-bottom:var(--space-3xs)}
 
-.project-row{display:flex;justify-content:space-between;align-items:center;gap:.75rem;
-  padding:.9rem 0;border-top:1px solid var(--line);cursor:pointer;border-radius:.5rem}
-.project-row:first-of-type{border-top:0}
-.project-row:hover,.project-row.is-active{background:var(--stage)}
-.project-row:hover,.project-row.is-active{margin:0 -.75rem;padding:.9rem var(--space-xs)}
+/* Each project is its own card: a name/capacity/badge header plus
+   land, connectivity and PPA status right on the card as chips, so a
+   site is legible at a glance instead of needing a click to reveal
+   its status in a separate detail block. */
+.project-card{display:block;padding:.95rem 0;border-top:1px solid var(--line);cursor:pointer;border-radius:.5rem}
+.project-card:first-of-type{border-top:0}
+.project-card:hover,.project-card.is-active{background:var(--stage);margin:0 -.75rem;padding:.95rem var(--space-xs)}
+.project-card.is-active{box-shadow:inset 3px 0 0 var(--signal)}
+.project-card-head{display:flex;justify-content:space-between;align-items:center;gap:.75rem}
 .project-name{display:block;font-weight:700;font-size:.95rem}
 .project-meta{display:block;color:var(--ink-soft);font-size:.82rem;margin-top:.15rem}
 .project-badge{font-size:.72rem;font-weight:700;padding:.3rem .65rem;border-radius:999px;
   background:rgba(16,42,54,.07);color:var(--ink-soft);white-space:nowrap;flex:none}
 .project-badge.is-done{background:rgba(92,184,92,.14);color:var(--success-ink)}
-
-.project-detail{margin-top:var(--space-2xs);padding-top:1.4rem;border-top:1px dashed var(--line)}
-.status-row{display:flex;gap:.85rem;align-items:flex-start;padding:.55rem 0}
-.status-icon{width:2.2rem;height:2.2rem;border-radius:8px;background:var(--stage);
-  display:flex;align-items:center;justify-content:center;flex:none}
-.status-icon img{width:1.15rem;height:1.15rem}
-.status-label{display:block;font-size:.76rem;color:var(--ink-soft);font-weight:700;text-transform:uppercase;letter-spacing:.03em}
-.status-value{display:block;font-size:.9rem;color:var(--ink);margin-top:.2rem;line-height:1.4}
+.project-chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.7rem}
+.chip{display:inline-flex;align-items:center;gap:.3rem;font-size:.78rem;color:var(--ink-soft);
+  background:rgba(16,42,54,.05);border-radius:999px;padding:.3rem .65rem .3rem .45rem;line-height:1.3}
+.chip img{width:.85rem;height:.85rem;opacity:.65;flex:none}
+.chip strong{color:var(--ink);font-weight:600}
 
 .panel-empty{color:var(--ink-soft);font-size:.92rem;padding:var(--space-md) 0}
 .panel-empty a{color:var(--forest);font-weight:600;text-decoration:none}
@@ -755,4 +761,5 @@ nav.primary a:hover::after{right:0}
 @media (max-width:64rem){
   .dash-layout{grid-template-columns:1fr}
   .panel{position:static}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
 }

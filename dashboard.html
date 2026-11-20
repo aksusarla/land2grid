@@ -36,6 +36,13 @@
 <p>Click a state to see what we're tracking there: land status, connectivity status and PPA status, at a glance.</p>
 </div>
 
+<div class="kpi-grid" id="kpi-grid">
+<div class="kpi-card"><span class="kpi-value" id="kpi-mw">&mdash;</span><span class="kpi-label">MW tracked</span></div>
+<div class="kpi-card"><span class="kpi-value" id="kpi-sites">&mdash;</span><span class="kpi-label">Active sites</span></div>
+<div class="kpi-card"><span class="kpi-value" id="kpi-states">&mdash;</span><span class="kpi-label">States covered</span></div>
+<div class="kpi-card"><span class="kpi-value" id="kpi-avg">&mdash;</span><span class="kpi-label">Avg. site size (MW)</span></div>
+</div>
+
 <div class="dash-layout">
 <div class="map-panel">
 <button class="map-reset" id="map-reset" type="button">&larr; All India</button>
@@ -330,22 +337,29 @@
 
   resetBtn.addEventListener('click', zoomToIndia);
 
-  function detailHTML(p) {
+  function chip(icon, label, value) {
     return (
-      '<div class="project-detail">' +
-        statusRow('land', 'Land acquisition', p.land) +
-        statusRow('grid', 'Connectivity', p.connectivity) +
-        statusRow('customer', 'Customer PPA', p.ppa) +
-      '</div>'
+      '<span class="chip"><img src="' + ICON[icon] + '" alt="" width="14" height="14">' +
+      '<strong>' + label + ':</strong>&nbsp;' + value + '</span>'
     );
   }
 
-  function statusRow(icon, label, value) {
+  // Each project is a self-contained card: name, capacity and stage
+  // badge up top, then its land/connectivity/PPA status as chips right
+  // on the card, so every site reads at a glance without clicking in.
+  function projectCardHTML(p, i, isActive) {
     return (
-      '<div class="status-row">' +
-        '<span class="status-icon"><img src="' + ICON[icon] + '" alt="" width="18" height="18"></span>' +
-        '<span><span class="status-label">' + label + '</span>' +
-        '<span class="status-value">' + value + '</span></span>' +
+      '<div class="project-card' + (isActive ? ' is-active' : '') + '" data-index="' + i + '" tabindex="0" role="button">' +
+        '<div class="project-card-head">' +
+          '<span><span class="project-name">' + p.name + '</span>' +
+          '<span class="project-meta">' + p.capacity + ' MW</span></span>' +
+          '<span class="project-badge' + (p.badgeDone ? ' is-done' : '') + '">' + p.badge + '</span>' +
+        '</div>' +
+        '<div class="project-chips">' +
+          chip('land', 'Land', p.land) +
+          chip('grid', 'Connectivity', p.connectivity) +
+          chip('customer', 'PPA', p.ppa) +
+        '</div>' +
       '</div>'
     );
   }
@@ -373,34 +387,24 @@
       return;
     }
 
-    var rowsHTML = list.map(function (p, i) {
-      return (
-        '<div class="project-row' + (i === activeIndex ? ' is-active' : '') + '" data-index="' + i + '" tabindex="0" role="button">' +
-          '<span><span class="project-name">' + p.name + '</span>' +
-          '<span class="project-meta">' + p.capacity + ' MW</span></span>' +
-          '<span class="project-badge' + (p.badgeDone ? ' is-done' : '') + '">' + p.badge + '</span>' +
-        '</div>'
-      );
+    var cardsHTML = list.map(function (p, i) {
+      return projectCardHTML(p, i, i === activeIndex);
     }).join('');
 
     panel.innerHTML =
       '<span class="panel-state">' + stateName + '</span>' +
       '<p class="panel-sub">' + list.length + ' active site' + (list.length === 1 ? '' : 's') + '</p>' +
-      rowsHTML +
-      detailHTML(list[activeIndex]);
+      cardsHTML;
 
-    var rows = panel.querySelectorAll('.project-row');
+    var cards = panel.querySelectorAll('.project-card');
     function select(i) {
-      rows.forEach(function (r) { r.classList.remove('is-active'); });
-      rows[i].classList.add('is-active');
-      var old = panel.querySelector('.project-detail');
-      if (old) old.remove();
-      panel.insertAdjacentHTML('beforeend', detailHTML(list[i]));
+      cards.forEach(function (c) { c.classList.remove('is-active'); });
+      cards[i].classList.add('is-active');
       markActiveDot(stateName, i);
     }
-    rows.forEach(function (r, i) {
-      r.addEventListener('click', function () { select(i); });
-      r.addEventListener('keydown', function (e) {
+    cards.forEach(function (c, i) {
+      c.addEventListener('click', function () { select(i); });
+      c.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(i); }
       });
     });
@@ -442,12 +446,11 @@
     });
   });
 
-  // default view: the whole India map, zoomed out, with no state
-  // pre-selected; a first-time visitor should see the country before
-  // being dropped into one state's detail.
-  renderDefaultPanel();
-
-  function renderDefaultPanel() {
+  // Portfolio-wide KPI strip at the top of the page: computed once from
+  // PROJECTS so it never drifts from the map/panel data, and stays put
+  // (it summarises the whole pipeline) while the panel below changes
+  // per state.
+  function renderKPIs() {
     var stateNames = Object.keys(PROJECTS);
     var siteCount = 0, mwTotal = 0;
     stateNames.forEach(function (name) {
@@ -456,11 +459,26 @@
         mwTotal += p.capacity;
       });
     });
+    var avg = siteCount ? Math.round((mwTotal / siteCount) * 10) / 10 : 0;
+    document.getElementById('kpi-mw').textContent = mwTotal;
+    document.getElementById('kpi-sites').textContent = siteCount;
+    document.getElementById('kpi-states').textContent = stateNames.length;
+    document.getElementById('kpi-avg').textContent = avg;
+    return { siteCount: siteCount, mwTotal: mwTotal, stateCount: stateNames.length };
+  }
+
+  // default view: the whole India map, zoomed out, with no state
+  // pre-selected; a first-time visitor should see the country before
+  // being dropped into one state's detail.
+  var totals = renderKPIs();
+  renderDefaultPanel();
+
+  function renderDefaultPanel() {
     panel.innerHTML =
       '<span class="panel-state">All India</span>' +
-      '<p class="panel-empty">' + siteCount + ' active site' + (siteCount === 1 ? '' : 's') +
-      ' across ' + stateNames.length + ' state' + (stateNames.length === 1 ? '' : 's') +
-      ' (' + mwTotal + ' MW tracked). Click a state on the map to see what\'s live there.</p>';
+      '<p class="panel-empty">' + totals.siteCount + ' active site' + (totals.siteCount === 1 ? '' : 's') +
+      ' across ' + totals.stateCount + ' state' + (totals.stateCount === 1 ? '' : 's') +
+      ' (' + totals.mwTotal + ' MW tracked). Click a state on the map to see what\'s live there.</p>';
   }
 })();
 </script>
