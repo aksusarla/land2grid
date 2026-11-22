@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=97">
+<link rel="stylesheet" href="assets/style.css?v=109">
 </head>
 <body>
 
@@ -30,17 +30,24 @@
 </header>
 
 <main>
-<div class="wrap">
+<div class="wrap dash-content">
 <div class="page-head">
 <h1>Live Projects</h1>
 <p>Click a state to see what we're tracking there: land status, connectivity status and PPA status, at a glance.</p>
 </div>
 
 <div class="kpi-grid" id="kpi-grid">
-<div class="kpi-card"><span class="kpi-value" id="kpi-mw">&mdash;</span><span class="kpi-label">MW tracked</span></div>
-<div class="kpi-card"><span class="kpi-value" id="kpi-sites">&mdash;</span><span class="kpi-label">Active sites</span></div>
 <div class="kpi-card"><span class="kpi-value" id="kpi-states">&mdash;</span><span class="kpi-label">States covered</span></div>
-<div class="kpi-card"><span class="kpi-value" id="kpi-avg">&mdash;</span><span class="kpi-label">Avg. site size (MW)</span></div>
+<div class="kpi-card"><span class="kpi-value" id="kpi-mw">&mdash;</span><span class="kpi-label">Total capacity (MW)</span></div>
+<div class="kpi-card"><span class="kpi-value" id="kpi-sites">&mdash;</span><span class="kpi-label">No. of projects</span></div>
+</div>
+
+<div class="filter-bar">
+<input type="search" id="filter-search" class="filter-search" placeholder="Search by project or state" aria-label="Search projects by name or state">
+<select id="filter-stage" class="filter-stage" aria-label="Filter by stage">
+<option value="">All stages</option>
+</select>
+<button type="button" id="filter-clear" class="filter-clear" hidden>Clear</button>
 </div>
 
 <div class="dash-layout">
@@ -87,18 +94,12 @@
 </div>
 
 <div class="panel" id="panel">
-<!-- filled by script below -->
+<span class="panel-state">All India</span>
+<p class="panel-empty">Loading the live pipeline&hellip;</p>
 </div>
 </div>
 </div>
 
-<section class="band-navy">
-<div class="wrap" style="text-align:left">
-<h2 style="color:var(--on-dark)">Not seeing what you need?</h2>
-<p style="color:var(--on-dark-soft);max-width:36rem;margin-top:.75rem">Tell us the state, capacity or stage you're after and we'll match it against what we're tracking that isn't listed here yet.</p>
-<div style="margin-top:1.75rem"><a class="btn alt" href="contact.html">Tell us what you're looking for</a></div>
-</div>
-</section>
 </main>
 
 <footer class="site band-navy">
@@ -129,122 +130,21 @@
 </div>
 </footer>
 
-<script src="assets/main.js?v=20"></script><script>
+<script src="assets/main.js?v=20"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/auth.js"></script>
+<script>
 // Live Projects dashboard: click a state on the map, see its sites.
 // No backend yet: PROJECTS is keyed by state name and the map's
 // data-state attributes are matched against those keys directly.
 (function () {
-  // Each project carries its own [x, y] position in the map's SVG
-  // coordinate space, derived from its real latitude/longitude through
-  // the same equirectangular projection used to draw the state paths
-  // (minx 68.1005, maxy 37.077, scale 20.4869, pad 10), so dots sit at
-  // their actual site location within the state, not a single shared pin.
-  var PROJECTS = {
-    'Tamil Nadu': [
-      {
-        name: 'Tamizhpadi',
-        capacity: 50,
-        badge: 'Load application pending',
-        badgeDone: false,
-        land: 'Under process',
-        connectivity: 'Applied, LFS underway',
-        ppa: 'Under discussion',
-        pos: [216.8, 574.5]
-      },
-      {
-        name: 'Ottapidaram',
-        capacity: 100,
-        badge: 'Load application pending',
-        badgeDone: false,
-        land: 'Under process',
-        connectivity: 'Applied, LFS underway',
-        ppa: 'Under discussion',
-        pos: [213.3, 586.9]
-      },
-      {
-        name: 'Kanchipuram',
-        capacity: 50,
-        badge: 'LFS completed',
-        badgeDone: true,
-        land: 'Under process',
-        connectivity: 'Applied, LFS completed',
-        ppa: 'Under discussion',
-        pos: [247.7, 506.7]
-      }
-    ],
-    'Punjab': [
-      {
-        name: 'Punjab GCPP',
-        capacity: 40,
-        badge: 'Connectivity identified',
-        badgeDone: false,
-        land: 'Identified',
-        connectivity: 'Identified, 66kV STU',
-        ppa: 'Under discussion',
-        pos: [168.9, 136.5]
-      }
-    ],
-    'Assam': [
-      {
-        name: 'Assam GCPP',
-        capacity: 50,
-        badge: 'Early stage',
-        badgeDone: false,
-        land: 'To be acquired',
-        connectivity: 'To be acquired',
-        ppa: 'Under discussion',
-        pos: [517.2, 235.8]
-      }
-    ],
-    'Andhra Pradesh': [
-      {
-        name: 'AP GCPP',
-        capacity: 50,
-        badge: 'Early stage',
-        badgeDone: false,
-        land: 'To be acquired',
-        connectivity: 'To be acquired, Eastern discom',
-        ppa: 'Under discussion',
-        pos: [269.4, 444.3]
-      }
-    ],
-    'Karnataka': [
-      {
-        name: 'Karnataka GCPP',
-        capacity: 13,
-        badge: 'Early stage',
-        badgeDone: false,
-        land: 'To be acquired',
-        connectivity: 'To be acquired',
-        ppa: 'Under discussion',
-        pos: [178.7, 461.8]
-      }
-    ],
-    'Madhya Pradesh': [
-      {
-        name: 'MP GCPP',
-        capacity: 30,
-        badge: 'Early stage',
-        badgeDone: false,
-        land: 'To be acquired',
-        connectivity: 'To be acquired',
-        ppa: 'Under discussion',
-        pos: [221.7, 278.4]
-      }
-    ],
-    'West Bengal': [
-      {
-        name: 'West Bengal GCPP',
-        capacity: 20,
-        badge: 'Early stage',
-        badgeDone: false,
-        land: 'To be acquired',
-        connectivity: 'To be acquired',
-        ppa: 'Under discussion',
-        pos: [414.5, 269.9]
-      }
-    ]
-  };
+  // Project data now lives in data/projects.json, not in this file, so
+  // adding or updating a site is a one-file data edit (or a pull from a
+  // shared Google Sheet via scripts/sync_from_sheet.py) rather than a
+  // hand-edit of this script. cache:'no-store' plus a timestamp query
+  // param means a data change shows up on the next load, with no
+  // separate cache-busting version to remember to bump here.
+  var PROJECTS = {};
 
   var ICON = {
     land: 'assets/icons/land-management.svg',
@@ -261,225 +161,498 @@
   var svg = document.getElementById('india-svg');
   var resetBtn = document.getElementById('map-reset');
   var panel = document.getElementById('panel');
+  var mapPanelEl = document.querySelector('.map-panel');
   var states = document.querySelectorAll('.state');
   var activeState = null;
   var activeDot = null;
   var zoomToken = 0;
 
-  // One marker per project, placed at its own pos[] rather than one
-  // shared pin per state; clicking a dot opens that specific project.
-  var SVG_NS = 'http://www.w3.org/2000/svg';
-  Object.keys(PROJECTS).forEach(function (stateName) {
-    PROJECTS[stateName].forEach(function (p, i) {
-      var dot = document.createElementNS(SVG_NS, 'circle');
-      dot.setAttribute('class', 'project-dot');
-      dot.setAttribute('cx', p.pos[0]);
-      dot.setAttribute('cy', p.pos[1]);
-      dot.setAttribute('r', 6);
-      dot.setAttribute('data-state', stateName);
-      dot.setAttribute('data-index', i);
-      dot.setAttribute('tabindex', '0');
-      dot.setAttribute('role', 'button');
-      dot.setAttribute('aria-label', p.name + ' project');
-      svg.appendChild(dot);
-    });
-  });
-  var dots = document.querySelectorAll('.project-dot');
-
-  function currentViewBox() {
-    var vb = svg.viewBox.baseVal;
-    return [vb.x, vb.y, vb.width, vb.height];
-  }
-
-  function fitBox(bbox) {
-    var pad = 0.3, minSize = 90;
-    var x0 = bbox[0], y0 = bbox[1], x1 = bbox[2], y1 = bbox[3];
-    var cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
-    var w = Math.max((x1 - x0) * (1 + pad * 2), minSize);
-    var h = Math.max((y1 - y0) * (1 + pad * 2), minSize);
-    var aspect = FULL_VIEW[2] / FULL_VIEW[3];
-    if (w / h > aspect) { h = w / aspect; } else { w = h * aspect; }
-    return [cx - w / 2, cy - h / 2, w, h];
-  }
-
-  function easeInOutQuad(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
-
-  function animateViewBox(to, duration) {
-    var from = currentViewBox();
-    var token = ++zoomToken;
-    var start = null;
-    function step(ts) {
-      if (token !== zoomToken) return; // a newer zoom took over
-      if (!start) start = ts;
-      var p = Math.min((ts - start) / duration, 1);
-      var e = easeInOutQuad(p);
-      var box = from.map(function (v, i) { return v + (to[i] - v) * e; });
-      svg.setAttribute('viewBox', box.join(' '));
-      if (p < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-
-  function zoomToState(stateName) {
-    var bbox = BOUNDS[stateName];
-    if (!bbox) return;
-    animateViewBox(fitBox(bbox), 500);
-    resetBtn.classList.add('is-visible');
-  }
-
-  function zoomToIndia() {
-    animateViewBox(FULL_VIEW, 500);
-    resetBtn.classList.remove('is-visible');
-    if (activeState) { activeState.classList.remove('is-active'); activeState = null; }
-    if (activeDot) { activeDot.classList.remove('is-active'); activeDot = null; }
-    renderDefaultPanel();
-  }
-
-  resetBtn.addEventListener('click', zoomToIndia);
-
-  function chip(icon, label, value) {
-    return (
-      '<span class="chip"><img src="' + ICON[icon] + '" alt="" width="14" height="14">' +
-      '<strong>' + label + ':</strong>&nbsp;' + value + '</span>'
-    );
-  }
-
-  // Each project is a self-contained card: name, capacity and stage
-  // badge up top, then its land/connectivity/PPA status as chips right
-  // on the card, so every site reads at a glance without clicking in.
-  function projectCardHTML(p, i, isActive) {
-    return (
-      '<div class="project-card' + (isActive ? ' is-active' : '') + '" data-index="' + i + '" tabindex="0" role="button">' +
-        '<div class="project-card-head">' +
-          '<span><span class="project-name">' + p.name + '</span>' +
-          '<span class="project-meta">' + p.capacity + ' MW</span></span>' +
-          '<span class="project-badge' + (p.badgeDone ? ' is-done' : '') + '">' + p.badge + '</span>' +
-        '</div>' +
-        '<div class="project-chips">' +
-          chip('land', 'Land', p.land) +
-          chip('grid', 'Connectivity', p.connectivity) +
-          chip('customer', 'PPA', p.ppa) +
-        '</div>' +
-      '</div>'
-    );
-  }
-
-  // Marks which dot is "active" to match whichever project is currently
-  // selected in the panel (by state + index, since several dots can sit
-  // in the same state now).
-  function markActiveDot(stateName, index) {
-    if (activeDot) activeDot.classList.remove('is-active');
-    var dot = document.querySelector('.project-dot[data-state="' + stateName + '"][data-index="' + index + '"]');
-    if (dot) dot.classList.add('is-active');
-    activeDot = dot;
-  }
-
-  function renderPanel(stateName, activeIndex) {
-    var list = PROJECTS[stateName];
-    activeIndex = activeIndex || 0;
-
-    if (activeDot) { activeDot.classList.remove('is-active'); activeDot = null; }
-
-    if (!list) {
-      panel.innerHTML =
-        '<span class="panel-state">' + stateName + '</span>' +
-        '<p class="panel-empty">No active sites here yet. <a href="contact.html">Tell us what you\'re looking for</a> and we\'ll check the live list.</p>';
+  // CSS alone can't pin the panel to the map's height: a grid row with
+  // "auto" sizing is still sized by each item's full content (a long
+  // project list would stretch the row itself, growing the card tall
+  // past the map rather than scrolling inside it), so the match has to
+  // be set explicitly from the map's own rendered height. The map's
+  // height only changes on resize (switching states just redraws what's
+  // inside the same box), so there's nothing to re-sync on state change.
+  function syncPanelHeight() {
+    if (window.matchMedia('(max-width: 64rem)').matches) {
+      panel.style.height = '';
       return;
     }
-
-    var cardsHTML = list.map(function (p, i) {
-      return projectCardHTML(p, i, i === activeIndex);
-    }).join('');
-
-    panel.innerHTML =
-      '<span class="panel-state">' + stateName + '</span>' +
-      '<p class="panel-sub">' + list.length + ' active site' + (list.length === 1 ? '' : 's') + '</p>' +
-      cardsHTML;
-
-    var cards = panel.querySelectorAll('.project-card');
-    function select(i) {
-      cards.forEach(function (c) { c.classList.remove('is-active'); });
-      cards[i].classList.add('is-active');
-      markActiveDot(stateName, i);
-    }
-    cards.forEach(function (c, i) {
-      c.addEventListener('click', function () { select(i); });
-      c.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(i); }
-      });
-    });
-
-    markActiveDot(stateName, activeIndex);
+    panel.style.height = mapPanelEl.getBoundingClientRect().height + 'px';
   }
+  syncPanelHeight();
+  window.addEventListener('resize', syncPanelHeight);
 
-  function selectState(el, activeIndex) {
-    if (activeState) activeState.classList.remove('is-active');
-    el.classList.add('is-active');
-    activeState = el;
-    var stateName = el.getAttribute('data-state');
-    renderPanel(stateName, activeIndex);
-    zoomToState(stateName);
-  }
-
-  function selectProjectDot(stateName, index) {
-    var el = document.querySelector('.state[data-state="' + stateName + '"]');
-    if (el) selectState(el, index);
-  }
-
-  states.forEach(function (el) {
-    el.addEventListener('click', function () { selectState(el); });
-    el.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectState(el); }
-    });
-  });
-
-  dots.forEach(function (d) {
-    d.addEventListener('click', function (e) {
-      e.stopPropagation();
-      selectProjectDot(d.getAttribute('data-state'), parseInt(d.getAttribute('data-index'), 10));
-    });
-    d.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        selectProjectDot(d.getAttribute('data-state'), parseInt(d.getAttribute('data-index'), 10));
+  // Documents on a project card are blurred until a signed-in partner
+  // session is confirmed; body.is-signed-in is the single switch the CSS
+  // reads for every card at once, so there's no per-card re-render needed
+  // when sign-in state changes.
+  (function checkAuth() {
+    if (!window.L2G_AUTH || !window.L2G_AUTH.isConfigured()) return;
+    var client = window.L2G_AUTH.getClient();
+    if (!client) return;
+    client.auth.getSession().then(function (res) {
+      if (res.data && res.data.session) {
+        document.body.classList.add('is-signed-in');
       }
     });
-  });
+    client.auth.onAuthStateChange(function (event, session) {
+      document.body.classList.toggle('is-signed-in', !!session);
+    });
+  })();
 
-  // Portfolio-wide KPI strip at the top of the page: computed once from
-  // PROJECTS so it never drifts from the map/panel data, and stays put
-  // (it summarises the whole pipeline) while the panel below changes
-  // per state.
-  function renderKPIs() {
-    var stateNames = Object.keys(PROJECTS);
-    var siteCount = 0, mwTotal = 0;
-    stateNames.forEach(function (name) {
-      PROJECTS[name].forEach(function (p) {
-        siteCount += 1;
-        mwTotal += p.capacity;
+  function init(data) {
+    PROJECTS = data;
+
+    // One marker per project, placed at its own pos[] rather than one
+    // shared pin per state; clicking a dot opens that specific project.
+    var SVG_NS = 'http://www.w3.org/2000/svg';
+    Object.keys(PROJECTS).forEach(function (stateName) {
+      PROJECTS[stateName].forEach(function (p, i) {
+        var dot = document.createElementNS(SVG_NS, 'circle');
+        dot.setAttribute('class', 'project-dot');
+        dot.setAttribute('cx', p.pos[0]);
+        dot.setAttribute('cy', p.pos[1]);
+        dot.setAttribute('r', 6);
+        dot.setAttribute('data-state', stateName);
+        dot.setAttribute('data-index', i);
+        dot.setAttribute('tabindex', '0');
+        dot.setAttribute('role', 'button');
+        dot.setAttribute('aria-label', p.name + ' project');
+        svg.appendChild(dot);
       });
     });
-    var avg = siteCount ? Math.round((mwTotal / siteCount) * 10) / 10 : 0;
-    document.getElementById('kpi-mw').textContent = mwTotal;
-    document.getElementById('kpi-sites').textContent = siteCount;
-    document.getElementById('kpi-states').textContent = stateNames.length;
-    document.getElementById('kpi-avg').textContent = avg;
-    return { siteCount: siteCount, mwTotal: mwTotal, stateCount: stateNames.length };
+    var dots = document.querySelectorAll('.project-dot');
+
+    function currentViewBox() {
+      var vb = svg.viewBox.baseVal;
+      return [vb.x, vb.y, vb.width, vb.height];
+    }
+
+    function fitBox(bbox) {
+      var pad = 0.3, minSize = 90;
+      var x0 = bbox[0], y0 = bbox[1], x1 = bbox[2], y1 = bbox[3];
+      var cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+      var w = Math.max((x1 - x0) * (1 + pad * 2), minSize);
+      var h = Math.max((y1 - y0) * (1 + pad * 2), minSize);
+      var aspect = FULL_VIEW[2] / FULL_VIEW[3];
+      if (w / h > aspect) { h = w / aspect; } else { w = h * aspect; }
+      return [cx - w / 2, cy - h / 2, w, h];
+    }
+
+    function easeInOutQuad(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
+
+    function animateViewBox(to, duration) {
+      var from = currentViewBox();
+      var token = ++zoomToken;
+      var start = null;
+      function step(ts) {
+        if (token !== zoomToken) return; // a newer zoom took over
+        if (!start) start = ts;
+        var p = Math.min((ts - start) / duration, 1);
+        var e = easeInOutQuad(p);
+        var box = from.map(function (v, i) { return v + (to[i] - v) * e; });
+        svg.setAttribute('viewBox', box.join(' '));
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function zoomToState(stateName) {
+      var bbox = BOUNDS[stateName];
+      if (!bbox) return;
+      animateViewBox(fitBox(bbox), 500);
+      resetBtn.classList.add('is-visible');
+    }
+
+    function zoomToIndia() {
+      animateViewBox(FULL_VIEW, 500);
+      resetBtn.classList.remove('is-visible');
+      if (activeState) { activeState.classList.remove('is-active'); activeState = null; }
+      if (activeDot) { activeDot.classList.remove('is-active'); activeDot = null; }
+      renderDefaultPanel();
+    }
+
+    resetBtn.addEventListener('click', zoomToIndia);
+
+    function chip(icon, label, value) {
+      return (
+        '<div class="chip"><div class="chip-head"><img src="' + ICON[icon] + '" alt="" width="14" height="14">' +
+        '<strong>' + label + '</strong></div><span class="chip-value">' + value + '</span></div>'
+      );
+    }
+
+    var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    function formatUpdated(iso) {
+      if (!iso) return '';
+      var d = new Date(iso + 'T00:00:00');
+      if (isNaN(d.getTime())) return iso;
+      return 'Updated ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+    }
+
+    // Each project is a self-contained card: name, capacity and stage
+    // badge up top, then its land/connectivity/PPA status as chips right
+    // on the card, so every site reads at a glance without clicking in.
+    // stateLabel is only passed in mixed search results, where cards from
+    // several states sit in one list and need to say which state they're in.
+    // Each project's documents are gated behind sign-in: the list itself
+    // is always in the markup (so there's nothing extra to fetch once a
+    // partner signs in) but sits blurred under a lock overlay until
+    // body.is-signed-in is set by the Supabase session check below.
+    function docsHTML(docs) {
+      docs = docs || [];
+      var body = docs.length
+        ? '<ul class="project-docs-list">' + docs.map(function (d) {
+            return '<li><a href="' + d.url + '" target="_blank" rel="noopener">' + d.name + '</a></li>';
+          }).join('') + '</ul>'
+        : '<p class="project-docs-empty">No documents shared yet.</p>';
+      return (
+        '<div class="project-docs">' +
+          '<div class="project-docs-head">Documents</div>' +
+          '<div class="project-docs-body">' +
+            body +
+            '<div class="project-docs-lock">' +
+              '<p>Sign in to view shared documents</p>' +
+              '<a class="btn btn-sm" href="login.html">Partner login</a>' +
+            '</div>' +
+          '</div>' +
+        '</div>'
+      );
+    }
+
+    function projectCardHTML(p, i, isActive, stateLabel) {
+      return (
+        '<div class="project-card' + (isActive ? ' is-active' : '') + '" data-index="' + i + '" tabindex="0" role="button">' +
+          '<div class="project-card-head">' +
+            '<span>' + (stateLabel ? '<span class="project-state-tag">' + stateLabel + '</span>' : '') +
+            '<span class="project-name">' + p.name + '</span>' +
+            '<span class="project-meta">' + p.capacity + ' MW</span></span>' +
+            '<span class="project-badge' + (p.badgeDone ? ' is-done' : '') + '">' + p.badge + '</span>' +
+          '</div>' +
+          '<div class="project-chips">' +
+            chip('land', 'Land', p.land) +
+            chip('grid', 'Connectivity', p.connectivity) +
+            chip('customer', 'PPA', p.ppa) +
+          '</div>' +
+          (p.lastUpdated ? '<p class="project-updated">' + formatUpdated(p.lastUpdated) + '</p>' : '') +
+          docsHTML(p.documents) +
+        '</div>'
+      );
+    }
+
+    // Marks which dot is "active" to match whichever project is currently
+    // selected in the panel (by state + index, since several dots can sit
+    // in the same state now).
+    function markActiveDot(stateName, index) {
+      if (activeDot) activeDot.classList.remove('is-active');
+      var dot = document.querySelector('.project-dot[data-state="' + stateName + '"][data-index="' + index + '"]');
+      if (dot) dot.classList.add('is-active');
+      activeDot = dot;
+    }
+
+    function renderPanel(stateName, activeIndex) {
+      var list = PROJECTS[stateName];
+      activeIndex = activeIndex || 0;
+
+      if (activeDot) { activeDot.classList.remove('is-active'); activeDot = null; }
+
+      if (!list) {
+        panel.innerHTML =
+          '<span class="panel-state">' + stateName + '</span>' +
+          '<p class="panel-empty">No active sites here yet. <a href="contact.html">Tell us what you\'re looking for</a> and we\'ll check the live list.</p>';
+        return;
+      }
+
+      var cardsHTML = list.map(function (p, i) {
+        return projectCardHTML(p, i, i === activeIndex);
+      }).join('');
+
+      panel.innerHTML =
+        '<span class="panel-state">' + stateName + '</span>' +
+        '<p class="panel-sub">' + list.length + ' active site' + (list.length === 1 ? '' : 's') + '</p>' +
+        '<div class="panel-cards">' + cardsHTML + '</div>';
+
+      var cards = panel.querySelectorAll('.project-card');
+      function select(i) {
+        cards.forEach(function (c) { c.classList.remove('is-active'); });
+        cards[i].classList.add('is-active');
+        markActiveDot(stateName, i);
+      }
+      cards.forEach(function (c, i) {
+        c.addEventListener('click', function () { select(i); });
+        c.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(i); }
+        });
+      });
+
+      markActiveDot(stateName, activeIndex);
+    }
+
+    function selectState(el, activeIndex) {
+      if (activeState) activeState.classList.remove('is-active');
+      el.classList.add('is-active');
+      activeState = el;
+      var stateName = el.getAttribute('data-state');
+      renderPanel(stateName, activeIndex);
+      zoomToState(stateName);
+    }
+
+    function selectProjectDot(stateName, index) {
+      var el = document.querySelector('.state[data-state="' + stateName + '"]');
+      if (el) selectState(el, index);
+    }
+
+    states.forEach(function (el) {
+      el.addEventListener('click', function () { selectState(el); });
+      el.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectState(el); }
+      });
+    });
+
+    dots.forEach(function (d) {
+      d.addEventListener('click', function (e) {
+        e.stopPropagation();
+        selectProjectDot(d.getAttribute('data-state'), parseInt(d.getAttribute('data-index'), 10));
+      });
+      d.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectProjectDot(d.getAttribute('data-state'), parseInt(d.getAttribute('data-index'), 10));
+        }
+      });
+    });
+
+    // Portfolio-wide KPI strip at the top of the page: computed once from
+    // PROJECTS so it never drifts from the map/panel data, and stays put
+    // (it summarises the whole pipeline) while the panel below changes
+    // per state.
+    function renderKPIs() {
+      var stateNames = Object.keys(PROJECTS);
+      var siteCount = 0, mwTotal = 0;
+      stateNames.forEach(function (name) {
+        PROJECTS[name].forEach(function (p) {
+          siteCount += 1;
+          mwTotal += p.capacity;
+        });
+      });
+      document.getElementById('kpi-mw').textContent = mwTotal;
+      document.getElementById('kpi-sites').textContent = siteCount;
+      document.getElementById('kpi-states').textContent = stateNames.length;
+      return { siteCount: siteCount, mwTotal: mwTotal, stateCount: stateNames.length };
+    }
+
+    // default view: the whole India map, zoomed out, with no state
+    // pre-selected; a first-time visitor should see the country before
+    // being dropped into one state's detail.
+    var totals = renderKPIs();
+    renderDefaultPanel();
+
+    function renderDefaultPanel() {
+      panel.innerHTML =
+        '<span class="panel-state">All India</span>' +
+        '<p class="panel-empty">' + totals.siteCount + ' active site' + (totals.siteCount === 1 ? '' : 's') +
+        ' across ' + totals.stateCount + ' state' + (totals.stateCount === 1 ? '' : 's') +
+        ' (' + totals.mwTotal + ' MW tracked). Click a state on the map to see what\'s live there.</p>';
+    }
+
+    // Search/filter bar: lets a visitor find a project by name or state,
+    // or narrow to a stage, without knowing which state to click first.
+    // Filtering dims non-matching states on the map and swaps the panel
+    // to a flat list of matching cards from any state; clearing it
+    // restores whatever the map was showing before (a selected state, or
+    // the all-India summary).
+    function initFilters() {
+      var searchInput = document.getElementById('filter-search');
+      var stageSelect = document.getElementById('filter-stage');
+      var clearBtn = document.getElementById('filter-clear');
+      if (!searchInput || !stageSelect || !clearBtn) return;
+
+      var badges = [];
+      Object.keys(PROJECTS).forEach(function (stateName) {
+        PROJECTS[stateName].forEach(function (p) {
+          if (badges.indexOf(p.badge) === -1) badges.push(p.badge);
+        });
+      });
+      badges.sort().forEach(function (b) {
+        var opt = document.createElement('option');
+        opt.value = b;
+        opt.textContent = b;
+        stageSelect.appendChild(opt);
+      });
+
+      function flatProjects() {
+        var out = [];
+        Object.keys(PROJECTS).forEach(function (stateName) {
+          PROJECTS[stateName].forEach(function (p, i) {
+            out.push({ stateName: stateName, index: i, p: p });
+          });
+        });
+        return out;
+      }
+
+      function renderSearchResults(matches) {
+        if (activeDot) { activeDot.classList.remove('is-active'); activeDot = null; }
+        if (activeState) { activeState.classList.remove('is-active'); activeState = null; }
+
+        if (!matches.length) {
+          panel.innerHTML =
+            '<span class="panel-state">No matches</span>' +
+            '<p class="panel-empty">Nothing in the live pipeline matches that yet. ' +
+            '<a href="contact.html">Tell us what you\'re looking for</a> and we\'ll check.</p>';
+          return;
+        }
+
+        var stateCount = {};
+        matches.forEach(function (m) { stateCount[m.stateName] = true; });
+        var cardsHTML = matches.map(function (m) {
+          return projectCardHTML(m.p, m.index, false, m.stateName);
+        }).join('');
+
+        panel.innerHTML =
+          '<span class="panel-state">' + matches.length + ' match' + (matches.length === 1 ? '' : 'es') + '</span>' +
+          '<p class="panel-sub">Across ' + Object.keys(stateCount).length + ' state' +
+          (Object.keys(stateCount).length === 1 ? '' : 's') + '</p>' +
+          '<div class="panel-cards">' + cardsHTML + '</div>';
+
+        panel.querySelectorAll('.project-card').forEach(function (c, idx) {
+          var m = matches[idx];
+          function go() { clearFilters(); selectProjectDot(m.stateName, m.index); }
+          c.addEventListener('click', go);
+          c.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); }
+          });
+        });
+      }
+
+      function applyFilters() {
+        var q = searchInput.value.trim().toLowerCase();
+        var stage = stageSelect.value;
+        var filtering = !!q || !!stage;
+        clearBtn.hidden = !filtering;
+
+        var matches = flatProjects().filter(function (m) {
+          var hay = (m.p.name + ' ' + m.stateName).toLowerCase();
+          var matchesQuery = !q || hay.indexOf(q) !== -1;
+          var matchesStage = !stage || m.p.badge === stage;
+          return matchesQuery && matchesStage;
+        });
+
+        var matchedStates = {};
+        matches.forEach(function (m) { matchedStates[m.stateName] = true; });
+        states.forEach(function (el) {
+          var name = el.getAttribute('data-state');
+          el.classList.toggle('is-dimmed', filtering && !matchedStates[name]);
+        });
+
+        if (!filtering) {
+          if (activeState) {
+            renderPanel(activeState.getAttribute('data-state'));
+          } else {
+            renderDefaultPanel();
+          }
+          return;
+        }
+
+        renderSearchResults(matches);
+      }
+
+      function clearFilters() {
+        searchInput.value = '';
+        stageSelect.value = '';
+        clearBtn.hidden = true;
+        states.forEach(function (el) { el.classList.remove('is-dimmed'); });
+      }
+
+      searchInput.addEventListener('input', applyFilters);
+      stageSelect.addEventListener('change', applyFilters);
+      clearBtn.addEventListener('click', function () {
+        clearFilters();
+        if (activeState) {
+          renderPanel(activeState.getAttribute('data-state'));
+        } else {
+          renderDefaultPanel();
+        }
+      });
+    }
+
+    initFilters();
   }
 
-  // default view: the whole India map, zoomed out, with no state
-  // pre-selected; a first-time visitor should see the country before
-  // being dropped into one state's detail.
-  var totals = renderKPIs();
-  renderDefaultPanel();
-
-  function renderDefaultPanel() {
-    panel.innerHTML =
-      '<span class="panel-state">All India</span>' +
-      '<p class="panel-empty">' + totals.siteCount + ' active site' + (totals.siteCount === 1 ? '' : 's') +
-      ' across ' + totals.stateCount + ' state' + (totals.stateCount === 1 ? '' : 's') +
-      ' (' + totals.mwTotal + ' MW tracked). Click a state on the map to see what\'s live there.</p>';
+  // Project data lives in Supabase (the admin page writes straight to
+  // it), with data/projects.json kept only as a fallback for as long as
+  // Supabase isn't configured yet — see docs/ADMIN_SETUP.md. Once it is
+  // configured, the JSON file is no longer read at all. Document links
+  // are fetched separately and only when signed in: the database denies
+  // the query entirely for a signed-out visitor (not just a client-side
+  // blur), so there's nothing to leak by inspecting the page source.
+  // Same equirectangular projection the map's own paths were drawn
+  // from (and that scripts/sync_from_sheet.py uses) — turns a real
+  // lat/lon into the SVG position a project dot is drawn at.
+  var PROJ_MINX = 68.1005, PROJ_MAXY = 37.077, PROJ_SCALE = 20.4869, PROJ_PAD = 10;
+  function projectLatLon(lat, lon) {
+    return [
+      (lon - PROJ_MINX) * PROJ_SCALE + PROJ_PAD,
+      (PROJ_MAXY - lat) * PROJ_SCALE + PROJ_PAD
+    ];
   }
+
+  function loadFromSupabase() {
+    var c = window.L2G_AUTH.getClient();
+    return c.auth.getSession().then(function (sessionRes) {
+      var signedIn = !!(sessionRes.data && sessionRes.data.session);
+      return c.from('projects').select('*').then(function (res) {
+        if (res.error) throw res.error;
+        var rows = res.data || [];
+        var docsByProject = {};
+        var docsPromise = signedIn
+          ? c.from('documents').select('project_id,name,url').then(function (dres) {
+              (dres.data || []).forEach(function (d) {
+                (docsByProject[d.project_id] = docsByProject[d.project_id] || []).push(
+                  { name: d.name, url: d.url }
+                );
+              });
+            })
+          : Promise.resolve();
+        return docsPromise.then(function () {
+          var grouped = {};
+          rows.forEach(function (r) {
+            (grouped[r.state] = grouped[r.state] || []).push({
+              name: r.name,
+              capacity: r.capacity,
+              badge: r.badge,
+              badgeDone: r.badge_done,
+              land: r.land,
+              connectivity: r.connectivity,
+              ppa: r.ppa,
+              pos: projectLatLon(r.latitude, r.longitude),
+              lastUpdated: r.last_updated,
+              documents: docsByProject[r.id] || []
+            });
+          });
+          return grouped;
+        });
+      });
+    });
+  }
+
+  function loadFromJSONFile() {
+    return fetch('data/projects.json?t=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (payload) { return payload.projects || payload; });
+  }
+
+  var usingSupabase = window.L2G_AUTH && window.L2G_AUTH.isConfigured();
+  (usingSupabase ? loadFromSupabase() : loadFromJSONFile())
+    .then(function (payload) { init(payload); })
+    .catch(function (err) {
+      console.error('Failed to load project data', err);
+      panel.innerHTML =
+        '<span class="panel-state">Couldn\'t load the pipeline</span>' +
+        '<p class="panel-empty">Something went wrong fetching live project data. Refresh the page, or ' +
+        '<a href="contact.html">contact us</a> if this keeps happening.</p>';
+    });
+
 })();
 </script>
 </body>

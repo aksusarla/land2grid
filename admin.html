@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admin | land2grid</title>
+<meta name="description" content="Manage land2grid's project pipeline and partner access.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://land2grid.com/admin.html">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=109">
+</head>
+<body>
+
+<header class="site">
+<div class="wrap">
+<button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+<a class="logo" href="index.html" aria-label="land2grid"><img class="logo-mark" src="assets/logo-mark.svg" alt="" width="52" height="52"><span class="logo-word"><span class="logo-land">land</span><span class="logo-two">2</span><span class="logo-grid">grid</span></span></a>
+<nav class="primary" aria-label="Primary">
+<a href="index.html" class="nav-home">Home</a>
+<a href="about.html">About Us</a>
+<a href="services/what-we-do.html">What We Do</a>
+<a href="insights.html">News &amp; Insights</a>
+</nav>
+<a href="dashboard.html" class="nav-find"><svg class="nav-find-ring nav-find-ring--lg" viewBox="0 0 196 64" aria-hidden="true" focusable="false"><rect class="nav-find-line nav-find-line--outer" x="2" y="2" width="192" height="60" rx="30"/><rect class="nav-find-line nav-find-line--inner" x="5.75" y="5.75" width="184.5" height="52.5" rx="26.25"/></svg><svg class="nav-find-ring nav-find-ring--md" viewBox="0 0 170 58" aria-hidden="true" focusable="false"><rect class="nav-find-line nav-find-line--outer" x="2" y="2" width="166" height="54" rx="27"/><rect class="nav-find-line nav-find-line--inner" x="5.75" y="5.75" width="158.5" height="46.5" rx="23.25"/></svg><svg class="nav-find-ring nav-find-ring--sm" viewBox="0 0 132 58" aria-hidden="true" focusable="false"><rect class="nav-find-line nav-find-line--outer" x="2" y="2" width="128" height="54" rx="27"/><rect class="nav-find-line nav-find-line--inner" x="5.75" y="5.75" width="120.5" height="46.5" rx="23.25"/></svg><span class="full">Live Projects</span><span class="short">Projects</span></a>
+</div>
+</header>
+
+<main>
+<div class="wrap">
+<div class="page-head">
+<span class="eyebrow">Admin</span>
+<h1>Manage pipeline &amp; partners</h1>
+<p>Add or update projects, attach document links, and control who can sign in — all from here, nothing to edit in code.</p>
+</div>
+
+<div class="panel auth-card" id="admin-gate" style="max-width:none">
+<p class="panel-empty">Checking your session&hellip;</p>
+</div>
+
+<div id="admin-app" hidden>
+
+<section class="admin-section" id="import-section" hidden>
+<h2>One-time: import existing data</h2>
+<p class="admin-hint">The project table is empty. If you've been using <code>data/projects.json</code>, import it once to carry that data over — after this, admin.html is the source of truth and the JSON file is no longer read.</p>
+<button class="btn" type="button" id="import-btn">Import data/projects.json</button>
+<p class="auth-message" id="import-message" role="status"></p>
+</section>
+
+<section class="admin-section">
+<h2>Add a project</h2>
+<form class="admin-form" id="add-project-form">
+<div class="admin-form-grid">
+<label>State<input name="state" required placeholder="Tamil Nadu"></label>
+<label>Project name<input name="name" required placeholder="Kanchipuram"></label>
+<label>Capacity (MW)<input name="capacity" type="number" step="any" required placeholder="50"></label>
+<label>Stage / badge<input name="badge" placeholder="Early stage"></label>
+<label>Land status<input name="land" placeholder="To be acquired"></label>
+<label>Connectivity status<input name="connectivity" placeholder="To be acquired"></label>
+<label>PPA status<input name="ppa" placeholder="Under discussion"></label>
+<label>Latitude<input name="latitude" type="number" step="any" required placeholder="12.83"></label>
+<label>Longitude<input name="longitude" type="number" step="any" required placeholder="79.70"></label>
+<label>Last updated<input name="last_updated" type="date"></label>
+<label class="admin-checkbox"><input name="badge_done" type="checkbox"> Stage is complete (shows green)</label>
+</div>
+<button class="btn" type="button" id="add-project-submit">Add project</button>
+<p class="auth-message" id="add-project-message" role="status"></p>
+</form>
+</section>
+
+<section class="admin-section">
+<h2>Projects</h2>
+<p class="admin-hint">Change a field, then press that project's Save. Document links are blurred on the public dashboard until someone signs in.</p>
+<div id="projects-list"></div>
+</section>
+
+<section class="admin-section">
+<h2>People</h2>
+<p class="admin-hint">Inviting someone sends them an email to set a password. Admins can use this page; partners can only view shared documents once signed in.</p>
+<form class="admin-form admin-inline-form" id="invite-form">
+<label>Email<input name="email" type="email" required placeholder="partner@example.com"></label>
+<button class="btn" type="button" id="invite-submit">Invite</button>
+</form>
+<p class="auth-message" id="invite-message" role="status"></p>
+<div id="people-list"></div>
+</section>
+
+</div>
+</div>
+</main>
+
+<footer class="site band-navy">
+<div class="wrap footer-grid">
+<div class="footer-brand">
+<a class="logo" href="index.html" aria-label="land2grid"><span class="logo-word"><span class="logo-land">land</span><span class="logo-two">2</span><span class="logo-grid">grid</span></span></a>
+<p class="footer-address">land2grid<br>WeWork Manyata Tech Park, Bengaluru 560045</p>
+<a href="mailto:contact@land2grid.com">contact@land2grid.com</a>
+</div>
+<div class="footer-col">
+<h4>Company</h4>
+<a href="about.html">About</a>
+<a href="services/what-we-do.html">What We Do</a>
+<a href="insights.html">News &amp; Insights</a>
+<a href="dashboard.html">Live Projects</a>
+<a href="contact.html">Contact</a>
+</div>
+<div class="footer-col">
+<h4>Follow us</h4>
+<div class="social-grid">
+<a href="#"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.6v1.7h.05c.5-.95 1.75-1.95 3.6-1.95 3.85 0 4.55 2.5 4.55 5.75V21h-4v-5.65c0-1.35-.03-3.1-1.9-3.1-1.9 0-2.2 1.5-2.2 3V21h-4V9Z"/></svg>LinkedIn</a>
+<a href="#"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18.9 2H22l-7.5 8.57L23 22h-6.9l-5.4-6.6L4.4 22H1.3l8.03-9.17L1 2h7.1l4.9 6.03L18.9 2Zm-1.2 18h1.9L7.4 4H5.4l12.3 16Z"/></svg>X</a>
+</div>
+</div>
+</div>
+<div class="wrap footer-bottom">
+<span class="footer-credit">Service icons by <a href="https://thenounproject.com" target="_blank" rel="noopener">The Noun Project</a></span><nav class="footer-legal"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="cookie-policy.html">Cookie policy</a></nav>
+</div>
+</footer>
+
+<script src="assets/main.js?v=20"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/auth.js"></script>
+<script>
+(function () {
+  var gate = document.getElementById('admin-gate');
+  var app = document.getElementById('admin-app');
+
+  if (!window.L2G_AUTH || !window.L2G_AUTH.isConfigured()) {
+    gate.innerHTML = '<p class="panel-empty">Partner login isn\'t set up yet — see docs/ADMIN_SETUP.md.</p>';
+    return;
+  }
+
+  var client = window.L2G_AUTH.getClient();
+
+  client.auth.getSession().then(function (res) {
+    var session = res.data && res.data.session;
+    if (!session) { window.location.href = 'login.html'; return; }
+
+    window.L2G_AUTH.getProfile().then(function (profile) {
+      if (!profile || profile.role !== 'admin') {
+        gate.innerHTML =
+          '<p class="panel-empty">You\'re signed in, but this page is for admins only. ' +
+          '<a href="documents.html">Go to Documents</a> instead.</p>';
+        return;
+      }
+      gate.hidden = true;
+      app.hidden = false;
+      initAdmin(client);
+    });
+  });
+
+  function escapeHTML(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function initAdmin(client) {
+    var projectsList = document.getElementById('projects-list');
+    var peopleList = document.getElementById('people-list');
+    var importSection = document.getElementById('import-section');
+    var importMessage = document.getElementById('import-message');
+
+    var projects = [];
+    var documentsByProject = {};
+    var profiles = [];
+
+    function loadAll() {
+      return Promise.all([
+        client.from('projects').select('*').order('state').order('name'),
+        client.from('documents').select('*'),
+        client.from('profiles').select('*').order('created_at')
+      ]).then(function (results) {
+        var pRes = results[0], dRes = results[1], profRes = results[2];
+        projects = pRes.data || [];
+        documentsByProject = {};
+        (dRes.data || []).forEach(function (d) {
+          (documentsByProject[d.project_id] = documentsByProject[d.project_id] || []).push(d);
+        });
+        profiles = profRes.data || [];
+        importSection.hidden = projects.length > 0;
+        renderProjects();
+        renderPeople();
+      });
+    }
+
+    // ---------------- Projects ----------------
+
+    function renderProjects() {
+      if (!projects.length) {
+        projectsList.innerHTML = '<p class="panel-empty">No projects yet — add one above.</p>';
+        return;
+      }
+      projectsList.innerHTML = projects.map(function (p) {
+        var docs = documentsByProject[p.id] || [];
+        return (
+          '<div class="admin-card" data-id="' + p.id + '">' +
+            '<div class="admin-form-grid">' +
+              field('State', 'state', p.state) +
+              field('Project name', 'name', p.name) +
+              field('Capacity (MW)', 'capacity', p.capacity, 'number') +
+              field('Stage / badge', 'badge', p.badge) +
+              field('Land status', 'land', p.land) +
+              field('Connectivity status', 'connectivity', p.connectivity) +
+              field('PPA status', 'ppa', p.ppa) +
+              field('Latitude', 'latitude', p.latitude, 'number') +
+              field('Longitude', 'longitude', p.longitude, 'number') +
+              field('Last updated', 'last_updated', p.last_updated, 'date') +
+              '<label class="admin-checkbox"><input type="checkbox" data-field="badge_done"' +
+                (p.badge_done ? ' checked' : '') + '> Stage is complete (shows green)</label>' +
+            '</div>' +
+            '<div class="admin-docs">' +
+              '<strong>Documents</strong>' +
+              '<div class="admin-doc-rows">' +
+                docs.map(function (d) {
+                  return '<div class="admin-doc-row" data-doc-id="' + d.id + '">' +
+                    '<input placeholder="Name" value="' + escapeHTML(d.name) + '" data-doc-field="name">' +
+                    '<input placeholder="URL" value="' + escapeHTML(d.url) + '" data-doc-field="url">' +
+                    '<button type="button" class="admin-btn-sm btn-remove-doc">Remove</button>' +
+                  '</div>';
+                }).join('') +
+              '</div>' +
+              '<button type="button" class="admin-btn-sm btn-add-doc">+ Add document link</button>' +
+            '</div>' +
+            '<div class="admin-card-actions">' +
+              '<button type="button" class="btn btn-save-project">Save</button>' +
+              '<button type="button" class="btn outline btn-delete-project">Delete project</button>' +
+              '<span class="auth-message admin-row-message"></span>' +
+            '</div>' +
+          '</div>'
+        );
+      }).join('');
+
+      projectsList.querySelectorAll('.admin-card').forEach(wireProjectCard);
+    }
+
+    function field(label, name, value, type) {
+      type = type || 'text';
+      return '<label>' + label + '<input data-field="' + name + '" type="' + type + '" value="' +
+        escapeHTML(value == null ? '' : value) + '"></label>';
+    }
+
+    function wireProjectCard(card) {
+      var id = card.getAttribute('data-id');
+
+      card.querySelector('.btn-add-doc').addEventListener('click', function () {
+        var row = document.createElement('div');
+        row.className = 'admin-doc-row';
+        row.innerHTML =
+          '<input placeholder="Name" data-doc-field="name">' +
+          '<input placeholder="URL" data-doc-field="url">' +
+          '<button type="button" class="admin-btn-sm btn-remove-doc">Remove</button>';
+        card.querySelector('.admin-doc-rows').appendChild(row);
+        row.querySelector('.btn-remove-doc').addEventListener('click', function () { row.remove(); });
+      });
+      card.querySelectorAll('.btn-remove-doc').forEach(function (btn) {
+        btn.addEventListener('click', function () { btn.closest('.admin-doc-row').remove(); });
+      });
+
+      card.querySelector('.btn-delete-project').addEventListener('click', function () {
+        if (!confirm('Delete this project and its document links? This can\'t be undone.')) return;
+        client.from('projects').delete().eq('id', id).then(function (res) {
+          if (res.error) { showRowMessage(card, res.error.message); return; }
+          loadAll();
+        });
+      });
+
+      card.querySelector('.btn-save-project').addEventListener('click', function () {
+        var updates = {};
+        card.querySelectorAll('[data-field]').forEach(function (el) {
+          var f = el.getAttribute('data-field');
+          updates[f] = el.type === 'checkbox' ? el.checked : el.value;
+        });
+        updates.capacity = parseFloat(updates.capacity) || 0;
+        updates.latitude = parseFloat(updates.latitude) || 0;
+        updates.longitude = parseFloat(updates.longitude) || 0;
+        if (!updates.last_updated) delete updates.last_updated;
+
+        var docRows = Array.prototype.slice.call(card.querySelectorAll('.admin-doc-row')).map(function (row) {
+          var name = row.querySelector('[data-doc-field="name"]').value.trim();
+          var url = row.querySelector('[data-doc-field="url"]').value.trim();
+          return { name: name, url: url };
+        }).filter(function (d) { return d.name && d.url; });
+
+        showRowMessage(card, 'Saving…');
+        client.from('projects').update(updates).eq('id', id)
+          .then(function (res) {
+            if (res.error) throw res.error;
+            // Simplest correct approach for a short per-project list:
+            // replace this project's documents wholesale rather than
+            // diffing row by row.
+            return client.from('documents').delete().eq('project_id', id);
+          })
+          .then(function () {
+            if (!docRows.length) return;
+            return client.from('documents').insert(
+              docRows.map(function (d) { return { project_id: id, name: d.name, url: d.url }; })
+            );
+          })
+          .then(function () {
+            showRowMessage(card, 'Saved.');
+            loadAll();
+          })
+          .catch(function (err) { showRowMessage(card, err.message || 'Something went wrong.'); });
+      });
+    }
+
+    function showRowMessage(card, text) {
+      card.querySelector('.admin-row-message').textContent = text;
+    }
+
+    document.getElementById('add-project-submit').addEventListener('click', function () {
+      var form = document.getElementById('add-project-form');
+      var msg = document.getElementById('add-project-message');
+      var data = new FormData(form);
+      var row = {
+        state: (data.get('state') || '').trim(),
+        name: (data.get('name') || '').trim(),
+        capacity: parseFloat(data.get('capacity')) || 0,
+        badge: (data.get('badge') || '').trim() || 'Early stage',
+        badge_done: form.querySelector('[name="badge_done"]').checked,
+        land: (data.get('land') || '').trim() || 'Not set',
+        connectivity: (data.get('connectivity') || '').trim() || 'Not set',
+        ppa: (data.get('ppa') || '').trim() || 'Not set',
+        latitude: parseFloat(data.get('latitude')) || 0,
+        longitude: parseFloat(data.get('longitude')) || 0,
+        last_updated: data.get('last_updated') || new Date().toISOString().slice(0, 10)
+      };
+      if (!row.state || !row.name || !row.capacity) {
+        msg.textContent = 'State, project name and capacity are required.';
+        return;
+      }
+      msg.textContent = 'Adding…';
+      client.from('projects').insert(row).then(function (res) {
+        if (res.error) { msg.textContent = res.error.message; return; }
+        msg.textContent = '';
+        form.reset();
+        loadAll();
+      });
+    });
+
+    // ---------------- Import from data/projects.json (one-time) ----------------
+
+    document.getElementById('import-btn').addEventListener('click', function () {
+      importMessage.textContent = 'Reading data/projects.json…';
+      fetch('data/projects.json?t=' + Date.now(), { cache: 'no-store' })
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function (payload) {
+          var byState = payload.projects || payload;
+          var rows = [];
+          var docsByRow = [];
+          Object.keys(byState).forEach(function (state) {
+            byState[state].forEach(function (p) {
+              rows.push({
+                state: state,
+                name: p.name,
+                capacity: p.capacity,
+                badge: p.badge || 'Early stage',
+                badge_done: !!p.badgeDone,
+                land: p.land || 'Not set',
+                connectivity: p.connectivity || 'Not set',
+                ppa: p.ppa || 'Not set',
+                // data/projects.json stores an already-projected [x, y]
+                // pair, not lat/lon, so there's nothing accurate to put
+                // here — leave at 0,0 and fix up lat/lon by hand after
+                // import (one-time cost, only for rows brought in this way).
+                latitude: 0,
+                longitude: 0,
+                last_updated: p.lastUpdated || new Date().toISOString().slice(0, 10)
+              });
+              docsByRow.push(p.documents || []);
+            });
+          });
+          if (!rows.length) throw new Error('No projects found in the file.');
+          importMessage.textContent = 'Importing ' + rows.length + ' project(s)…';
+          return client.from('projects').insert(rows).select().then(function (res) {
+            if (res.error) throw res.error;
+            var inserted = res.data;
+            var docRows = [];
+            inserted.forEach(function (row, i) {
+              (docsByRow[i] || []).forEach(function (d) {
+                docRows.push({ project_id: row.id, name: d.name, url: d.url });
+              });
+            });
+            return docRows.length ? client.from('documents').insert(docRows) : Promise.resolve();
+          });
+        })
+        .then(function () {
+          importMessage.textContent = 'Imported. Latitude/longitude defaulted to 0,0 — ' +
+            'edit each project below to set its real position on the map.';
+          loadAll();
+        })
+        .catch(function (err) { importMessage.textContent = err.message || 'Import failed.'; });
+    });
+
+    // ---------------- People ----------------
+
+    function renderPeople() {
+      if (!profiles.length) {
+        peopleList.innerHTML = '<p class="panel-empty">No one has signed in yet.</p>';
+        return;
+      }
+      peopleList.innerHTML =
+        '<table class="admin-table"><thead><tr><th>Email</th><th>Role</th><th></th></tr></thead><tbody>' +
+        profiles.map(function (p) {
+          return '<tr data-id="' + p.id + '">' +
+            '<td>' + escapeHTML(p.email) + '</td>' +
+            '<td>' + p.role + '</td>' +
+            '<td>' +
+              '<button type="button" class="admin-btn-sm btn-toggle-role">' +
+                (p.role === 'admin' ? 'Make partner' : 'Make admin') +
+              '</button> ' +
+              '<button type="button" class="admin-btn-sm btn-remove-person">Remove access</button>' +
+            '</td>' +
+          '</tr>';
+        }).join('') +
+        '</tbody></table><p class="auth-message" id="people-message" role="status"></p>';
+
+      peopleList.querySelectorAll('.btn-toggle-role').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var row = btn.closest('tr');
+          var id = row.getAttribute('data-id');
+          var current = profiles.filter(function (p) { return p.id === id; })[0];
+          var next = current.role === 'admin' ? 'partner' : 'admin';
+          client.from('profiles').update({ role: next }).eq('id', id).then(function (res) {
+            if (res.error) { document.getElementById('people-message').textContent = res.error.message; return; }
+            loadAll();
+          });
+        });
+      });
+      peopleList.querySelectorAll('.btn-remove-person').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var row = btn.closest('tr');
+          var id = row.getAttribute('data-id');
+          if (!confirm('Remove this person\'s access? They will no longer be able to sign in.')) return;
+          client.functions.invoke('admin-users', { body: { action: 'remove', userId: id } })
+            .then(function (res) {
+              if (res.error || (res.data && res.data.error)) {
+                document.getElementById('people-message').textContent =
+                  (res.data && res.data.error) || res.error.message || 'Could not remove access.';
+                return;
+              }
+              loadAll();
+            });
+        });
+      });
+    }
+
+    document.getElementById('invite-submit').addEventListener('click', function () {
+      var form = document.getElementById('invite-form');
+      var msg = document.getElementById('invite-message');
+      var email = form.querySelector('[name="email"]').value.trim();
+      if (!email) { msg.textContent = 'Enter an email first.'; return; }
+      msg.textContent = 'Sending invite…';
+      client.functions.invoke('admin-users', { body: { action: 'invite', email: email } })
+        .then(function (res) {
+          if (res.error || (res.data && res.data.error)) {
+            msg.textContent = (res.data && res.data.error) || res.error.message ||
+              'Could not send the invite. Has the admin-users function been deployed? See docs/ADMIN_SETUP.md.';
+            return;
+          }
+          msg.textContent = 'Invited ' + email + '.';
+          form.reset();
+          loadAll();
+        })
+        .catch(function () {
+          msg.textContent = 'Could not reach the invite function. Has it been deployed? See docs/ADMIN_SETUP.md.';
+        });
+    });
+
+    loadAll();
+  }
+})();
+</script>
+</body>
+</html>

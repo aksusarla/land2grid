@@ -498,6 +498,13 @@ form.contact-form .btn{margin-top:var(--space-md);background:var(--ink);color:va
 form.contact-form .btn:hover{background:var(--ink-max)}
 .form-note{color:var(--ink-soft);font-size:.85rem;margin-top:var(--space-sm)}
 
+/* Partner login + documents pages: a centered form card reusing the
+   site's existing .contact-form input styling, so it looks native to
+   the rest of the site rather than a bolted-on auth screen. */
+.auth-card{max-width:26rem;margin-top:var(--space-lg)}
+.auth-form .btn{width:100%;margin-top:var(--space-md)}
+.auth-message{color:var(--notify);font-size:.88rem;margin-top:var(--space-sm);min-height:1.2em}
+
 /* footer: ink, multi-column. Order left to right: brand + address,
    Company links, Follow us, a short "Get in touch" form that posts to
    the same Netlify form bucket as the full contact page. */
@@ -700,12 +707,32 @@ nav.primary a:hover::after{right:0}
    of the rest even at a glance on a small screen, before anyone
    touches the map. The selected state goes a deeper orange so it
    still stands out from the rest of the gold states. */
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:var(--space-lg)}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:var(--space-lg)}
 .kpi-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
-  padding:1.1rem 1.2rem;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:.2rem}
-.kpi-value{font-family:"Figtree",sans-serif;font-weight:800;font-size:1.9rem;color:var(--ink);line-height:1.1}
-.kpi-label{color:var(--ink-soft);font-size:.82rem}
-.dash-layout{display:grid;grid-template-columns:1.25fr 1fr;gap:2rem;margin-top:var(--space-lg);align-items:start}
+  padding:1.3rem 1.4rem;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:.3rem}
+.kpi-value{font-family:"Figtree",sans-serif;font-weight:800;font-size:2.1rem;color:var(--ink);line-height:1.1}
+.kpi-label{color:var(--ink-soft);font-size:.85rem}
+
+/* Search/filter bar: a text search (by project or state name) plus a
+   stage dropdown, so a visitor can find a site without knowing which
+   state to click first. Matching states stay full-colour on the map
+   while the rest dim, and the panel swaps to a flat results list. */
+.filter-bar{display:flex;gap:.75rem;margin-top:1.1rem;flex-wrap:wrap}
+.filter-search{flex:1 1 16rem;min-width:0;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-md);padding:.75rem 1rem;font:inherit;font-size:.92rem;color:var(--ink)}
+.filter-search::placeholder{color:var(--ink-soft)}
+.filter-stage{flex:0 0 auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:.75rem 1rem;font:inherit;font-size:.92rem;color:var(--ink);cursor:pointer}
+.filter-clear{flex:0 0 auto;background:var(--stage);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:.75rem 1.1rem;font:inherit;font-size:.92rem;font-weight:700;color:var(--ink-soft);cursor:pointer}
+.filter-clear:hover{color:var(--ink);border-color:var(--customer)}
+
+/* Dashboard has no closing CTA section before the footer (removed: it
+   was navy-on-navy against the footer with no visible seam between
+   them), so this wrap carries its own bottom padding instead, matching
+   the breathing room a normal <section> would have given it. */
+.dash-content{padding-bottom:var(--space-2xl)}
+.dash-layout{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:var(--space-lg);align-items:start}
 .map-panel{background:var(--stage);border-radius:var(--r-lg);padding:var(--space-md);position:relative}
 .map-panel svg{width:100%;height:auto;display:block}
 .map-reset{position:absolute;top:1.1rem;left:1.1rem;z-index:2;background:var(--surface);border:1px solid var(--line);
@@ -721,6 +748,7 @@ nav.primary a:hover::after{right:0}
 .state.has-projects:hover,.state.has-projects:focus-visible{fill:#f2ad1f}
 .state.is-active{fill:var(--signal);transform:scale(1.045)}
 .state.is-active:hover{fill:var(--signal)}
+.state.is-dimmed{opacity:.3}
 .project-dot{fill:var(--on-dark);stroke:var(--forest);stroke-width:2;cursor:pointer;outline:none;
   transition:transform .15s ease;transform-box:fill-box;transform-origin:center;
   filter:drop-shadow(0 1px 2px rgba(16,42,54,.35))}
@@ -729,30 +757,86 @@ nav.primary a:hover::after{right:0}
   filter:drop-shadow(0 0 3px var(--signal)) drop-shadow(0 0 3px var(--signal))}
 .project-dot.is-active{fill:var(--signal);stroke:var(--on-dark)}
 
+/* align-self:stretch matches the map's own height (the grid row is sized
+   by the taller of the two items), but min-height:0 is what keeps the
+   panel from being the one that sets that height: without it, a long
+   project list would force the row taller than the map itself. With it,
+   the panel is pinned to the map's height and .panel-cards (below)
+   scrolls its own overflow instead of pushing the card outer taller. */
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
-  padding:1.6rem;position:sticky;top:6.5rem}
-.panel-state{font-family:"Figtree",sans-serif;font-weight:700;font-size:1.25rem}
-.panel-sub{color:var(--ink-soft);font-size:.88rem;margin-top:.2rem;margin-bottom:var(--space-3xs)}
+  padding:1.8rem;position:sticky;top:6.5rem;display:flex;flex-direction:column;justify-content:center;
+  align-self:stretch;min-height:0}
+.panel-state{font-family:"Figtree",sans-serif;font-weight:700;font-size:1.4rem}
+.panel-sub{color:var(--ink-soft);font-size:.92rem;margin-top:.25rem;margin-bottom:var(--space-sm)}
+.panel-cards{flex:1 1 auto;min-height:0;overflow-y:auto;display:flex;flex-direction:column;
+  margin-right:-.6rem;padding-right:.6rem}
+.panel-cards::-webkit-scrollbar{width:6px}
+.panel-cards::-webkit-scrollbar-thumb{background:var(--line);border-radius:999px}
+.panel-cards::-webkit-scrollbar-track{background:transparent}
 
-/* Each project is its own card: a name/capacity/badge header plus
-   land, connectivity and PPA status right on the card as chips, so a
-   site is legible at a glance instead of needing a click to reveal
-   its status in a separate detail block. */
-.project-card{display:block;padding:.95rem 0;border-top:1px solid var(--line);cursor:pointer;border-radius:var(--r-lg)}
-.project-card:first-of-type{border-top:0}
-.project-card:hover,.project-card.is-active{background:var(--stage);margin:0 -.75rem;padding:.95rem var(--space-xs)}
-.project-card.is-active{box-shadow:inset 3px 0 0 var(--signal)}
-.project-card-head{display:flex;justify-content:space-between;align-items:center;gap:.75rem}
-.project-name{display:block;font-weight:700;font-size:.95rem}
-.project-meta{display:block;color:var(--ink-soft);font-size:.82rem;margin-top:.15rem}
-.project-badge{font-size:.72rem;font-weight:700;padding:.3rem .65rem;border-radius:999px;
-  background:rgba(16,42,54,.07);color:var(--ink-soft);white-space:nowrap;flex:none}
+/* Each project is its own standalone card (border, radius, shadow) rather
+   than a row in a list, so a single site reads as a proper deal summary:
+   name, capacity and stage up top, then land, connectivity and PPA status
+   as three status tiles beneath. Tiles collapse from a 3-up row to a
+   stacked column once the card gets too narrow to hold them comfortably,
+   whether that's the panel shrinking on a laptop or the whole layout
+   going to one column on a phone. */
+.project-card{display:block;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:1.5rem 1.6rem;margin-top:1.1rem;cursor:pointer;
+  box-shadow:var(--shadow-sm);
+  transition:border-color .15s ease,box-shadow .15s ease,transform .15s ease,flex-grow .25s ease}
+.project-card:first-of-type{margin-top:0}
+.project-card:hover{border-color:var(--customer);box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.project-card.is-active{border-color:var(--signal);background:rgba(242,153,74,.05);box-shadow:var(--shadow-md)}
+/* The panel is stretched to match the map's height (see .panel above), so
+   a single short card can leave a block of unused white space beneath it.
+   Letting the selected (or currently hovered) card grow into that leftover
+   space, rather than leave it empty, is what makes a one-project state
+   feel like a full card instead of a form floating in a box. In a
+   multi-card list there's usually no leftover space to grow into, so this
+   is a no-op there — it only does anything where there's room to give. */
+.project-card.is-active,.project-card:hover{
+  flex-grow:1;display:flex;flex-direction:column;justify-content:center}
+.project-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.project-state-tag{display:block;color:var(--signal);font-weight:700;font-size:.72rem;
+  text-transform:uppercase;letter-spacing:.03em;margin-bottom:.3rem}
+.project-name{display:block;font-family:"Figtree",sans-serif;font-weight:700;font-size:1.15rem}
+.project-meta{display:block;color:var(--ink-soft);font-size:.9rem;margin-top:.25rem}
+.project-badge{font-size:.76rem;font-weight:700;padding:.35rem .75rem;border-radius:999px;
+  background:rgba(16,42,54,.07);color:var(--ink-soft);white-space:nowrap;flex:none;margin-top:.1rem}
 .project-badge.is-done{background:rgba(92,184,92,.14);color:var(--success-ink)}
-.project-chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.7rem}
-.chip{display:inline-flex;align-items:center;gap:.3rem;font-size:.78rem;color:var(--ink-soft);
-  background:rgba(16,42,54,.05);border-radius:999px;padding:.3rem .65rem .3rem .45rem;line-height:1.3}
-.chip img{width:.85rem;height:.85rem;opacity:.65;flex:none}
-.chip strong{color:var(--ink);font-weight:600}
+.project-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:1.1rem}
+.chip{display:flex;flex-direction:column;gap:.4rem;font-size:.9rem;color:var(--ink);
+  background:var(--stage);border-radius:var(--r-sm);padding:.7rem .8rem;line-height:1.3}
+.chip-head{display:flex;align-items:center;gap:.4rem}
+.chip img{width:.9rem;height:.9rem;opacity:.6;flex:none}
+.chip strong{color:var(--ink-soft);font-weight:700;font-size:.72rem;text-transform:uppercase;letter-spacing:.03em}
+.chip-value{color:var(--ink);font-weight:600}
+.project-updated{color:var(--ink-soft);font-size:.78rem;margin-top:.9rem}
+
+/* Documents live on every card so the markup never has to change on
+   sign-in; .project-docs-body just gets a blur + lock overlay until
+   body.is-signed-in flips (set by the Supabase session check). */
+.project-docs{margin-top:1.1rem;padding-top:1rem;border-top:1px solid var(--line)}
+.project-docs-head{color:var(--ink-soft);font-weight:700;font-size:.72rem;
+  text-transform:uppercase;letter-spacing:.03em;margin-bottom:.6rem}
+.project-docs-body{position:relative;min-height:3.4rem}
+.project-docs-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem;
+  filter:blur(5px);user-select:none;pointer-events:none;transition:filter .2s ease}
+.project-docs-list a{display:flex;align-items:center;gap:.5rem;color:var(--ink);font-weight:600;
+  font-size:.9rem;text-decoration:none}
+.project-docs-list a:hover{text-decoration:underline}
+.project-docs-list a::before{content:"";width:.6rem;height:.75rem;flex:none;border-radius:1px;
+  background:var(--customer);opacity:.5}
+.project-docs-empty{color:var(--ink-soft);font-size:.88rem;filter:blur(5px);user-select:none;
+  pointer-events:none;transition:filter .2s ease}
+.project-docs-lock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:.6rem;text-align:center;padding:.5rem}
+.project-docs-lock p{margin:0;color:var(--ink-soft);font-size:.82rem;font-weight:600}
+.btn-sm{padding:.5rem 1.1rem;font-size:.82rem}
+body.is-signed-in .project-docs-list,body.is-signed-in .project-docs-empty{filter:none;
+  pointer-events:auto;user-select:auto}
+body.is-signed-in .project-docs-lock{display:none}
 
 .panel-empty{color:var(--ink-soft);font-size:.92rem;padding:var(--space-md) 0}
 .panel-empty a{color:var(--forest);font-weight:600;text-decoration:none}
@@ -761,5 +845,52 @@ nav.primary a:hover::after{right:0}
 @media (max-width:64rem){
   .dash-layout{grid-template-columns:1fr}
   .panel{position:static}
-  .kpi-grid{grid-template-columns:repeat(2,1fr)}
 }
+@media (max-width:48rem){
+  .project-chips{grid-template-columns:1fr}
+  .chip{flex-direction:row;align-items:center;justify-content:space-between}
+}
+@media (max-width:30rem){
+  .kpi-grid{grid-template-columns:1fr}
+  .panel{padding:1.3rem}
+  .project-card{padding:1.2rem 1.25rem}
+  .project-name{font-size:1.05rem}
+  .filter-search,.filter-stage,.filter-clear{flex:1 1 100%}
+}
+
+/* admin.html: a plain, utilitarian set of form/table styles — this page
+   is a work tool for the team, not a piece of marketing design, so it
+   borrows the site's colors and radii but keeps layout simple (grids of
+   labeled inputs, a card per project) rather than anything bespoke. */
+.admin-section{margin-top:var(--space-xl);padding-top:var(--space-lg);border-top:1px solid var(--line)}
+.admin-section:first-of-type{margin-top:var(--space-lg)}
+.admin-hint{color:var(--ink-soft);font-size:.88rem;margin:.4rem 0 var(--space-sm);max-width:44rem}
+.admin-form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(13rem,1fr));gap:1rem;margin-bottom:var(--space-sm)}
+.admin-form-grid label{display:block;font-size:.8rem;color:var(--ink-soft)}
+.admin-form-grid input{width:100%;margin-top:.3rem;padding:.6rem .75rem;border:1.5px solid var(--line);
+  border-radius:var(--r-sm);background:var(--surface);color:var(--ink);font:inherit}
+.admin-checkbox{display:flex !important;align-items:center;gap:.5rem;font-size:.85rem;color:var(--ink)}
+.admin-checkbox input{width:auto !important;margin:0 !important}
+.admin-inline-form{display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap}
+.admin-inline-form label{font-size:.8rem;color:var(--ink-soft)}
+.admin-inline-form input{margin-top:.3rem;padding:.6rem .75rem;border:1.5px solid var(--line);
+  border-radius:var(--r-sm);background:var(--surface);color:var(--ink);font:inherit;min-width:16rem}
+.admin-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:1.3rem 1.4rem;margin-top:1rem;box-shadow:var(--shadow-sm)}
+.admin-card:first-child{margin-top:0}
+.admin-docs{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line)}
+.admin-docs strong{display:block;font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;
+  color:var(--ink-soft);margin-bottom:.6rem}
+.admin-doc-rows{display:flex;flex-direction:column;gap:.5rem}
+.admin-doc-row{display:grid;grid-template-columns:1fr 2fr auto;gap:.5rem}
+.admin-doc-row input{padding:.5rem .65rem;border:1.5px solid var(--line);border-radius:var(--r-sm);
+  background:var(--surface);color:var(--ink);font:inherit;font-size:.9rem}
+.admin-btn-sm{background:none;border:1.5px solid var(--line);border-radius:999px;
+  padding:.4rem .9rem;font-size:.8rem;font-weight:600;cursor:pointer;color:var(--ink)}
+.admin-btn-sm:hover{border-color:var(--customer)}
+.admin-card-actions{display:flex;align-items:center;gap:1rem;margin-top:1rem;flex-wrap:wrap}
+.admin-row-message{margin:0;min-height:1em}
+.admin-table{width:100%;border-collapse:collapse;margin-top:1rem}
+.admin-table th{text-align:left;font-size:.78rem;color:var(--ink-soft);text-transform:uppercase;
+  letter-spacing:.03em;padding:.5rem .6rem;border-bottom:1px solid var(--line)}
+.admin-table td{padding:.65rem .6rem;border-bottom:1px solid var(--line);font-size:.92rem}

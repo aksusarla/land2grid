@@ -1,0 +1,154 @@
+{
+  "generatedAt": "2026-11-20",
+  "projects": {
+    "Tamil Nadu": [
+      {
+        "name": "Tamizhpadi",
+        "capacity": 50,
+        "badge": "Load application pending",
+        "badgeDone": false,
+        "land": "Under process",
+        "connectivity": "Applied, LFS underway",
+        "ppa": "Under discussion",
+        "pos": [
+          216.8,
+          574.5
+        ],
+        "lastUpdated": "2026-11-20",
+        "documents": []
+      },
+      {
+        "name": "Ottapidaram",
+        "capacity": 100,
+        "badge": "Load application pending",
+        "badgeDone": false,
+        "land": "Under process",
+        "connectivity": "Applied, LFS underway",
+        "ppa": "Under discussion",
+        "pos": [
+          213.3,
+          586.9
+        ],
+        "lastUpdated": "2026-11-20",
+        "documents": []
+      },
+      {
+        "name": "Kanchipuram",
+        "capacity": 50,
+        "badge": "LFS completed",
+        "badgeDone": true,
+        "land": "Under process",
+        "connectivity": "Applied, LFS completed",
+        "ppa": "Under discussion",
+        "pos": [
+          247.7,
+          506.7
+        ],
+        "lastUpdated": "2026-11-20",
+        "documents": []
+      }
+    ],
+    "Punjab": [
+      {
+        "name": "Punjab GCPP",
+        "capacity": 40,
+        "badge": "Connectivity identified",
+        "badgeDone": false,
+        "land": "Identified",
+        "connectivity": "Identified, 66kV STU",
+        "ppa": "Under discussion",
+        "pos": [
+          168.9,
+          136.5
+        ],
+        "lastUpdated": "2026-11-20",
+        "documents": []
+      }
+    ],
+    "Assam": [
+      {
+        "name": "Assam GCPP",
+        "capacity": 50,
+        "badge": "Early stage",
+        "badgeDone": false,
+        "land": "To be acquired",
+        "connectivity": "To be acquired",
+        "ppa": "Under discussion",
+        "pos": [
+          517.2,
+          235.8
+        ],
+        "lastUpdated": "2026-11-20",
+        "documents": []
+      }
+    ],
+    "Andhra Pradesh": [
+      {
+        "name": "AP GCPP",
+        "capacity": 50,
+        "badge": "Early stage",
+        "badgeDone": false,
+        "land": "To be acquired",
+        "connectivity": "To be acquired, Eastern discom",
+        "ppa": "Under discussion",
+        "pos": [
+          269.4,
+          444.3
+        ],
+        "lastUpdated": "2026-11-20",
+        "documents": []
+      }
+    ],
+    "Karnataka": [
+      {
+        "name": "Karnataka GCPP",
+        "capacity": 13,
+        "badge": "Early stage",
+        "badgeDone": false,
+        "land": "To be acquired",
+        "connectivity": "To be acquired",
+        "ppa": "Under discussion",
+        "pos": [
+          178.7,
+          461.8
+        ],
+        "lastUpdated": "2026-11-20",
+        "documents": []
+      }
+    ],
+    "Madhya Pradesh": [
+      {
+        "name": "MP GCPP",
+        "capacity": 30,
+        "badge": "Early stage",
+        "badgeDone": false,
+        "land": "To be acquired",
+        "connectivity": "To be acquired",
+        "ppa": "Under discussion",
+        "pos": [
+          221.7,
+          278.4
+        ],
+        "lastUpdated": "2026-11-20",
+        "documents": []
+      }
+    ],
+    "West Bengal": [
+      {
+        "name": "West Bengal GCPP",
+        "capacity": 20,
+        "badge": "Early stage",
+        "badgeDone": false,
+        "land": "To be acquired",
+        "connectivity": "To be acquired",
+        "ppa": "Under discussion",
+        "pos": [
+          414.5,
+          269.9
+        ],
+        "lastUpdated": "2026-11-20",
+        "documents": []
+      }
+    ]
+  }
+}
