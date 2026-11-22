@@ -28,6 +28,14 @@ Plain HTML/CSS/JS, six pages, no build step.
    - you can remove `data-netlify`, `netlify-honeypot`, and the hidden `form-name` field (Formspree doesn't need them)
 3. Point your domain at the Vercel project under Settings → Domains.
 
-## Editing content
+## Editing the header/footer
 
-Every page repeats the same header/footer markup (plain static HTML, no includes). If you add a page, copy the header/footer block from an existing page so the nav stays in sync.
+The header and footer are still plain static HTML in every page (no includes at request time, so deploy stays build-free), but they're no longer hand-copied. `partials/header.html` and `partials/footer.html` (plus `partials/footer-minimal.html` for `thank-you.html`) are the single source of truth.
+
+To change the nav, logo, footer links, address, etc.:
+
+1. Edit `partials/header.html` and/or `partials/footer.html`.
+2. Run `node scripts/build.js` from the repo root.
+3. Commit the regenerated `.html` files along with the partial.
+
+If you add a new page, add it to the `pages` list in `scripts/build.js`, give it an empty `<header class="site">...</header>` / `<footer class="site band-navy">...</footer>` pair (or copy one from an existing page), and run the build script to fill them in.
