@@ -22,7 +22,14 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, apikey, content-type",
+  // The Supabase JS client adds a couple of headers of its own
+  // (x-client-info, and on newer client versions x-supabase-api-version)
+  // on top of authorization/apikey/content-type. If any header the
+  // browser's preflight asks about isn't listed here, the browser
+  // blocks the real request before it's ever sent — which is why
+  // invites were failing with "Failed to send a request to the Edge
+  // Function" even though the function itself was deployed and fine.
+  "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-client-info, x-supabase-api-version",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
