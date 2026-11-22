@@ -185,3 +185,42 @@ drop policy if exists "documents: admins can delete" on public.documents;
 create policy "documents: admins can delete"
   on public.documents for delete
   using (public.is_admin());
+
+-- ---------------------------------------------------------------
+-- enquiries
+-- ---------------------------------------------------------------
+-- Backs the public contact form (contact.html), which inserts directly
+-- via the publishable client key — no server/function needed. Anyone
+-- can insert (that's the whole point of a contact form), but only
+-- admins can read or delete the submissions, via admin.html.
+create table if not exists public.enquiries (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text not null,
+  company text,
+  state text,
+  capacity text,
+  need text,
+  message text,
+  created_at timestamptz not null default now()
+);
+
+alter table public.enquiries enable row level security;
+
+grant insert on public.enquiries to anon, authenticated;
+grant select, delete on public.enquiries to authenticated;
+
+drop policy if exists "enquiries: anyone can submit" on public.enquiries;
+create policy "enquiries: anyone can submit"
+  on public.enquiries for insert
+  with check (true);
+
+drop policy if exists "enquiries: admins can read" on public.enquiries;
+create policy "enquiries: admins can read"
+  on public.enquiries for select
+  using (public.is_admin());
+
+drop policy if exists "enquiries: admins can delete" on public.enquiries;
+create policy "enquiries: admins can delete"
+  on public.enquiries for delete
+  using (public.is_admin());

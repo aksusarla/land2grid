@@ -44,16 +44,13 @@
 
 <div>
 <!--
-  Netlify Forms: this form works as-is once deployed on Netlify (no backend
-  code needed, just the name + data-netlify attributes).
-  If you deploy on Vercel instead, Vercel has no built-in form handler:
-  sign up free at formspree.io, swap the action below to
-  "https://formspree.io/f/YOUR_FORM_ID", and you can drop the
-  data-netlify / netlify-honeypot attributes and the hidden form-name field.
+  Submissions go straight to Supabase (see assets/auth.js for the shared
+  client, and supabase/schema.sql for the `enquiries` table + RLS) via
+  the script at the bottom of this page — no form backend or hosting
+  requirement needed. Admins read/delete them from admin.html.
 -->
-<form class="contact-form" name="project-enquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="thank-you.html">
-<input type="hidden" name="form-name" value="project-enquiry">
-<p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
+<form class="contact-form" id="project-enquiry-form" action="thank-you.html">
+<p style="display:none"><label>Don't fill this out if you're human: <input id="bot-field" name="bot-field"></label></p>
 
 <label for="name">Your name</label>
 <input id="name" name="name" type="text" required>
@@ -92,7 +89,8 @@
 <label for="message">Tell us more</label>
 <textarea id="message" name="message" placeholder="Timeline, technology, anything else that matters."></textarea>
 
-<button class="btn" type="submit">Send enquiry</button>
+<button class="btn" type="submit" id="enquiry-submit">Send enquiry</button>
+<p class="auth-message" id="enquiry-message" role="status"></p>
 <p class="form-note">Prefer email? Write to us directly at <a href="mailto:contact@land2grid.com">contact@land2grid.com</a>.</p>
 </form>
 </div>
@@ -139,5 +137,57 @@
 </footer>
 
 <script src="assets/main.js?v=20"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/auth.js"></script>
+<script>
+(function () {
+  var form = document.getElementById('project-enquiry-form');
+  var msg = document.getElementById('enquiry-message');
+  var submitBtn = document.getElementById('enquiry-submit');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    // Honeypot: real visitors never see or fill this field; bots that
+    // fill every input will, so treat that as spam and bail out quietly.
+    if (form.querySelector('#bot-field').value) {
+      window.location.href = 'thank-you.html';
+      return;
+    }
+
+    var client = window.L2G_AUTH && window.L2G_AUTH.isConfigured() && window.L2G_AUTH.getClient();
+    if (!client) {
+      msg.textContent = 'Sorry, something is misconfigured — please email us directly at contact@land2grid.com.';
+      return;
+    }
+
+    var data = new FormData(form);
+    var row = {
+      name: (data.get('name') || '').trim(),
+      email: (data.get('email') || '').trim(),
+      company: (data.get('company') || '').trim(),
+      state: (data.get('state') || '').trim(),
+      capacity: (data.get('capacity') || '').trim(),
+      need: data.get('need') || '',
+      message: (data.get('message') || '').trim()
+    };
+    if (!row.name || !row.email || !row.company) {
+      msg.textContent = 'Please fill in your name, email and company.';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    msg.textContent = 'Sending…';
+    client.from('enquiries').insert(row).then(function (res) {
+      if (res.error) {
+        submitBtn.disabled = false;
+        msg.textContent = 'Something went wrong — please email us directly at contact@land2grid.com.';
+        return;
+      }
+      window.location.href = 'thank-you.html';
+    });
+  });
+})();
+</script>
 </body>
 </html>

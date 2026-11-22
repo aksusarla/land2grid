@@ -44,6 +44,12 @@
 
 <div id="admin-app" hidden>
 
+<section class="admin-section" id="enquiries-section">
+<h2>Enquiries</h2>
+<p class="admin-hint">Submissions from the contact form on the public site.</p>
+<div id="enquiries-list"></div>
+</section>
+
 <section class="admin-section" id="import-section" hidden>
 <h2>One-time: import existing data</h2>
 <p class="admin-hint">The project table is empty. If you've been using <code>data/projects.json</code>, import it once to carry that data over — after this, admin.html is the source of truth and the JSON file is no longer read.</p>
@@ -162,29 +168,74 @@
   function initAdmin(client) {
     var projectsList = document.getElementById('projects-list');
     var peopleList = document.getElementById('people-list');
+    var enquiriesList = document.getElementById('enquiries-list');
     var importSection = document.getElementById('import-section');
     var importMessage = document.getElementById('import-message');
 
     var projects = [];
     var documentsByProject = {};
     var profiles = [];
+    var enquiries = [];
 
     function loadAll() {
       return Promise.all([
         client.from('projects').select('*').order('state').order('name'),
         client.from('documents').select('*'),
-        client.from('profiles').select('*').order('created_at')
+        client.from('profiles').select('*').order('created_at'),
+        client.from('enquiries').select('*').order('created_at', { ascending: false })
       ]).then(function (results) {
-        var pRes = results[0], dRes = results[1], profRes = results[2];
+        var pRes = results[0], dRes = results[1], profRes = results[2], enqRes = results[3];
         projects = pRes.data || [];
         documentsByProject = {};
         (dRes.data || []).forEach(function (d) {
           (documentsByProject[d.project_id] = documentsByProject[d.project_id] || []).push(d);
         });
         profiles = profRes.data || [];
+        enquiries = enqRes.data || [];
         importSection.hidden = projects.length > 0;
         renderProjects();
         renderPeople();
+        renderEnquiries();
+      });
+    }
+
+    // ---------------- Enquiries ----------------
+
+    function renderEnquiries() {
+      if (!enquiries.length) {
+        enquiriesList.innerHTML = '<p class="panel-empty">No enquiries yet.</p>';
+        return;
+      }
+      enquiriesList.innerHTML =
+        '<table class="admin-table"><thead><tr>' +
+          '<th>Received</th><th>Name</th><th>Email</th><th>Company</th>' +
+          '<th>State(s)</th><th>Capacity</th><th>Need</th><th>Message</th><th></th>' +
+        '</tr></thead><tbody>' +
+        enquiries.map(function (e) {
+          return '<tr data-id="' + e.id + '">' +
+            '<td>' + escapeHTML(new Date(e.created_at).toLocaleString()) + '</td>' +
+            '<td>' + escapeHTML(e.name) + '</td>' +
+            '<td><a href="mailto:' + escapeHTML(e.email) + '">' + escapeHTML(e.email) + '</a></td>' +
+            '<td>' + escapeHTML(e.company) + '</td>' +
+            '<td>' + escapeHTML(e.state) + '</td>' +
+            '<td>' + escapeHTML(e.capacity) + '</td>' +
+            '<td>' + escapeHTML(e.need) + '</td>' +
+            '<td>' + escapeHTML(e.message) + '</td>' +
+            '<td><button type="button" class="admin-btn-sm btn-remove-enquiry">Delete</button></td>' +
+          '</tr>';
+        }).join('') +
+        '</tbody></table>';
+
+      enquiriesList.querySelectorAll('.btn-remove-enquiry').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var row = btn.closest('tr');
+          var id = row.getAttribute('data-id');
+          if (!confirm('Delete this enquiry?')) return;
+          client.from('enquiries').delete().eq('id', id).then(function (res) {
+            if (res.error) { alert(res.error.message); return; }
+            loadAll();
+          });
+        });
       });
     }
 
