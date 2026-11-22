@@ -701,7 +701,7 @@ nav.primary a:hover::after{right:0}
    touches the map. The selected state goes a deeper orange so it
    still stands out from the rest of the gold states. */
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:var(--space-lg)}
-.kpi-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+.kpi-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
   padding:1.1rem 1.2rem;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:.2rem}
 .kpi-value{font-family:"Figtree",sans-serif;font-weight:800;font-size:1.9rem;color:var(--ink);line-height:1.1}
 .kpi-label{color:var(--ink-soft);font-size:.82rem}
@@ -738,7 +738,7 @@ nav.primary a:hover::after{right:0}
    land, connectivity and PPA status right on the card as chips, so a
    site is legible at a glance instead of needing a click to reveal
    its status in a separate detail block. */
-.project-card{display:block;padding:.95rem 0;border-top:1px solid var(--line);cursor:pointer;border-radius:.5rem}
+.project-card{display:block;padding:.95rem 0;border-top:1px solid var(--line);cursor:pointer;border-radius:var(--r-lg)}
 .project-card:first-of-type{border-top:0}
 .project-card:hover,.project-card.is-active{background:var(--stage);margin:0 -.75rem;padding:.95rem var(--space-xs)}
 .project-card.is-active{box-shadow:inset 3px 0 0 var(--signal)}
