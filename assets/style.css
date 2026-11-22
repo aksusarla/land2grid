@@ -766,6 +766,11 @@ nav.primary a:hover::after{right:0}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
   padding:1.8rem;position:sticky;top:6.5rem;display:flex;flex-direction:column;justify-content:center;
   align-self:stretch;min-height:0}
+/* .panel's own display:flex otherwise beats the browser's default
+   [hidden]{display:none} (equal specificity, author rule wins), so a
+   panel such as admin.html's #admin-gate never actually disappears
+   once JS sets .hidden = true after a successful sign-in check. */
+.panel[hidden]{display:none}
 .panel-state{font-family:"Figtree",sans-serif;font-weight:700;font-size:1.4rem}
 .panel-sub{color:var(--ink-soft);font-size:.92rem;margin-top:.25rem;margin-bottom:var(--space-sm)}
 .panel-cards{flex:1 1 auto;min-height:0;overflow-y:auto;display:flex;flex-direction:column;
