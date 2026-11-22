@@ -30,6 +30,14 @@ create table if not exists public.profiles (
 
 alter table public.profiles enable row level security;
 
+-- RLS policies only apply once a role already has the underlying table
+-- privilege; creating tables here in the SQL editor (rather than the
+-- Table Editor UI, which grants this automatically) leaves anon/
+-- authenticated with none at all, so every policy below would 401 with
+-- "permission denied for table ..." without these grants.
+grant select on public.profiles to authenticated;
+grant update on public.profiles to authenticated;
+
 -- A security-definer function, not a direct subquery, is what lets a
 -- profiles RLS policy check someone's role without Postgres treating
 -- it as a recursive policy on the same table.
@@ -109,6 +117,9 @@ create table if not exists public.projects (
 
 alter table public.projects enable row level security;
 
+grant select on public.projects to anon, authenticated;
+grant insert, update, delete on public.projects to authenticated;
+
 -- Project data (everything except documents) is the same public
 -- information the dashboard has always shown with no login — that
 -- doesn't change just because it now lives in a database.
@@ -145,6 +156,12 @@ create table if not exists public.documents (
 );
 
 alter table public.documents enable row level security;
+
+-- Only authenticated gets a grant at all (not anon) — that way a
+-- signed-out visitor is denied at the privilege level, not just by the
+-- RLS policy below, matching "the database denies the query entirely
+-- for a signed-out visitor" in dashboard.html's own comment.
+grant select, insert, update, delete on public.documents to authenticated;
 
 -- Documents stay gated behind sign-in (any role — admin or partner),
 -- matching the blurred-until-signed-in behaviour on the dashboard.
