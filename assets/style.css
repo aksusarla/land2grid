@@ -874,6 +874,18 @@ body.is-signed-in .project-docs-lock{display:none}
 .admin-form-grid label{display:block;font-size:.8rem;color:var(--ink-soft)}
 .admin-form-grid input{width:100%;margin-top:.3rem;padding:.6rem .75rem;border:1.5px solid var(--line);
   border-radius:var(--r-sm);background:var(--surface);color:var(--ink);font:inherit}
+.admin-form-grid select,.admin-inline-form select,.admin-table select{
+  appearance:none;-webkit-appearance:none;-moz-appearance:none;
+  border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--surface);
+  color:var(--ink);font:inherit;cursor:pointer;
+  background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='%23767676' d='M4 6l4 4 4-4' stroke='%23767676' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+  background-repeat:no-repeat;background-position:right .6rem center;background-size:.85em}
+.admin-form-grid select{width:100%;margin-top:.3rem;padding:.6rem 1.8rem .6rem .75rem}
+.admin-inline-form select{margin-top:.3rem;padding:.6rem 1.8rem .6rem .75rem;min-width:11rem}
+.admin-table select{padding:.4rem 1.6rem .4rem .6rem;font-size:.88rem}
+.admin-form-grid select:focus,.admin-inline-form select:focus,.admin-table select:focus,
+.admin-form-grid input:focus,.admin-inline-form input:focus{
+  outline:none;border-color:var(--customer)}
 .admin-checkbox{display:flex !important;align-items:center;gap:.5rem;font-size:.85rem;color:var(--ink)}
 .admin-checkbox input{width:auto !important;margin:0 !important}
 .admin-inline-form{display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap}

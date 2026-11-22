@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=111">
+<link rel="stylesheet" href="assets/style.css?v=112">
 </head>
 <body>
 
@@ -219,6 +219,24 @@
       if (!id) return '—';
       var c = companies.filter(function (c) { return c.id === id; })[0];
       return c ? c.name : '—';
+    }
+
+    // supabase-js only gives a generic "Edge Function returned a non-2xx
+    // status code" on res.error — the function's own JSON error message
+    // ({"error": "..."}) is in res.error.context, which is the raw
+    // Response and has to be read and parsed separately. This reads that
+    // real message when it's there, and falls back sensibly when it isn't.
+    function functionErrorMessage(res, fallback) {
+      if (!res.error && res.data && res.data.error) return Promise.resolve(res.data.error);
+      if (!res.error) return Promise.resolve(null);
+      if (res.error.context && typeof res.error.context.json === 'function') {
+        return res.error.context.clone().json().then(function (body) {
+          return (body && body.error) || res.error.message || fallback;
+        }).catch(function () {
+          return res.error.message || fallback;
+        });
+      }
+      return Promise.resolve(res.error.message || fallback);
     }
 
     function loadAll() {
@@ -604,12 +622,11 @@
           document.getElementById('people-message').textContent = 'Saving…';
           client.functions.invoke('admin-users', { body: body }).then(function (res) {
             var msg = document.getElementById('people-message');
-            if (res.error || (res.data && res.data.error)) {
-              msg.textContent = (res.data && res.data.error) || res.error.message || 'Could not save.';
-              return;
-            }
-            msg.textContent = 'Saved.';
-            loadAll();
+            functionErrorMessage(res, 'Could not save.').then(function (err) {
+              if (err) { msg.textContent = err; return; }
+              msg.textContent = 'Saved.';
+              loadAll();
+            });
           });
         });
       });
@@ -620,12 +637,10 @@
           if (!confirm('Remove this person\'s access? They will no longer be able to sign in.')) return;
           client.functions.invoke('admin-users', { body: { action: 'remove', userId: id } })
             .then(function (res) {
-              if (res.error || (res.data && res.data.error)) {
-                document.getElementById('people-message').textContent =
-                  (res.data && res.data.error) || res.error.message || 'Could not remove access.';
-                return;
-              }
-              loadAll();
+              functionErrorMessage(res, 'Could not remove access.').then(function (err) {
+                if (err) { document.getElementById('people-message').textContent = err; return; }
+                loadAll();
+              });
             });
         });
       });
@@ -643,14 +658,12 @@
         body: { action: 'invite', email: email, role: role, company_id: companyId }
       })
         .then(function (res) {
-          if (res.error || (res.data && res.data.error)) {
-            msg.textContent = (res.data && res.data.error) || res.error.message ||
-              'Could not send the invite. Has the admin-users function been deployed? See docs/ADMIN_SETUP.md.';
-            return;
-          }
-          msg.textContent = 'Invited ' + email + '.';
-          form.reset();
-          loadAll();
+          functionErrorMessage(res, 'Could not send the invite. Has the admin-users function been deployed? See docs/ADMIN_SETUP.md.').then(function (err) {
+            if (err) { msg.textContent = err; return; }
+            msg.textContent = 'Invited ' + email + '.';
+            form.reset();
+            loadAll();
+          });
         })
         .catch(function () {
           msg.textContent = 'Could not reach the invite function. Has it been deployed? See docs/ADMIN_SETUP.md.';
