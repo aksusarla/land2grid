@@ -47,6 +47,14 @@
 <button class="btn" type="submit" id="login-submit">Sign in</button>
 <p class="auth-message" id="auth-message" role="status"></p>
 </form>
+<form class="contact-form auth-form" id="setpw-form" hidden>
+<label for="setpw-password">Choose a password</label>
+<input id="setpw-password" name="password" type="password" required autocomplete="new-password" minlength="6">
+<label for="setpw-confirm">Confirm password</label>
+<input id="setpw-confirm" name="confirm" type="password" required autocomplete="new-password" minlength="6">
+<button class="btn" type="submit" id="setpw-submit">Set password &amp; continue</button>
+<p class="auth-message" id="setpw-message" role="status"></p>
+</form>
 </div>
 </div>
 </main>
@@ -93,18 +101,42 @@
     return;
   }
 
-  var supabaseClient = window.L2G_AUTH.getClient();
+  // An invite or password-reset email lands here with #access_token=...&type=invite
+  // (or type=recovery) in the URL. The supabase-js client reads that hash and signs
+  // the browser in automatically (it's what detectSessionInUrl, on by default, does),
+  // but an invite/recovery link proves identity, not a password — someone still needs
+  // to set one before "Sign in" will ever work for them again. Capture the hash
+  // ourselves, synchronously, since the client clears it from the URL once it's read.
+  var hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  var flowType = hashParams.get('type');
+  var hashError = hashParams.get('error_description');
+  var isSetPasswordFlow = (flowType === 'invite' || flowType === 'recovery') && hashParams.get('access_token');
 
-  // Already signed in from an earlier visit? skip straight to the portal.
-  supabaseClient.auth.getSession().then(function (res) {
-    if (res.data && res.data.session) window.location.href = 'documents.html';
-  });
-
-  var form = document.getElementById('login-form');
+  var loginForm = document.getElementById('login-form');
   var message = document.getElementById('auth-message');
   var submitBtn = document.getElementById('login-submit');
 
-  form.addEventListener('submit', function (e) {
+  var setpwForm = document.getElementById('setpw-form');
+  var setpwMessage = document.getElementById('setpw-message');
+  var setpwSubmit = document.getElementById('setpw-submit');
+
+  var supabaseClient = window.L2G_AUTH.getClient();
+
+  if (hashError) {
+    message.textContent = hashError.replace(/\+/g, ' ') + ' Ask whoever invited you to send a fresh link.';
+  }
+
+  if (isSetPasswordFlow) {
+    loginForm.hidden = true;
+    setpwForm.hidden = false;
+  } else {
+    // Already signed in from an earlier visit? skip straight to the portal.
+    supabaseClient.auth.getSession().then(function (res) {
+      if (res.data && res.data.session) window.location.href = 'documents.html';
+    });
+  }
+
+  loginForm.addEventListener('submit', function (e) {
     e.preventDefault();
     message.textContent = '';
     submitBtn.disabled = true;
@@ -127,6 +159,39 @@
         message.textContent = 'Something went wrong signing in. Please try again.';
         submitBtn.disabled = false;
         submitBtn.textContent = 'Sign in';
+      });
+  });
+
+  setpwForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    setpwMessage.textContent = '';
+
+    var password = document.getElementById('setpw-password').value;
+    var confirm = document.getElementById('setpw-confirm').value;
+    if (password !== confirm) {
+      setpwMessage.textContent = 'Those two passwords don\'t match.';
+      return;
+    }
+
+    setpwSubmit.disabled = true;
+    setpwSubmit.textContent = 'Setting password…';
+
+    // The invite/recovery link already signed this browser in (via the URL hash
+    // above); updateUser just attaches a password to that same account.
+    supabaseClient.auth.updateUser({ password: password })
+      .then(function (res) {
+        if (res.error) {
+          setpwMessage.textContent = res.error.message || 'Could not set your password. Try again.';
+          setpwSubmit.disabled = false;
+          setpwSubmit.textContent = 'Set password & continue';
+          return;
+        }
+        window.location.href = 'documents.html';
+      })
+      .catch(function () {
+        setpwMessage.textContent = 'Something went wrong. Please try again.';
+        setpwSubmit.disabled = false;
+        setpwSubmit.textContent = 'Set password & continue';
       });
   });
 })();
