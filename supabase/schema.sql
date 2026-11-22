@@ -224,3 +224,171 @@ drop policy if exists "enquiries: admins can delete" on public.enquiries;
 create policy "enquiries: admins can delete"
   on public.enquiries for delete
   using (public.is_admin());
+
+-- ---------------------------------------------------------------
+-- companies + the 'bd' role
+-- ---------------------------------------------------------------
+-- Added once the two-role (admin/partner) model needed to grow: a BD
+-- team that can invite and manage partners themselves, and partners
+-- grouped by the company they represent, so one partner company's
+-- documents aren't visible to another's. Safe to re-run like the rest
+-- of this file — every statement below is additive/idempotent.
+create table if not exists public.companies (
+  id uuid primary key default gen_random_uuid(),
+  name text not null unique,
+  created_at timestamptz not null default now()
+);
+
+alter table public.companies enable row level security;
+grant select, insert, update, delete on public.companies to authenticated;
+
+-- A partner's own company (nullable — admins/BD aren't tied to one,
+-- and an existing partner with no company yet just sees nothing extra
+-- until someone assigns them one).
+alter table public.profiles
+  add column if not exists company_id uuid references public.companies(id) on delete set null;
+
+alter table public.profiles drop constraint if exists profiles_role_check;
+alter table public.profiles add constraint profiles_role_check
+  check (role in ('admin', 'bd', 'partner'));
+
+-- Which company (if any) a project/deal is being run for. Nullable —
+-- the public pipeline map doesn't need every project tied to a
+-- partner; this only matters for scoping that project's documents.
+alter table public.projects
+  add column if not exists company_id uuid references public.companies(id) on delete set null;
+
+-- is_staff(): the internal land2grid team (admin or bd), as opposed to
+-- an external partner. Replaces is_admin() everywhere that used to
+-- mean "can manage projects/companies/people" but should now also
+-- include BD.
+create or replace function public.is_staff()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select coalesce((select role from public.profiles where id = auth.uid()) in ('admin', 'bd'), false);
+$$;
+
+-- my_company_id(): the caller's own company — used to scope a
+-- partner's document access to their own company's projects only.
+create or replace function public.my_company_id()
+returns uuid
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select company_id from public.profiles where id = auth.uid();
+$$;
+
+-- companies: staff manage the list; a partner can read (only) their
+-- own company's row, e.g. to show its name back to them.
+drop policy if exists "companies: staff can read" on public.companies;
+create policy "companies: staff can read"
+  on public.companies for select
+  using (public.is_staff());
+
+drop policy if exists "companies: partner can read own" on public.companies;
+create policy "companies: partner can read own"
+  on public.companies for select
+  using (id = public.my_company_id());
+
+drop policy if exists "companies: staff can insert" on public.companies;
+create policy "companies: staff can insert"
+  on public.companies for insert
+  with check (public.is_staff());
+
+drop policy if exists "companies: staff can update" on public.companies;
+create policy "companies: staff can update"
+  on public.companies for update
+  using (public.is_staff())
+  with check (public.is_staff());
+
+drop policy if exists "companies: staff can delete" on public.companies;
+create policy "companies: staff can delete"
+  on public.companies for delete
+  using (public.is_staff());
+
+-- projects: BD can now manage the pipeline too, not just admins.
+drop policy if exists "projects: admins can insert" on public.projects;
+drop policy if exists "projects: staff can insert" on public.projects;
+create policy "projects: staff can insert"
+  on public.projects for insert
+  with check (public.is_staff());
+
+drop policy if exists "projects: admins can update" on public.projects;
+drop policy if exists "projects: staff can update" on public.projects;
+create policy "projects: staff can update"
+  on public.projects for update
+  using (public.is_staff())
+  with check (public.is_staff());
+
+drop policy if exists "projects: admins can delete" on public.projects;
+drop policy if exists "projects: staff can delete" on public.projects;
+create policy "projects: staff can delete"
+  on public.projects for delete
+  using (public.is_staff());
+
+-- documents: this used to be "any signed-in person sees every
+-- document on every project" (fine when every signed-in person was
+-- land2grid staff or a single lumped-together 'partner' role, wrong
+-- once different partner companies are signing in). Staff still see
+-- everything; a partner now sees only documents on projects tagged
+-- with their own company.
+drop policy if exists "documents: signed-in users can read" on public.documents;
+drop policy if exists "documents: staff can read all" on public.documents;
+create policy "documents: staff can read all"
+  on public.documents for select
+  using (public.is_staff());
+
+drop policy if exists "documents: partner can read own company's" on public.documents;
+create policy "documents: partner can read own company's"
+  on public.documents for select
+  using (
+    exists (
+      select 1 from public.projects p
+      where p.id = documents.project_id
+        and p.company_id is not null
+        and p.company_id = public.my_company_id()
+    )
+  );
+
+drop policy if exists "documents: admins can insert" on public.documents;
+drop policy if exists "documents: staff can insert" on public.documents;
+create policy "documents: staff can insert"
+  on public.documents for insert
+  with check (public.is_staff());
+
+drop policy if exists "documents: admins can update" on public.documents;
+drop policy if exists "documents: staff can update" on public.documents;
+create policy "documents: staff can update"
+  on public.documents for update
+  using (public.is_staff())
+  with check (public.is_staff());
+
+drop policy if exists "documents: admins can delete" on public.documents;
+drop policy if exists "documents: staff can delete" on public.documents;
+create policy "documents: staff can delete"
+  on public.documents for delete
+  using (public.is_staff());
+
+-- profiles: BD (not just admin) can now see the People list, needed
+-- to manage partners. Only an admin can promote/demote anyone's role;
+-- BD can still update a partner's company assignment directly (e.g.
+-- from a future "edit" UI) as long as the row stays a partner —
+-- enforced below rather than through the admin-users function, so it
+-- works even for a plain table update.
+drop policy if exists "profiles: admins can read all rows" on public.profiles;
+drop policy if exists "profiles: staff can read all rows" on public.profiles;
+create policy "profiles: staff can read all rows"
+  on public.profiles for select
+  using (public.is_staff());
+
+drop policy if exists "profiles: bd can update partner company" on public.profiles;
+create policy "profiles: bd can update partner company"
+  on public.profiles for update
+  using (public.is_staff() and role = 'partner')
+  with check (role = 'partner');

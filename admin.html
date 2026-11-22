@@ -41,6 +41,7 @@
 <button type="button" class="admin-tab is-active" data-tab="enquiries">Enquiries</button>
 <button type="button" class="admin-tab" data-tab="projects">Projects</button>
 <button type="button" class="admin-tab" data-tab="people">People</button>
+<button type="button" class="admin-tab" data-tab="companies">Companies</button>
 </nav>
 
 <section class="admin-tabpanel is-active" data-panel="enquiries">
@@ -73,8 +74,10 @@
 <label>Latitude<input name="latitude" type="number" step="any" required placeholder="12.83"></label>
 <label>Longitude<input name="longitude" type="number" step="any" required placeholder="79.70"></label>
 <label>Last updated<input name="last_updated" type="date"></label>
+<label>Company (optional)<select name="company_id"><option value="">No company</option></select></label>
 <label class="admin-checkbox"><input name="badge_done" type="checkbox"> Stage is complete (shows green)</label>
 </div>
+<p class="admin-hint">Tagging a project with a company lets that company's partner logins see its documents — see the Companies tab.</p>
 <button class="btn" type="button" id="add-project-submit">Add project</button>
 <p class="auth-message" id="add-project-message" role="status"></p>
 </form>
@@ -90,13 +93,28 @@
 <section class="admin-tabpanel" data-panel="people">
 <section class="admin-section">
 <h2>People</h2>
-<p class="admin-hint">Inviting someone sends them an email to set a password. Admins can use this page; partners can only view shared documents once signed in.</p>
+<p class="admin-hint" id="people-hint">Inviting someone sends them an email to set a password. Partners can only view their own company's documents once signed in.</p>
 <form class="admin-form admin-inline-form" id="invite-form">
 <label>Email<input name="email" type="email" required placeholder="partner@example.com"></label>
+<label>Role<select name="role" id="invite-role"><option value="partner">Partner</option><option value="bd">BD team</option><option value="admin">Admin</option></select></label>
+<label id="invite-company-wrap">Company<select name="company_id" id="invite-company"><option value="">No company</option></select></label>
 <button class="btn" type="button" id="invite-submit">Invite</button>
 </form>
 <p class="auth-message" id="invite-message" role="status"></p>
 <div id="people-list"></div>
+</section>
+</section>
+
+<section class="admin-tabpanel" data-panel="companies">
+<section class="admin-section">
+<h2>Companies</h2>
+<p class="admin-hint">The partner companies you work with. Assign a partner's login and a project to the same company (People and Projects tabs) so that company only ever sees its own documents.</p>
+<form class="admin-form admin-inline-form" id="add-company-form">
+<label>Company name<input name="name" required placeholder="Acme Renewables"></label>
+<button class="btn" type="button" id="add-company-submit">Add company</button>
+</form>
+<p class="auth-message" id="add-company-message" role="status"></p>
+<div id="companies-list"></div>
 </section>
 </section>
 
@@ -124,18 +142,19 @@
     if (!session) { window.location.href = 'login.html'; return; }
 
     window.L2G_AUTH.getProfile().then(function (profile) {
-      if (!profile || profile.role !== 'admin') {
+      if (!profile || (profile.role !== 'admin' && profile.role !== 'bd')) {
         gate.innerHTML =
-          '<p class="panel-empty">You\'re signed in, but this page is for admins only. ' +
+          '<p class="panel-empty">You\'re signed in, but this page is for admins and the BD team only. ' +
           '<a href="documents.html">Go to Documents</a> instead.</p>';
         return;
       }
       gate.hidden = true;
       app.hidden = false;
-      whoami.innerHTML = 'Signed in as <strong>' + escapeHTML(profile.email) + '</strong>';
+      whoami.innerHTML = 'Signed in as <strong>' + escapeHTML(profile.email) + '</strong>' +
+        (profile.role === 'bd' ? ' (BD team)' : '');
       whoami.hidden = false;
       signoutBtn.hidden = false;
-      initAdmin(client);
+      initAdmin(client, profile.role);
     });
   });
 
@@ -163,10 +182,12 @@
     });
   }
 
-  function initAdmin(client) {
+  function initAdmin(client, viewerRole) {
+    var isAdminViewer = viewerRole === 'admin';
     var projectsList = document.getElementById('projects-list');
     var peopleList = document.getElementById('people-list');
     var enquiriesList = document.getElementById('enquiries-list');
+    var companiesList = document.getElementById('companies-list');
     var importSection = document.getElementById('import-section');
     var importMessage = document.getElementById('import-message');
 
@@ -174,15 +195,41 @@
     var documentsByProject = {};
     var profiles = [];
     var enquiries = [];
+    var companies = [];
+
+    // BD can only ever invite/manage partners, so there's no role
+    // choice to make for them — hide it rather than show a dropdown
+    // with one real option.
+    if (!isAdminViewer) {
+      document.getElementById('invite-role').value = 'partner';
+      document.getElementById('invite-role').parentElement.hidden = true;
+    }
+    document.getElementById('invite-role').addEventListener('change', function (e) {
+      document.getElementById('invite-company-wrap').hidden = e.target.value !== 'partner';
+    });
+
+    function companyOptions(selectedId) {
+      return '<option value="">No company</option>' + companies.map(function (c) {
+        return '<option value="' + c.id + '"' + (c.id === selectedId ? ' selected' : '') + '>' +
+          escapeHTML(c.name) + '</option>';
+      }).join('');
+    }
+
+    function companyName(id) {
+      if (!id) return '—';
+      var c = companies.filter(function (c) { return c.id === id; })[0];
+      return c ? c.name : '—';
+    }
 
     function loadAll() {
       return Promise.all([
         client.from('projects').select('*').order('state').order('name'),
         client.from('documents').select('*'),
         client.from('profiles').select('*').order('created_at'),
-        client.from('enquiries').select('*').order('created_at', { ascending: false })
+        client.from('enquiries').select('*').order('created_at', { ascending: false }),
+        client.from('companies').select('*').order('name')
       ]).then(function (results) {
-        var pRes = results[0], dRes = results[1], profRes = results[2], enqRes = results[3];
+        var pRes = results[0], dRes = results[1], profRes = results[2], enqRes = results[3], compRes = results[4];
         projects = pRes.data || [];
         documentsByProject = {};
         (dRes.data || []).forEach(function (d) {
@@ -190,12 +237,70 @@
         });
         profiles = profRes.data || [];
         enquiries = enqRes.data || [];
+        companies = compRes.data || [];
         importSection.hidden = projects.length > 0;
         renderProjects();
         renderPeople();
         renderEnquiries();
+        renderCompanies();
+        syncCompanyDropdowns();
       });
     }
+
+    function syncCompanyDropdowns() {
+      document.getElementById('invite-company').innerHTML = companyOptions('');
+      var addProjectCompany = document.querySelector('#add-project-form [name="company_id"]');
+      if (addProjectCompany) addProjectCompany.innerHTML = companyOptions('');
+    }
+
+    // ---------------- Companies ----------------
+
+    function renderCompanies() {
+      if (!companies.length) {
+        companiesList.innerHTML = '<p class="panel-empty">No companies yet — add one above.</p>';
+        return;
+      }
+      var countByCompany = {};
+      profiles.forEach(function (p) {
+        if (p.company_id) countByCompany[p.company_id] = (countByCompany[p.company_id] || 0) + 1;
+      });
+      companiesList.innerHTML =
+        '<table class="admin-table"><thead><tr><th>Company</th><th>Partner logins</th><th></th></tr></thead><tbody>' +
+        companies.map(function (c) {
+          return '<tr data-id="' + c.id + '">' +
+            '<td>' + escapeHTML(c.name) + '</td>' +
+            '<td>' + (countByCompany[c.id] || 0) + '</td>' +
+            '<td><button type="button" class="admin-btn-sm btn-remove-company">Delete</button></td>' +
+          '</tr>';
+        }).join('') +
+        '</tbody></table>';
+
+      companiesList.querySelectorAll('.btn-remove-company').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var row = btn.closest('tr');
+          var id = row.getAttribute('data-id');
+          if (!confirm('Delete this company? Partners/projects assigned to it will become unassigned.')) return;
+          client.from('companies').delete().eq('id', id).then(function (res) {
+            if (res.error) { alert(res.error.message); return; }
+            loadAll();
+          });
+        });
+      });
+    }
+
+    document.getElementById('add-company-submit').addEventListener('click', function () {
+      var form = document.getElementById('add-company-form');
+      var msg = document.getElementById('add-company-message');
+      var name = form.querySelector('[name="name"]').value.trim();
+      if (!name) { msg.textContent = 'Enter a company name first.'; return; }
+      msg.textContent = 'Adding…';
+      client.from('companies').insert({ name: name }).then(function (res) {
+        if (res.error) { msg.textContent = res.error.message; return; }
+        msg.textContent = '';
+        form.reset();
+        loadAll();
+      });
+    });
 
     // ---------------- Enquiries ----------------
 
@@ -259,6 +364,7 @@
               field('Latitude', 'latitude', p.latitude, 'number') +
               field('Longitude', 'longitude', p.longitude, 'number') +
               field('Last updated', 'last_updated', p.last_updated, 'date') +
+              '<label>Company<select data-field="company_id">' + companyOptions(p.company_id) + '</select></label>' +
               '<label class="admin-checkbox"><input type="checkbox" data-field="badge_done"' +
                 (p.badge_done ? ' checked' : '') + '> Stage is complete (shows green)</label>' +
             '</div>' +
@@ -327,6 +433,7 @@
         updates.capacity = parseFloat(updates.capacity) || 0;
         updates.latitude = parseFloat(updates.latitude) || 0;
         updates.longitude = parseFloat(updates.longitude) || 0;
+        updates.company_id = updates.company_id || null;
         if (!updates.last_updated) delete updates.last_updated;
 
         var docRows = Array.prototype.slice.call(card.querySelectorAll('.admin-doc-row')).map(function (row) {
@@ -377,7 +484,8 @@
         ppa: (data.get('ppa') || '').trim() || 'Not set',
         latitude: parseFloat(data.get('latitude')) || 0,
         longitude: parseFloat(data.get('longitude')) || 0,
-        last_updated: data.get('last_updated') || new Date().toISOString().slice(0, 10)
+        last_updated: data.get('last_updated') || new Date().toISOString().slice(0, 10),
+        company_id: data.get('company_id') || null
       };
       if (!row.state || !row.name || !row.capacity) {
         msg.textContent = 'State, project name and capacity are required.';
@@ -454,29 +562,53 @@
         return;
       }
       peopleList.innerHTML =
-        '<table class="admin-table"><thead><tr><th>Email</th><th>Role</th><th></th></tr></thead><tbody>' +
+        '<table class="admin-table"><thead><tr><th>Email</th><th>Role</th><th>Company</th><th></th></tr></thead><tbody>' +
         profiles.map(function (p) {
+          // BD can edit a partner's role/company, but can't touch an
+          // admin or another BD row at all (not even to view-edit it) —
+          // matches what the admin-users function itself will allow.
+          var canEditRole = isAdminViewer || p.role === 'partner';
+          var roleCell = canEditRole
+            ? '<select data-role>' +
+                ['partner', 'bd', 'admin'].map(function (r) {
+                  if (r !== 'partner' && !isAdminViewer) return '';
+                  return '<option value="' + r + '"' + (p.role === r ? ' selected' : '') + '>' + r + '</option>';
+                }).join('') +
+              '</select>'
+            : escapeHTML(p.role);
+          var companyCell = p.role === 'partner'
+            ? '<select data-company>' + companyOptions(p.company_id) + '</select>'
+            : '—';
+          var canRemove = isAdminViewer || p.role === 'partner';
           return '<tr data-id="' + p.id + '">' +
             '<td>' + escapeHTML(p.email) + '</td>' +
-            '<td>' + p.role + '</td>' +
+            '<td>' + roleCell + '</td>' +
+            '<td>' + companyCell + '</td>' +
             '<td>' +
-              '<button type="button" class="admin-btn-sm btn-toggle-role">' +
-                (p.role === 'admin' ? 'Make partner' : 'Make admin') +
-              '</button> ' +
-              '<button type="button" class="admin-btn-sm btn-remove-person">Remove access</button>' +
+              (canEditRole || p.role === 'partner' ? '<button type="button" class="admin-btn-sm btn-save-person">Save</button> ' : '') +
+              (canRemove ? '<button type="button" class="admin-btn-sm btn-remove-person">Remove access</button>' : '') +
             '</td>' +
           '</tr>';
         }).join('') +
         '</tbody></table><p class="auth-message" id="people-message" role="status"></p>';
 
-      peopleList.querySelectorAll('.btn-toggle-role').forEach(function (btn) {
+      peopleList.querySelectorAll('.btn-save-person').forEach(function (btn) {
         btn.addEventListener('click', function () {
           var row = btn.closest('tr');
           var id = row.getAttribute('data-id');
-          var current = profiles.filter(function (p) { return p.id === id; })[0];
-          var next = current.role === 'admin' ? 'partner' : 'admin';
-          client.from('profiles').update({ role: next }).eq('id', id).then(function (res) {
-            if (res.error) { document.getElementById('people-message').textContent = res.error.message; return; }
+          var body = { action: 'update_profile', userId: id };
+          var roleSel = row.querySelector('[data-role]');
+          var companySel = row.querySelector('[data-company]');
+          if (roleSel) body.role = roleSel.value;
+          if (companySel) body.company_id = companySel.value || null;
+          document.getElementById('people-message').textContent = 'Saving…';
+          client.functions.invoke('admin-users', { body: body }).then(function (res) {
+            var msg = document.getElementById('people-message');
+            if (res.error || (res.data && res.data.error)) {
+              msg.textContent = (res.data && res.data.error) || res.error.message || 'Could not save.';
+              return;
+            }
+            msg.textContent = 'Saved.';
             loadAll();
           });
         });
@@ -503,9 +635,13 @@
       var form = document.getElementById('invite-form');
       var msg = document.getElementById('invite-message');
       var email = form.querySelector('[name="email"]').value.trim();
+      var role = form.querySelector('[name="role"]').value;
+      var companyId = form.querySelector('[name="company_id"]').value || null;
       if (!email) { msg.textContent = 'Enter an email first.'; return; }
       msg.textContent = 'Sending invite…';
-      client.functions.invoke('admin-users', { body: { action: 'invite', email: email } })
+      client.functions.invoke('admin-users', {
+        body: { action: 'invite', email: email, role: role, company_id: companyId }
+      })
         .then(function (res) {
           if (res.error || (res.data && res.data.error)) {
             msg.textContent = (res.data && res.data.error) || res.error.message ||

@@ -1,22 +1,34 @@
 // Edge Function: admin-users
 //
-// The only thing this function exists for: inviting a new partner, or
-// removing someone's access, both require Supabase's Admin API, which
-// in turn requires the service_role secret key — a key that must never
-// reach the browser (anyone holding it could do anything to the
-// database, bypassing every RLS policy). This function holds that key
-// on Supabase's own servers instead, and only acts on behalf of someone
-// who is (a) signed in and (b) already has the 'admin' role in the
-// profiles table. admin.html calls this function; it never sees the
-// service_role key itself.
+// The only thing this function exists for: inviting someone, changing
+// their role/company, or removing their access, all require Supabase's
+// Admin API (or need to bypass RLS deliberately), which in turn
+// requires the service_role secret key — a key that must never reach
+// the browser (anyone holding it could do anything to the database,
+// bypassing every RLS policy). This function holds that key on
+// Supabase's own servers instead, and only acts on behalf of someone
+// who is (a) signed in and (b) already has the 'admin' or 'bd' role in
+// the profiles table — and, for anything touching an admin/bd account
+// rather than a partner, specifically 'admin'. admin.html calls this
+// function; it never sees the service_role key itself.
 //
 // Deploy: see docs/ADMIN_SETUP.md. Short version — paste this file's
 // contents into Supabase dashboard > Edge Functions > Create a new
 // function named "admin-users", then Deploy.
 //
 // Body (JSON), POST only:
-//   { "action": "invite", "email": "someone@example.com" }
+//   { "action": "invite", "email": "someone@example.com", "role": "partner", "company_id": "<uuid>|null" }
+//     role and company_id are both optional (default role: "partner",
+//     default company_id: null). Only an admin can invite someone as
+//     "admin" or "bd"; a bd caller can only invite partners.
+//   { "action": "update_profile", "userId": "<uuid>", "role": "partner", "company_id": "<uuid>|null" }
+//     role and company_id are both optional — send only what's
+//     changing. An admin can change anyone's role/company; a bd
+//     caller can only change a partner's company (role must already
+//     be, and stay, "partner").
 //   { "action": "remove", "userId": "<uuid>" }
+//     An admin can remove anyone (except themselves); a bd caller can
+//     only remove a partner.
 
 import { createClient } from "npm:@supabase/supabase-js@2";
 
@@ -65,20 +77,23 @@ Deno.serve(async (req) => {
     return json({ error: "Not signed in." }, 401);
   }
 
-  // The admin client (secret key) is what actually performs the
-  // privileged action — but only after confirming, via that same
-  // secret-key client, that the caller's own profile row says
-  // role = 'admin'. Never trust a role claim sent in the request body.
+  // The admin client (secret key) is what actually performs every
+  // privileged action below — but only after confirming, via that
+  // same secret-key client, that the caller's own profile row says
+  // role = 'admin' or 'bd'. Never trust a role claim sent in the
+  // request body.
   const adminClient = createClient(SUPABASE_URL, SECRET_KEY);
-  const { data: profile, error: profileErr } = await adminClient
+  const { data: callerProfile, error: callerProfileErr } = await adminClient
     .from("profiles")
     .select("role")
     .eq("id", callerData.user.id)
     .single();
 
-  if (profileErr || !profile || profile.role !== "admin") {
-    return json({ error: "Admin access required." }, 403);
+  const callerRole = callerProfile && callerProfile.role;
+  if (callerProfileErr || !callerProfile || (callerRole !== "admin" && callerRole !== "bd")) {
+    return json({ error: "Admin or BD access required." }, 403);
   }
+  const isAdmin = callerRole === "admin";
 
   let body;
   try {
@@ -90,8 +105,70 @@ Deno.serve(async (req) => {
   if (body.action === "invite") {
     const email = String(body.email || "").trim();
     if (!email) return json({ error: "Email is required." }, 400);
-    const { error } = await adminClient.auth.admin.inviteUserByEmail(email);
-    if (error) return json({ error: error.message }, 400);
+
+    const requestedRole = String(body.role || "partner").trim();
+    if (!["admin", "bd", "partner"].includes(requestedRole)) {
+      return json({ error: "Invalid role." }, 400);
+    }
+    if (requestedRole !== "partner" && !isAdmin) {
+      return json({ error: "Only admins can invite an admin or BD team member." }, 403);
+    }
+    const companyId = requestedRole === "partner" ? (body.company_id || null) : null;
+
+    const { data: inviteData, error: inviteErr } = await adminClient.auth.admin.inviteUserByEmail(email);
+    if (inviteErr) return json({ error: inviteErr.message }, 400);
+
+    // The new-user trigger already created a 'partner' profile row for
+    // them with no company — only touch it again if something other
+    // than that default was asked for.
+    if (requestedRole !== "partner" || companyId) {
+      const newUserId = inviteData && inviteData.user && inviteData.user.id;
+      if (newUserId) {
+        await adminClient
+          .from("profiles")
+          .update({ role: requestedRole, company_id: companyId })
+          .eq("id", newUserId);
+      }
+    }
+    return json({ ok: true });
+  }
+
+  if (body.action === "update_profile") {
+    const userId = String(body.userId || "").trim();
+    if (!userId) return json({ error: "userId is required." }, 400);
+    if (userId === callerData.user.id && body.role !== undefined) {
+      return json({ error: "You can't change your own role here." }, 400);
+    }
+
+    const { data: target, error: targetErr } = await adminClient
+      .from("profiles")
+      .select("role")
+      .eq("id", userId)
+      .single();
+    if (targetErr || !target) return json({ error: "Person not found." }, 404);
+
+    const updates: Record<string, unknown> = {};
+
+    if (body.role !== undefined) {
+      const newRole = String(body.role).trim();
+      if (!["admin", "bd", "partner"].includes(newRole)) return json({ error: "Invalid role." }, 400);
+      if (!isAdmin && (target.role !== "partner" || newRole !== "partner")) {
+        return json({ error: "Only admins can change that." }, 403);
+      }
+      updates.role = newRole;
+    }
+
+    if (body.company_id !== undefined) {
+      if (!isAdmin && target.role !== "partner") {
+        return json({ error: "Only admins can change that." }, 403);
+      }
+      updates.company_id = body.company_id || null;
+    }
+
+    if (!Object.keys(updates).length) return json({ error: "Nothing to update." }, 400);
+
+    const { error: updateErr } = await adminClient.from("profiles").update(updates).eq("id", userId);
+    if (updateErr) return json({ error: updateErr.message }, 400);
     return json({ ok: true });
   }
 
@@ -101,12 +178,23 @@ Deno.serve(async (req) => {
     if (userId === callerData.user.id) {
       return json({ error: "You can't remove your own access." }, 400);
     }
+
+    if (!isAdmin) {
+      const { data: target, error: targetErr } = await adminClient
+        .from("profiles")
+        .select("role")
+        .eq("id", userId)
+        .single();
+      if (targetErr || !target) return json({ error: "Person not found." }, 404);
+      if (target.role !== "partner") return json({ error: "Only admins can remove that person." }, 403);
+    }
+
     const { error } = await adminClient.auth.admin.deleteUser(userId);
     if (error) return json({ error: error.message }, 400);
     return json({ ok: true });
   }
 
-  return json({ error: "Unknown action. Use 'invite' or 'remove'." }, 400);
+  return json({ error: "Unknown action. Use 'invite', 'update_profile' or 'remove'." }, 400);
 });
 
 function json(body: unknown, status = 200) {
