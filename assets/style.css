@@ -895,6 +895,27 @@ body.is-signed-in .project-docs-lock{display:none}
 .admin-btn-sm:hover{border-color:var(--customer)}
 .admin-card-actions{display:flex;align-items:center;gap:1rem;margin-top:1rem;flex-wrap:wrap}
 .admin-row-message{margin:0;min-height:1em}
+/* Admin app shell (admin.html): a signed-in tool, not a marketing
+   page, so it skips the site's header/footer/primary-nav entirely in
+   favour of its own minimal top bar (brand + who's signed in + sign
+   out) and a tab strip instead of one long scrolling page. */
+.admin-topbar{position:sticky;top:0;z-index:40;background:var(--dark);
+  border-bottom:1px solid var(--line-on-dark);display:flex;align-items:center;
+  justify-content:space-between;gap:1rem;padding:.85rem 1.75rem}
+.admin-topbar-right{display:flex;align-items:center;gap:1rem}
+.admin-whoami{color:var(--on-dark-soft);font-size:.85rem}
+.admin-whoami strong{color:var(--on-dark);font-weight:600}
+.admin-shell-outer{max-width:72rem;margin:0 auto;padding:var(--space-lg) 1.75rem var(--space-2xl)}
+.admin-tabs{display:flex;gap:.25rem;border-bottom:1px solid var(--line);margin-bottom:var(--space-lg);
+  overflow-x:auto}
+.admin-tab{background:none;border:0;padding:.75rem 1.1rem;font:600 .92rem/1 "Inter",sans-serif;
+  color:var(--ink-soft);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.admin-tab:hover{color:var(--ink)}
+.admin-tab.is-active{color:var(--ink);border-bottom-color:var(--grid)}
+.admin-tabpanel{display:none}
+.admin-tabpanel.is-active{display:block}
+.admin-tabpanel .admin-section:first-of-type{margin-top:0;padding-top:0;border-top:0}
+
 .admin-table{width:100%;border-collapse:collapse;margin-top:1rem}
 .admin-table th{text-align:left;font-size:.78rem;color:var(--ink-soft);text-transform:uppercase;
   letter-spacing:.03em;padding:.5rem .6rem;border-bottom:1px solid var(--line)}
