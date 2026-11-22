@@ -392,3 +392,21 @@ create policy "profiles: bd can update partner company"
   on public.profiles for update
   using (public.is_staff() and role = 'partner')
   with check (role = 'partner');
+
+-- service_role grants on the app tables. RLS policies alone don't
+-- grant table access — Postgres still checks the normal GRANT system
+-- first, and service_role only gets BYPASSRLS, not automatic SELECT/
+-- INSERT/UPDATE/DELETE. These tables were created via the SQL editor
+-- without ever granting service_role those privileges, which silently
+-- broke every Edge Function query that reads/writes them as
+-- service_role (e.g. admin-users checking the caller's own role) with
+-- "permission denied for table ..." — swallowed by supabase-js into
+-- a generic "non-2xx status code" error on the client, so it looked
+-- like an auth/CORS problem instead of a grants problem.
+grant select, insert, update, delete
+  on public.profiles, public.companies, public.projects, public.documents
+  to service_role;
+
+-- Keep this from recurring for any table created the same way later.
+alter default privileges in schema public
+  grant select, insert, update, delete on tables to service_role;
