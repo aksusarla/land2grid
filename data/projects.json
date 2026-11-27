@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-20",
+  "generatedAt": "2026-11-28",
   "projects": {
     "Tamil Nadu": [
       {
@@ -52,16 +52,50 @@
       {
         "name": "Punjab GCPP",
         "capacity": 40,
-        "badge": "Connectivity identified",
+        "badge": "PPA under negotiation",
         "badgeDone": false,
-        "land": "Identified",
-        "connectivity": "Identified, 66kV STU",
-        "ppa": "Under discussion",
+        "land": "Identified, under DD",
+        "connectivity": "Applied",
+        "ppa": "PPA under negotiation",
         "pos": [
           168.9,
           136.5
         ],
-        "lastUpdated": "2026-11-20",
+        "lastUpdated": "2026-11-28",
+        "documents": []
+      }
+    ],
+    "Bihar": [
+      {
+        "name": "Bihar GCPP",
+        "capacity": 50,
+        "badge": "Captive consumer",
+        "badgeDone": true,
+        "land": "Identified, under DD",
+        "connectivity": "Applied",
+        "ppa": "Captive Consumer",
+        "pos": [
+          372.65,
+          238.95
+        ],
+        "lastUpdated": "2026-11-28",
+        "documents": []
+      }
+    ],
+    "Jharkhand": [
+      {
+        "name": "Jharkhand GCPP",
+        "capacity": 20,
+        "badge": "Captive consumer",
+        "badgeDone": true,
+        "land": "Identified, under DD",
+        "connectivity": "Applied",
+        "ppa": "Captive Consumer",
+        "pos": [
+          369.45,
+          284.9
+        ],
+        "lastUpdated": "2026-11-28",
         "documents": []
       }
     ],
@@ -69,16 +103,16 @@
       {
         "name": "Assam GCPP",
         "capacity": 50,
-        "badge": "Early stage",
+        "badge": "Early stage discussion",
         "badgeDone": false,
-        "land": "To be acquired",
-        "connectivity": "To be acquired",
-        "ppa": "Under discussion",
+        "land": "Identified, under DD",
+        "connectivity": "Yet to apply",
+        "ppa": "Early stage discussion",
         "pos": [
           517.2,
           235.8
         ],
-        "lastUpdated": "2026-11-20",
+        "lastUpdated": "2026-11-28",
         "documents": []
       }
     ],
@@ -103,33 +137,16 @@
       {
         "name": "Karnataka GCPP",
         "capacity": 13,
-        "badge": "Early stage",
-        "badgeDone": false,
-        "land": "To be acquired",
-        "connectivity": "To be acquired",
-        "ppa": "Under discussion",
+        "badge": "BTM captive",
+        "badgeDone": true,
+        "land": "Identified, under DD",
+        "connectivity": "Yet to apply",
+        "ppa": "BTM Captive",
         "pos": [
           178.7,
           461.8
         ],
-        "lastUpdated": "2026-11-20",
-        "documents": []
-      }
-    ],
-    "Madhya Pradesh": [
-      {
-        "name": "MP GCPP",
-        "capacity": 30,
-        "badge": "Early stage",
-        "badgeDone": false,
-        "land": "To be acquired",
-        "connectivity": "To be acquired",
-        "ppa": "Under discussion",
-        "pos": [
-          221.7,
-          278.4
-        ],
-        "lastUpdated": "2026-11-20",
+        "lastUpdated": "2026-11-28",
         "documents": []
       }
     ],
@@ -137,16 +154,33 @@
       {
         "name": "West Bengal GCPP",
         "capacity": 20,
-        "badge": "Early stage",
-        "badgeDone": false,
-        "land": "To be acquired",
-        "connectivity": "To be acquired",
-        "ppa": "Under discussion",
+        "badge": "Captive consumer",
+        "badgeDone": true,
+        "land": "Identified, under DD",
+        "connectivity": "Applied",
+        "ppa": "Captive Consumer",
         "pos": [
           414.5,
           269.9
         ],
-        "lastUpdated": "2026-11-20",
+        "lastUpdated": "2026-11-28",
+        "documents": []
+      }
+    ],
+    "Uttar Pradesh": [
+      {
+        "name": "Uttar Pradesh GCPP",
+        "capacity": 50,
+        "badge": "Captive consumer",
+        "badgeDone": true,
+        "land": "Identified, under DD",
+        "connectivity": "Applied",
+        "ppa": "Captive Consumer",
+        "pos": [
+          271.4,
+          213.65
+        ],
+        "lastUpdated": "2026-11-28",
         "documents": []
       }
     ]
