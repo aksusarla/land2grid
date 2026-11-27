@@ -49,8 +49,15 @@
   client, and supabase/schema.sql for the `enquiries` table + RLS) via
   the script at the bottom of this page — no form backend or hosting
   requirement needed. Admins read/delete them from admin.html.
+
+  The form is also marked up as a Netlify Form (data-netlify + the
+  hidden form-name field below) purely so Netlify will email a copy to
+  the team the moment someone submits — see the AJAX POST in the
+  script below. Supabase stays the system of record either way; this
+  is just the notification.
 -->
-<form class="contact-form" id="project-enquiry-form" action="thank-you.html">
+<form class="contact-form" id="project-enquiry-form" name="enquiry" data-netlify="true" netlify-honeypot="bot-field" action="thank-you.html">
+<input type="hidden" name="form-name" value="enquiry">
 <p style="display:none"><label>Don't fill this out if you're human: <input id="bot-field" name="bot-field"></label></p>
 
 <label for="name">Your name</label>
@@ -176,6 +183,18 @@
       msg.textContent = 'Please fill in your name, email and company.';
       return;
     }
+
+    // Best-effort email notification via Netlify Forms — fired in
+    // parallel with the real (Supabase) submission below, and never
+    // allowed to block or fail the actual enquiry if Netlify's form
+    // endpoint has a hiccup.
+    var netlifyBody = new URLSearchParams();
+    data.forEach(function (value, key) { netlifyBody.append(key, value); });
+    fetch('/contact.html', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: netlifyBody.toString()
+    }).catch(function () { /* notification is non-critical */ });
 
     submitBtn.disabled = true;
     msg.textContent = 'Sending…';
