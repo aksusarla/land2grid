@@ -67,7 +67,7 @@
     ],
     "Bihar": [
       {
-        "name": "Bihar GCPP",
+        "name": "Bihar 01",
         "capacity": 50,
         "badge": "Captive consumer",
         "badgeDone": true,
@@ -75,8 +75,8 @@
         "connectivity": "Applied",
         "ppa": "Captive Consumer",
         "pos": [
-          372.65,
-          238.95
+          362.63,
+          255.45
         ],
         "lastUpdated": "2026-11-28",
         "documents": []
@@ -84,7 +84,7 @@
     ],
     "Jharkhand": [
       {
-        "name": "Jharkhand GCPP",
+        "name": "Jharkhand 01",
         "capacity": 20,
         "badge": "Captive consumer",
         "badgeDone": true,
@@ -92,8 +92,8 @@
         "connectivity": "Applied",
         "ppa": "Captive Consumer",
         "pos": [
-          369.45,
-          284.9
+          362.56,
+          291.34
         ],
         "lastUpdated": "2026-11-28",
         "documents": []
@@ -169,7 +169,7 @@
     ],
     "Uttar Pradesh": [
       {
-        "name": "Uttar Pradesh GCPP",
+        "name": "Uttar Pradesh 01",
         "capacity": 50,
         "badge": "Captive consumer",
         "badgeDone": true,
@@ -177,8 +177,8 @@
         "connectivity": "Applied",
         "ppa": "Captive Consumer",
         "pos": [
-          271.4,
-          213.65
+          273.17,
+          219.59
         ],
         "lastUpdated": "2026-11-28",
         "documents": []
