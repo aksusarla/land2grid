@@ -60,27 +60,6 @@
 <p class="auth-message" id="import-message" role="status"></p>
 </section>
 
-<section class="admin-section">
-<h2>Add a project</h2>
-<form class="admin-form" id="add-project-form">
-<div class="admin-form-grid">
-<label>State<select name="state" id="add-project-state" required><option value="">Select a state</option></select></label>
-<label>Capacity (MW)<input name="capacity" type="number" step="any" required placeholder="50"></label>
-<label>Stage / badge<input name="badge" placeholder="Early stage"></label>
-<label>Land status<input name="land" placeholder="To be acquired"></label>
-<label>Connectivity status<input name="connectivity" placeholder="To be acquired"></label>
-<label>PPA status<input name="ppa" placeholder="Under discussion"></label>
-<label>Latitude<input name="latitude" id="add-project-lat" type="number" step="any" required placeholder="12.83"></label>
-<label>Longitude<input name="longitude" id="add-project-lng" type="number" step="any" required placeholder="79.70"></label>
-<label>Last updated<input name="last_updated" type="date"></label>
-<label>Company (optional)<select name="company_id"><option value="">No company</option></select></label>
-<label class="admin-checkbox"><input name="badge_done" type="checkbox"> Stage is complete (shows green)</label>
-</div>
-<p class="admin-hint">The project is named automatically from the state (e.g. "<span id="add-project-name-preview">State 01</span>"), and latitude/longitude are filled in from the state's capital so a project never ends up unplaced on the map — edit them if you have the real site's coordinates. Tagging a project with a company lets that company's partner logins see its documents — see the Companies tab.</p>
-<button class="btn" type="button" id="add-project-submit">Add project</button>
-<p class="auth-message" id="add-project-message" role="status"></p>
-</form>
-</section>
 
 <section class="admin-section">
 <h2>Projects</h2>
@@ -220,91 +199,6 @@
       return c ? c.name : '—';
     }
 
-    // Fixed list of Indian states/UTs, each with its capital's
-    // lat/lon as a sane default so a new project is never left at
-    // (0, 0) — that silently drops it off the map (this bit Bihar
-    // and Jharkhand before). The dropdown keeps "State" typo-free,
-    // which the auto-generated "<State> 01" project name depends on.
-    var STATE_COORDS = {
-      'Andhra Pradesh': [16.5131, 80.5165],
-      'Arunachal Pradesh': [27.0844, 93.6053],
-      'Assam': [26.1445, 91.7362],
-      'Bihar': [25.5941, 85.1376],
-      'Chhattisgarh': [21.2514, 81.6296],
-      'Goa': [15.4909, 73.8278],
-      'Gujarat': [23.2156, 72.6369],
-      'Haryana': [30.7333, 76.7794],
-      'Himachal Pradesh': [31.1048, 77.1734],
-      'Jharkhand': [23.3441, 85.3096],
-      'Karnataka': [12.9716, 77.5946],
-      'Kerala': [8.5241, 76.9366],
-      'Madhya Pradesh': [23.2599, 77.4126],
-      'Maharashtra': [19.0760, 72.8777],
-      'Manipur': [24.8170, 93.9368],
-      'Meghalaya': [25.5788, 91.8933],
-      'Mizoram': [23.7271, 92.7176],
-      'Nagaland': [25.6751, 94.1086],
-      'Odisha': [20.2961, 85.8245],
-      'Punjab': [30.7333, 76.7794],
-      'Rajasthan': [26.9124, 75.7873],
-      'Sikkim': [27.3389, 88.6065],
-      'Tamil Nadu': [13.0827, 80.2707],
-      'Telangana': [17.3850, 78.4867],
-      'Tripura': [23.8315, 91.2868],
-      'Uttarakhand': [30.3165, 78.0322],
-      'Uttar Pradesh': [26.8467, 80.9462],
-      'West Bengal': [22.5726, 88.3639],
-      'Andaman and Nicobar': [11.6234, 92.7265],
-      'Chandigarh': [30.7333, 76.7794],
-      'Dadra Nagar Haveli and Daman Diu': [20.1809, 73.0169],
-      'Delhi': [28.7041, 77.1025],
-      'Jammu and Kashmir': [34.0837, 74.7973],
-      'Ladakh': [34.1526, 77.5771],
-      'Lakshadweep': [10.5669, 72.6420],
-      'Puducherry': [11.9416, 79.8083]
-    };
-    var STATE_NAMES = Object.keys(STATE_COORDS).sort();
-
-    function stateOptions() {
-      return '<option value="">Select a state</option>' + STATE_NAMES.map(function (s) {
-        return '<option value="' + escapeHTML(s) + '">' + escapeHTML(s) + '</option>';
-      }).join('');
-    }
-
-    // Next auto-generated name for a state, e.g. "Bihar 02" when
-    // "Bihar 01" already exists. Legacy free-text names (like
-    // "Tamizhpadi" or "Punjab GCPP") don't match the pattern and are
-    // safely ignored rather than breaking the count.
-    function nextProjectName(state) {
-      if (!state) return '';
-      var pattern = new RegExp('^' + state.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ' (\\d+)$', 'i');
-      var max = 0;
-      projects.forEach(function (p) {
-        if (p.state !== state) return;
-        var m = pattern.exec((p.name || '').trim());
-        if (m) max = Math.max(max, parseInt(m[1], 10));
-      });
-      var n = max + 1;
-      return state + ' ' + (n < 10 ? '0' + n : n);
-    }
-
-    function updateAddProjectNamePreview() {
-      var state = document.getElementById('add-project-state').value;
-      var preview = document.getElementById('add-project-name-preview');
-      if (!preview) return;
-      preview.textContent = state ? nextProjectName(state) : 'State 01';
-    }
-
-    document.getElementById('add-project-state').innerHTML = stateOptions();
-    document.getElementById('add-project-state').addEventListener('change', function (e) {
-      var coords = STATE_COORDS[e.target.value];
-      if (coords) {
-        document.getElementById('add-project-lat').value = coords[0];
-        document.getElementById('add-project-lng').value = coords[1];
-      }
-      updateAddProjectNamePreview();
-    });
-
     // supabase-js only gives a generic "Edge Function returned a non-2xx
     // status code" on res.error — the function's own JSON error message
     // ({"error": "..."}) is in res.error.context, which is the raw
@@ -346,14 +240,11 @@
         renderEnquiries();
         renderCompanies();
         syncCompanyDropdowns();
-        updateAddProjectNamePreview();
       });
     }
 
     function syncCompanyDropdowns() {
       document.getElementById('invite-company').innerHTML = companyOptions('');
-      var addProjectCompany = document.querySelector('#add-project-form [name="company_id"]');
-      if (addProjectCompany) addProjectCompany.innerHTML = companyOptions('');
     }
 
     // ---------------- Companies ----------------
@@ -571,44 +462,6 @@
     function showRowMessage(card, text) {
       card.querySelector('.admin-row-message').textContent = text;
     }
-
-    document.getElementById('add-project-submit').addEventListener('click', function () {
-      var form = document.getElementById('add-project-form');
-      var msg = document.getElementById('add-project-message');
-      var data = new FormData(form);
-      var state = (data.get('state') || '').trim();
-      var latitude = parseFloat(data.get('latitude'));
-      var longitude = parseFloat(data.get('longitude'));
-      var row = {
-        state: state,
-        name: nextProjectName(state),
-        capacity: parseFloat(data.get('capacity')) || 0,
-        badge: (data.get('badge') || '').trim() || 'Early stage',
-        badge_done: form.querySelector('[name="badge_done"]').checked,
-        land: (data.get('land') || '').trim() || 'Not set',
-        connectivity: (data.get('connectivity') || '').trim() || 'Not set',
-        ppa: (data.get('ppa') || '').trim() || 'Not set',
-        latitude: isNaN(latitude) ? 0 : latitude,
-        longitude: isNaN(longitude) ? 0 : longitude,
-        last_updated: data.get('last_updated') || new Date().toISOString().slice(0, 10),
-        company_id: data.get('company_id') || null
-      };
-      if (!row.state || !row.capacity) {
-        msg.textContent = 'State and capacity are required.';
-        return;
-      }
-      if (!row.latitude || !row.longitude) {
-        msg.textContent = 'Latitude and longitude are required — pick a state to auto-fill them.';
-        return;
-      }
-      msg.textContent = 'Adding…';
-      client.from('projects').insert(row).then(function (res) {
-        if (res.error) { msg.textContent = res.error.message; return; }
-        msg.textContent = '';
-        form.reset();
-        loadAll();
-      });
-    });
 
     // ---------------- Import from data/projects.json (one-time) ----------------
 
