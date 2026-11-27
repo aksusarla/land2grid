@@ -207,16 +207,6 @@
       document.getElementById('invite-company-wrap').hidden = e.target.value !== 'partner';
     });
 
-    document.getElementById('add-project-state').innerHTML = stateOptions();
-    document.getElementById('add-project-state').addEventListener('change', function (e) {
-      var coords = STATE_COORDS[e.target.value];
-      if (coords) {
-        document.getElementById('add-project-lat').value = coords[0];
-        document.getElementById('add-project-lng').value = coords[1];
-      }
-      updateAddProjectNamePreview();
-    });
-
     function companyOptions(selectedId) {
       return '<option value="">No company</option>' + companies.map(function (c) {
         return '<option value="' + c.id + '"' + (c.id === selectedId ? ' selected' : '') + '>' +
@@ -304,6 +294,16 @@
       if (!preview) return;
       preview.textContent = state ? nextProjectName(state) : 'State 01';
     }
+
+    document.getElementById('add-project-state').innerHTML = stateOptions();
+    document.getElementById('add-project-state').addEventListener('change', function (e) {
+      var coords = STATE_COORDS[e.target.value];
+      if (coords) {
+        document.getElementById('add-project-lat').value = coords[0];
+        document.getElementById('add-project-lng').value = coords[1];
+      }
+      updateAddProjectNamePreview();
+    });
 
     // supabase-js only gives a generic "Edge Function returned a non-2xx
     // status code" on res.error — the function's own JSON error message
