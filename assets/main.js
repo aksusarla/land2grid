@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
     });
-    // a thin band just above the vertical middle of the viewport — a
+    // a thin band just above the vertical middle of the viewport, a
     // section "becomes current" when it crosses that line, which tracks
     // naturally with what the reader is actually looking at.
   }, { threshold: 0, rootMargin: '-45% 0px -50% 0px' });

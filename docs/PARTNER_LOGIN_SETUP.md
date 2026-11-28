@@ -1,4 +1,4 @@
-# Partner login setup (Supabase) — superseded
+# Partner login setup (Supabase), superseded
 
 **Use `docs/ADMIN_SETUP.md` instead.** This file covered login-only setup
 from before there was an admin page; everything below is now part of a
@@ -11,7 +11,7 @@ for reference only.
 The "Partner login" link in the site footer (`login.html`) and the gated
 `documents.html` page are built, but they need a real Supabase project
 before anyone can actually sign in. Until then, both pages show a plain
-"isn't set up yet" message — nothing is broken, it's just inert.
+"isn't set up yet" message, nothing is broken, it's just inert.
 
 ## 1. Create the Supabase project
 
@@ -24,7 +24,7 @@ before anyone can actually sign in. Until then, both pages show a plain
 
 1. In the project dashboard: **Project Settings > API**.
 2. Copy the **Project URL** (looks like `https://abcdefghijkl.supabase.co`).
-3. Copy the **anon public** key (a long string — NOT the `service_role`
+3. Copy the **anon public** key (a long string, NOT the `service_role`
    key, which must never be put in a public website's code).
 
 ## 3. Paste them into the site
@@ -36,7 +36,7 @@ var SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';
 var SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 ```
 
-with the real values from step 2. Commit and push — that's the only code
+with the real values from step 2. Commit and push, that's the only code
 change needed to turn login on.
 
 ## 4. Make it invite-only
@@ -74,10 +74,10 @@ To attach documents to a project, either:
 - Add a `Documents` column to your Google Sheet (if you're using
   `scripts/sync_from_sheet.py`) with entries like
   `Term sheet | https://drive.google.com/... ; Land survey | https://...`
-  — see the script's own docstring for the exact format.
+, see the script's own docstring for the exact format.
 
 The links themselves point wherever you already host the file (Google
-Drive, Dropbox, etc.) — this is a link, not a file upload. A project
+Drive, Dropbox, etc.), this is a link, not a file upload. A project
 with no documents yet just shows "No documents shared yet" once
 unlocked.
 
@@ -89,7 +89,7 @@ unlocked.
   button.
 - **Later, when you're ready:** real file upload/download through
   Supabase Storage (so a document lives on the site instead of a link
-  to somewhere else), and an access log — who signed in and when —
+  to somewhere else), and an access log, who signed in and when, 
   since Supabase's Auth system already records sign-in events that can
   be queried or exported. Say the word and that's the next layer to
   build on top of this.

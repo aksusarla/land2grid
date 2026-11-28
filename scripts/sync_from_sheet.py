@@ -34,7 +34,7 @@ ONE-TIME SHEET SETUP
      each "Name | URL", separated by semicolons, e.g.:
        Term sheet | https://drive.google.com/file/d/abc/view ; Land survey | https://drive.google.com/file/d/xyz/view
      Leave it blank for "no documents shared yet". Links can point
-     anywhere you already host the file (Drive, Dropbox, etc.) —
+     anywhere you already host the file (Drive, Dropbox, etc.), 
      this script doesn't upload anything, it just records the link.
 
 2. One row per project. A state with several projects just gets
@@ -108,7 +108,7 @@ def parse_documents(raw, row_num, name, warnings):
         if len(parts) != 2 or not parts[0].strip() or not parts[1].strip():
             warnings.append(
                 f"Row {row_num} ({name}): Documents entry {j} ('{piece}') isn't "
-                "'Name | URL' — skipped."
+                "'Name | URL', skipped."
             )
             continue
         docs.append({"name": parts[0].strip(), "url": parts[1].strip()})
@@ -155,7 +155,7 @@ def parse_rows(csv_text):
             continue  # blank row, skip quietly
 
         if not state or not name or not capacity_raw:
-            warnings.append(f"Row {i}: missing State, Project Name or Capacity MW — skipped.")
+            warnings.append(f"Row {i}: missing State, Project Name or Capacity MW, skipped.")
             continue
 
         try:
@@ -163,7 +163,7 @@ def parse_rows(csv_text):
             if capacity == int(capacity):
                 capacity = int(capacity)
         except ValueError:
-            warnings.append(f"Row {i} ({name}): Capacity MW '{capacity_raw}' isn't a number — skipped.")
+            warnings.append(f"Row {i} ({name}): Capacity MW '{capacity_raw}' isn't a number, skipped.")
             continue
 
         lat_raw = (row.get("Latitude") or "").strip()
@@ -173,9 +173,9 @@ def parse_rows(csv_text):
             try:
                 pos = project(float(lon_raw), float(lat_raw))
             except ValueError:
-                warnings.append(f"Row {i} ({name}): Latitude/Longitude aren't numbers — using [0, 0].")
+                warnings.append(f"Row {i} ({name}): Latitude/Longitude aren't numbers, using [0, 0].")
         else:
-            warnings.append(f"Row {i} ({name}): no Latitude/Longitude given — dot will sit at [0, 0] until set.")
+            warnings.append(f"Row {i} ({name}): no Latitude/Longitude given, dot will sit at [0, 0] until set.")
 
         entry = {
             "name": name,
@@ -205,7 +205,7 @@ def main():
     projects, warnings, kept, today = parse_rows(csv_text)
 
     if not kept:
-        sys.exit("No usable rows found — nothing written. Check the sheet against the column names in this script's docstring.")
+        sys.exit("No usable rows found, nothing written. Check the sheet against the column names in this script's docstring.")
 
     output = {"generatedAt": today, "projects": projects}
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)

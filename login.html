@@ -105,7 +105,7 @@
   // An invite or password-reset email lands here with #access_token=...&type=invite
   // (or type=recovery) in the URL. The supabase-js client reads that hash and signs
   // the browser in automatically (it's what detectSessionInUrl, on by default, does),
-  // but an invite/recovery link proves identity, not a password — someone still needs
+  // but an invite/recovery link proves identity, not a password, someone still needs
   // to set one before "Sign in" will ever work for them again. Capture the hash
   // ourselves, synchronously, since the client clears it from the URL once it's read.
   var hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));

@@ -3,16 +3,16 @@
 // The only thing this function exists for: inviting someone, changing
 // their role/company, or removing their access, all require Supabase's
 // Admin API (or need to bypass RLS deliberately), which in turn
-// requires the service_role secret key — a key that must never reach
+// requires the service_role secret key, a key that must never reach
 // the browser (anyone holding it could do anything to the database,
 // bypassing every RLS policy). This function holds that key on
 // Supabase's own servers instead, and only acts on behalf of someone
 // who is (a) signed in and (b) already has the 'admin' or 'bd' role in
-// the profiles table — and, for anything touching an admin/bd account
+// the profiles table, and, for anything touching an admin/bd account
 // rather than a partner, specifically 'admin'. admin.html calls this
 // function; it never sees the service_role key itself.
 //
-// Deploy: see docs/ADMIN_SETUP.md. Short version — paste this file's
+// Deploy: see docs/ADMIN_SETUP.md. Short version, paste this file's
 // contents into Supabase dashboard > Edge Functions > Create a new
 // function named "admin-users", then Deploy.
 //
@@ -22,7 +22,7 @@
 //     default company_id: null). Only an admin can invite someone as
 //     "admin" or "bd"; a bd caller can only invite partners.
 //   { "action": "update_profile", "userId": "<uuid>", "role": "partner", "company_id": "<uuid>|null" }
-//     role and company_id are both optional — send only what's
+//     role and company_id are both optional, send only what's
 //     changing. An admin can change anyone's role/company; a bd
 //     caller can only change a partner's company (role must already
 //     be, and stay, "partner").
@@ -38,7 +38,7 @@ const CORS_HEADERS = {
   // (x-client-info, and on newer client versions x-supabase-api-version)
   // on top of authorization/apikey/content-type. If any header the
   // browser's preflight asks about isn't listed here, the browser
-  // blocks the real request before it's ever sent — which is why
+  // blocks the real request before it's ever sent, which is why
   // invites were failing with "Failed to send a request to the Edge
   // Function" even though the function itself was deployed and fine.
   "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-client-info, x-supabase-api-version",
@@ -63,11 +63,11 @@ Deno.serve(async (req) => {
   const authHeader = req.headers.get("Authorization") ?? "";
 
   if (!authHeader.startsWith("Bearer ")) {
-    return json({ error: "Missing Authorization header — sign in first." }, 401);
+    return json({ error: "Missing Authorization header, sign in first." }, 401);
   }
 
   // Identify the caller from their own JWT (the publishable key + their
-  // token, not the secret key — this client can only do what that
+  // token, not the secret key, this client can only do what that
   // person is allowed to do).
   const callerClient = createClient(SUPABASE_URL, PUBLISHABLE_KEY, {
     global: { headers: { Authorization: authHeader } },
@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
   }
 
   // The admin client (secret key) is what actually performs every
-  // privileged action below — but only after confirming, via that
+  // privileged action below, but only after confirming, via that
   // same secret-key client, that the caller's own profile row says
   // role = 'admin' or 'bd'. Never trust a role claim sent in the
   // request body.
@@ -119,7 +119,7 @@ Deno.serve(async (req) => {
     if (inviteErr) return json({ error: inviteErr.message }, 400);
 
     // The new-user trigger already created a 'partner' profile row for
-    // them with no company — only touch it again if something other
+    // them with no company, only touch it again if something other
     // than that default was asked for.
     if (requestedRole !== "partner" || companyId) {
       const newUserId = inviteData && inviteData.user && inviteData.user.id;

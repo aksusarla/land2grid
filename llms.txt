@@ -1,0 +1,22 @@
+# land2grid
+
+> land2grid coordinates land management, grid connectivity and industrial customer acquisition for IPPs and EPCs building solar and wind projects in India.
+
+## Services
+
+- [What we do](https://land2grid.com/services/what-we-do.html): land, grid connectivity and industrial offtake, run end to end by one team
+- [Land management](https://land2grid.com/services/land-management.html): site identification, landowner negotiation, title and survey diligence
+- [Grid connectivity](https://land2grid.com/services/grid-connectivity.html): CTU/STU connectivity applications, substation and evacuation planning
+- [Industrial customer acquisition](https://land2grid.com/services/customer-acquisition.html): open access and captive demand mapping, PPA structuring support
+
+## Insights
+
+- [Land aggregation is where solar projects stall](https://land2grid.com/insights/land-aggregation-is-the-real-delay.html)
+- [What a load flow study actually tells you](https://land2grid.com/insights/load-flow-study-before-you-file.html)
+- [Open access or group captive: the structuring choice](https://land2grid.com/insights/open-access-vs-group-captive.html)
+
+## Company
+
+- [About](https://land2grid.com/about.html)
+- [Contact](https://land2grid.com/contact.html)
+- [Live projects](https://land2grid.com/dashboard.html)

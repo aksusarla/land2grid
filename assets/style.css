@@ -799,7 +799,7 @@ nav.primary a:hover::after{right:0}
    space, rather than leave it empty, is what makes a one-project state
    feel like a full card instead of a form floating in a box. In a
    multi-card list there's usually no leftover space to grow into, so this
-   is a no-op there — it only does anything where there's room to give. */
+   is a no-op there, it only does anything where there's room to give. */
 .project-card.is-active,.project-card:hover{
   flex-grow:1;display:flex;flex-direction:column;justify-content:center}
 .project-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
@@ -863,7 +863,7 @@ body.is-signed-in .project-docs-lock{display:none}
   .filter-search,.filter-stage,.filter-clear{flex:1 1 100%}
 }
 
-/* admin.html: a plain, utilitarian set of form/table styles — this page
+/* admin.html: a plain, utilitarian set of form/table styles, this page
    is a work tool for the team, not a piece of marketing design, so it
    borrows the site's colors and radii but keeps layout simple (grids of
    labeled inputs, a card per project) rather than anything bespoke. */
