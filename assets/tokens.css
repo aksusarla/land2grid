@@ -1,0 +1,54 @@
+/* land2grid colour and font tokens v1.1 (28 November 2026)
+   Gold leads, cream carries the page, green is the quiet third colour.
+   Primary   gold  #FBBF24  (with ember #F2994A): buttons, highlights, cards, map states, logo
+   Secondary cream #F7F1E3: page background and surfaces
+   Tertiary  green: deep forest #1C3B2E for text and dark areas, leaf #2F6B3F for links and small accents */
+
+:root{
+  color-scheme:light;
+
+  /* ---- Palette ---- */
+  --l2g-gold:#fbbf24;        /* primary: logo top, main highlights, cards, map states */
+  --l2g-gold-hover:#f5ad1a;
+  --l2g-ember:#f2994a;       /* primary partner: logo base, action buttons, hover */
+  --l2g-ember-hover:#e8862f;
+  --l2g-cream:#f7f1e3;       /* secondary: page background, text on dark */
+  --l2g-sand:#efe6d2;        /* secondary: alternate bands, hover fills */
+  --l2g-white:#ffffff;       /* cards, inputs */
+  --l2g-line:#e3d9c2;        /* borders, dividers */
+  --l2g-forest:#1c3b2e;      /* tertiary: text, headings, header, footer, overlays */
+  --l2g-forest-2:#24493a;    /* hover on dark */
+  --l2g-leaf:#2f6b3f;        /* tertiary: links, success, small green accents */
+  --l2g-ink-muted:#54644f;   /* secondary text */
+  --l2g-amber-text:#8a5a12;  /* eyebrow labels and tags on cream */
+  --l2g-sage:#a9b8a0;        /* secondary text on forest */
+  --l2g-notify:#e2574c;
+
+  /* ---- Roles ---- */
+  --color-bg:var(--l2g-cream);
+  --color-bg-alt:var(--l2g-sand);
+  --color-surface:var(--l2g-white);
+  --color-border:var(--l2g-line);
+  --color-text:var(--l2g-forest);
+  --color-heading:var(--l2g-forest);
+  --color-text-muted:var(--l2g-ink-muted);
+  --color-accent-text:var(--l2g-amber-text);
+  --color-link:var(--l2g-leaf);
+  --color-primary:var(--l2g-gold);
+  --color-primary-hover:var(--l2g-ember);
+  --color-on-primary:var(--l2g-forest);
+  --color-action:var(--l2g-ember);
+  --color-action-hover:var(--l2g-gold);
+  --color-on-action:var(--l2g-forest);
+  --color-dark:var(--l2g-forest);
+  --color-dark-hover:var(--l2g-forest-2);
+  --color-on-dark:var(--l2g-cream);
+  --color-on-dark-muted:var(--l2g-sage);
+  --color-line-on-dark:rgba(247,241,227,.14);
+  --color-logo-top:var(--l2g-gold);
+  --color-logo-base:var(--l2g-ember);
+
+  /* ---- Fonts ---- */
+  --font-display:"Figtree","Inter",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+}

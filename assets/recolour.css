@@ -1,0 +1,60 @@
+/* land2grid colour and font update v1.1 (28 November 2026)
+   Re-colours the current land2grid.com without changing content, layout or markup.
+   Load order on every page:  style.css  ->  tokens.css  ->  recolour.css
+   The live site's gold and orange stay exactly where they are today; navy becomes deep
+   forest green and the cool off-white becomes warm cream. */
+
+/* ---------- Part 1: variable mapping ---------- */
+:root{
+  --paper:var(--color-bg);
+  --surface:var(--color-surface);
+  --stage:var(--color-bg-alt);
+  --line:var(--color-border);
+  --ink:var(--color-text);
+  --ink-soft:var(--color-text-muted);
+  --ink-max:#0f241b;
+
+  --dark:var(--color-dark);
+  --forest:var(--color-dark);
+  --on-dark:var(--color-on-dark);
+  --on-dark-soft:var(--color-on-dark-muted);
+  --line-on-dark:var(--color-line-on-dark);
+
+  /* Gold and orange: unchanged roles from the live site */
+  --accent:var(--color-primary);
+  --accent-ink:var(--color-on-primary);
+  --accent-hover:var(--color-primary-hover);
+  --accent-text:var(--color-accent-text);
+  --signal:var(--color-action);
+  --signal-ink:var(--color-on-action);
+  --sun-gold:var(--color-logo-top);
+  --sun-orange:var(--color-logo-base);
+
+  /* Service colours: land = forest, grid = ember, customer = gold (as today, navy -> forest) */
+  --land:var(--l2g-forest);--land-ink:var(--l2g-cream);--land-soft:var(--l2g-sage);
+  --grid:var(--l2g-ember);--grid-on:var(--l2g-forest);
+  --customer:var(--l2g-gold);--customer-on:var(--l2g-forest);
+  --icon-blue:var(--l2g-leaf);
+
+  --success-ink:var(--l2g-leaf);
+  --notify:var(--l2g-notify);
+
+  --shadow-sm:0 1px 2px rgba(28,59,46,.05),0 1px 1px rgba(28,59,46,.04);
+  --shadow-md:0 8px 24px -8px rgba(28,59,46,.16),0 2px 6px rgba(28,59,46,.07);
+  --shadow-lg:0 24px 60px -20px rgba(28,59,46,.34);
+}
+
+/* ---------- Fonts: Figtree + Inter only (remove the Fontshare/Satoshi link) ---------- */
+body{font-family:var(--font-body)}
+
+/* ---------- Part 2: colours hard-coded in style.css (navy tints -> forest) ---------- */
+.hero-video::before{background-image:linear-gradient(135deg,#1c3b2e 0%,#12281f 100%)}
+.hero-video-overlay,.service-hero-overlay{background:linear-gradient(100deg,rgba(18,40,31,.92) 0%,rgba(18,40,31,.8) 30%,rgba(18,40,31,.45) 62%,rgba(18,40,31,.18) 100%)}
+.stat:hover{box-shadow:0 1.25rem 2.5rem rgba(28,59,46,.22)}
+.illustrative-badge{background:rgba(28,59,46,.06)}
+.project-badge{background:rgba(28,59,46,.07)}
+.project-badge.is-done{background:rgba(47,107,63,.12);color:var(--l2g-leaf)}
+.project-dot{filter:drop-shadow(0 1px 2px rgba(28,59,46,.35))}
+/* Map: warm grey for states without projects; states with projects stay gold */
+.state{fill:#e6dcc6;stroke:var(--color-bg)}
+.state:hover,.state:focus-visible{fill:#efe2bd}
