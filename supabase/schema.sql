@@ -8,7 +8,7 @@
 --                'admin' (can use admin.html) or 'partner' (can only
 --                view the Documents section once signed in). New
 --                accounts default to 'partner' automatically.
---   - projects   the live project/deal data the dashboard reads —
+--   - projects   the live project/deal data the dashboard reads, 
 --                replaces data/projects.json as the source of truth.
 --   - documents  the document links shown (blurred until sign-in) on
 --                each project's card.
@@ -67,7 +67,7 @@ create policy "profiles: admins can update role"
   using (public.is_admin())
   with check (public.is_admin());
 
--- Every new Supabase Auth user (created by inviting them — see
+-- Every new Supabase Auth user (created by inviting them, see
 -- docs/ADMIN_SETUP.md) automatically gets a 'partner' profile row the
 -- moment their account exists, so there's nothing to set up per person
 -- beyond inviting them.
@@ -98,7 +98,7 @@ create trigger on_auth_user_created
 -- admin.html enters a normal place on a map, not an SVG position. The
 -- same equirectangular projection the map itself uses turns lat/lon
 -- into a map position at read time (see the shared helper mentioned in
--- docs/ADMIN_SETUP.md) — nothing about the projection is stored here.
+-- docs/ADMIN_SETUP.md), nothing about the projection is stored here.
 create table if not exists public.projects (
   id uuid primary key default gen_random_uuid(),
   state text not null,
@@ -121,7 +121,7 @@ grant select on public.projects to anon, authenticated;
 grant insert, update, delete on public.projects to authenticated;
 
 -- Project data (everything except documents) is the same public
--- information the dashboard has always shown with no login — that
+-- information the dashboard has always shown with no login, that
 -- doesn't change just because it now lives in a database.
 drop policy if exists "projects: anyone can read" on public.projects;
 create policy "projects: anyone can read"
@@ -157,13 +157,13 @@ create table if not exists public.documents (
 
 alter table public.documents enable row level security;
 
--- Only authenticated gets a grant at all (not anon) — that way a
+-- Only authenticated gets a grant at all (not anon), that way a
 -- signed-out visitor is denied at the privilege level, not just by the
 -- RLS policy below, matching "the database denies the query entirely
 -- for a signed-out visitor" in dashboard.html's own comment.
 grant select, insert, update, delete on public.documents to authenticated;
 
--- Documents stay gated behind sign-in (any role — admin or partner),
+-- Documents stay gated behind sign-in (any role, admin or partner),
 -- matching the blurred-until-signed-in behaviour on the dashboard.
 drop policy if exists "documents: signed-in users can read" on public.documents;
 create policy "documents: signed-in users can read"
@@ -190,7 +190,7 @@ create policy "documents: admins can delete"
 -- enquiries
 -- ---------------------------------------------------------------
 -- Backs the public contact form (contact.html), which inserts directly
--- via the publishable client key — no server/function needed. Anyone
+-- via the publishable client key, no server/function needed. Anyone
 -- can insert (that's the whole point of a contact form), but only
 -- admins can read or delete the submissions, via admin.html.
 create table if not exists public.enquiries (
@@ -232,7 +232,7 @@ create policy "enquiries: admins can delete"
 -- team that can invite and manage partners themselves, and partners
 -- grouped by the company they represent, so one partner company's
 -- documents aren't visible to another's. Safe to re-run like the rest
--- of this file — every statement below is additive/idempotent.
+-- of this file, every statement below is additive/idempotent.
 create table if not exists public.companies (
   id uuid primary key default gen_random_uuid(),
   name text not null unique,
@@ -242,7 +242,7 @@ create table if not exists public.companies (
 alter table public.companies enable row level security;
 grant select, insert, update, delete on public.companies to authenticated;
 
--- A partner's own company (nullable — admins/BD aren't tied to one,
+-- A partner's own company (nullable, admins/BD aren't tied to one,
 -- and an existing partner with no company yet just sees nothing extra
 -- until someone assigns them one).
 alter table public.profiles
@@ -252,7 +252,7 @@ alter table public.profiles drop constraint if exists profiles_role_check;
 alter table public.profiles add constraint profiles_role_check
   check (role in ('admin', 'bd', 'partner'));
 
--- Which company (if any) a project/deal is being run for. Nullable —
+-- Which company (if any) a project/deal is being run for. Nullable, 
 -- the public pipeline map doesn't need every project tied to a
 -- partner; this only matters for scoping that project's documents.
 alter table public.projects
@@ -272,7 +272,7 @@ as $$
   select coalesce((select role from public.profiles where id = auth.uid()) in ('admin', 'bd'), false);
 $$;
 
--- my_company_id(): the caller's own company — used to scope a
+-- my_company_id(): the caller's own company, used to scope a
 -- partner's document access to their own company's projects only.
 create or replace function public.my_company_id()
 returns uuid
@@ -378,7 +378,7 @@ create policy "documents: staff can delete"
 -- profiles: BD (not just admin) can now see the People list, needed
 -- to manage partners. Only an admin can promote/demote anyone's role;
 -- BD can still update a partner's company assignment directly (e.g.
--- from a future "edit" UI) as long as the row stays a partner —
+-- from a future "edit" UI) as long as the row stays a partner, 
 -- enforced below rather than through the admin-users function, so it
 -- works even for a plain table update.
 drop policy if exists "profiles: admins can read all rows" on public.profiles;
@@ -394,13 +394,13 @@ create policy "profiles: bd can update partner company"
   with check (role = 'partner');
 
 -- service_role grants on the app tables. RLS policies alone don't
--- grant table access — Postgres still checks the normal GRANT system
+-- grant table access, Postgres still checks the normal GRANT system
 -- first, and service_role only gets BYPASSRLS, not automatic SELECT/
 -- INSERT/UPDATE/DELETE. These tables were created via the SQL editor
 -- without ever granting service_role those privileges, which silently
 -- broke every Edge Function query that reads/writes them as
 -- service_role (e.g. admin-users checking the caller's own role) with
--- "permission denied for table ..." — swallowed by supabase-js into
+-- "permission denied for table ...", swallowed by supabase-js into
 -- a generic "non-2xx status code" error on the client, so it looked
 -- like an auth/CORS problem instead of a grants problem.
 grant select, insert, update, delete

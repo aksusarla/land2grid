@@ -55,7 +55,7 @@
 <section class="admin-tabpanel" data-panel="projects">
 <section class="admin-section" id="import-section" hidden>
 <h2>One-time: import existing data</h2>
-<p class="admin-hint">The project table is empty. If you've been using <code>data/projects.json</code>, import it once to carry that data over — after this, admin.html is the source of truth and the JSON file is no longer read.</p>
+<p class="admin-hint">The project table is empty. If you've been using <code>data/projects.json</code>, import it once to carry that data over, after this, admin.html is the source of truth and the JSON file is no longer read.</p>
 <button class="btn" type="button" id="import-btn">Import data/projects.json</button>
 <p class="auth-message" id="import-message" role="status"></p>
 </section>
@@ -109,7 +109,7 @@
   var signoutBtn = document.getElementById('admin-signout');
 
   if (!window.L2G_AUTH || !window.L2G_AUTH.isConfigured()) {
-    gate.innerHTML = '<p class="panel-empty">Partner login isn\'t set up yet — see docs/ADMIN_SETUP.md.</p>';
+    gate.innerHTML = '<p class="panel-empty">Partner login isn\'t set up yet, see docs/ADMIN_SETUP.md.</p>';
     return;
   }
 
@@ -176,7 +176,7 @@
     var companies = [];
 
     // BD can only ever invite/manage partners, so there's no role
-    // choice to make for them — hide it rather than show a dropdown
+    // choice to make for them, hide it rather than show a dropdown
     // with one real option.
     if (!isAdminViewer) {
       document.getElementById('invite-role').value = 'partner';
@@ -194,13 +194,13 @@
     }
 
     function companyName(id) {
-      if (!id) return '—';
+      if (!id) return '-';
       var c = companies.filter(function (c) { return c.id === id; })[0];
-      return c ? c.name : '—';
+      return c ? c.name : '-';
     }
 
     // supabase-js only gives a generic "Edge Function returned a non-2xx
-    // status code" on res.error — the function's own JSON error message
+    // status code" on res.error, the function's own JSON error message
     // ({"error": "..."}) is in res.error.context, which is the raw
     // Response and has to be read and parsed separately. This reads that
     // real message when it's there, and falls back sensibly when it isn't.
@@ -251,7 +251,7 @@
 
     function renderCompanies() {
       if (!companies.length) {
-        companiesList.innerHTML = '<p class="panel-empty">No companies yet — add one above.</p>';
+        companiesList.innerHTML = '<p class="panel-empty">No companies yet, add one above.</p>';
         return;
       }
       var countByCompany = {};
@@ -340,7 +340,7 @@
 
     function renderProjects() {
       if (!projects.length) {
-        projectsList.innerHTML = '<p class="panel-empty">No projects yet — add one above.</p>';
+        projectsList.innerHTML = '<p class="panel-empty">No projects yet, add one above.</p>';
         return;
       }
       projectsList.innerHTML = projects.map(function (p) {
@@ -486,7 +486,7 @@
                 ppa: p.ppa || 'Not set',
                 // data/projects.json stores an already-projected [x, y]
                 // pair, not lat/lon, so there's nothing accurate to put
-                // here — leave at 0,0 and fix up lat/lon by hand after
+                // here, leave at 0,0 and fix up lat/lon by hand after
                 // import (one-time cost, only for rows brought in this way).
                 latitude: 0,
                 longitude: 0,
@@ -510,7 +510,7 @@
           });
         })
         .then(function () {
-          importMessage.textContent = 'Imported. Latitude/longitude defaulted to 0,0 — ' +
+          importMessage.textContent = 'Imported. Latitude/longitude defaulted to 0,0, ' +
             'edit each project below to set its real position on the map.';
           loadAll();
         })
@@ -528,7 +528,7 @@
         '<table class="admin-table"><thead><tr><th>Email</th><th>Role</th><th>Company</th><th></th></tr></thead><tbody>' +
         profiles.map(function (p) {
           // BD can edit a partner's role/company, but can't touch an
-          // admin or another BD row at all (not even to view-edit it) —
+          // admin or another BD row at all (not even to view-edit it), 
           // matches what the admin-users function itself will allow.
           var canEditRole = isAdminViewer || p.role === 'partner';
           var roleCell = canEditRole
@@ -541,7 +541,7 @@
             : escapeHTML(p.role);
           var companyCell = p.role === 'partner'
             ? '<select data-company>' + companyOptions(p.company_id) + '</select>'
-            : '—';
+            : '-';
           var canRemove = isAdminViewer || p.role === 'partner';
           return '<tr data-id="' + p.id + '">' +
             '<td>' + escapeHTML(p.email) + '</td>' +

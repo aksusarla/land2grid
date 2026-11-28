@@ -582,13 +582,13 @@
 
   // Project data lives in Supabase (the admin page writes straight to
   // it), with data/projects.json kept only as a fallback for as long as
-  // Supabase isn't configured yet — see docs/ADMIN_SETUP.md. Once it is
+  // Supabase isn't configured yet, see docs/ADMIN_SETUP.md. Once it is
   // configured, the JSON file is no longer read at all. Document links
   // are fetched separately and only when signed in: the database denies
   // the query entirely for a signed-out visitor (not just a client-side
   // blur), so there's nothing to leak by inspecting the page source.
   // Same equirectangular projection the map's own paths were drawn
-  // from (and that scripts/sync_from_sheet.py uses) — turns a real
+  // from (and that scripts/sync_from_sheet.py uses), turns a real
   // lat/lon into the SVG position a project dot is drawn at.
   var PROJ_MINX = 68.1005, PROJ_MAXY = 37.077, PROJ_SCALE = 20.4869, PROJ_PAD = 10;
   function projectLatLon(lat, lon) {

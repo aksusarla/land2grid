@@ -47,12 +47,12 @@
 <!--
   Submissions go straight to Supabase (see assets/auth.js for the shared
   client, and supabase/schema.sql for the `enquiries` table + RLS) via
-  the script at the bottom of this page — no form backend or hosting
+  the script at the bottom of this page, no form backend or hosting
   requirement needed. Admins read/delete them from admin.html.
 
   The form is also marked up as a Netlify Form (data-netlify + the
   hidden form-name field below) purely so Netlify will email a copy to
-  the team the moment someone submits — see the AJAX POST in the
+  the team the moment someone submits, see the AJAX POST in the
   script below. Supabase stays the system of record either way; this
   is just the notification.
 -->
@@ -165,7 +165,7 @@
 
     var client = window.L2G_AUTH && window.L2G_AUTH.isConfigured() && window.L2G_AUTH.getClient();
     if (!client) {
-      msg.textContent = 'Sorry, something is misconfigured — please email us directly at contact@land2grid.com.';
+      msg.textContent = 'Sorry, something is misconfigured, please email us directly at contact@land2grid.com.';
       return;
     }
 
@@ -184,7 +184,7 @@
       return;
     }
 
-    // Best-effort email notification via Netlify Forms — fired in
+    // Best-effort email notification via Netlify Forms, fired in
     // parallel with the real (Supabase) submission below, and never
     // allowed to block or fail the actual enquiry if Netlify's form
     // endpoint has a hiccup.
@@ -201,7 +201,7 @@
     client.from('enquiries').insert(row).then(function (res) {
       if (res.error) {
         submitBtn.disabled = false;
-        msg.textContent = 'Something went wrong — please email us directly at contact@land2grid.com.';
+        msg.textContent = 'Something went wrong, please email us directly at contact@land2grid.com.';
         return;
       }
       window.location.href = 'thank-you.html';
